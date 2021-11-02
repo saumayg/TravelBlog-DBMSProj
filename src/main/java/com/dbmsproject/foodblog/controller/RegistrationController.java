@@ -34,13 +34,13 @@ public class RegistrationController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-    @GetMapping("/showForm")
+    @GetMapping()
     public String showRegForm(Model model) {
         model.addAttribute("user", new User());
-        return "registration_form";
+        return "regForm";
     }
 
-    @PostMapping("/processreg")
+    @PostMapping()
     public String processRegistrationForm(
         @Valid @ModelAttribute("user") User user,
         BindingResult bindingResult,
@@ -52,27 +52,23 @@ public class RegistrationController {
         String username = user.getUsername();
         		
 		 if (bindingResult.hasErrors()){
-			 return "registration_form";
+			 return "regForm";
 	        }
 
         User existing = userService.findByUserName(username);
 
         if (existing != null) {
             logger.warning("User name already exists.");
+            bindingResult.rejectValue("username", "error.user", "There is already a user registered with the username provided");
         }
-        // if (existing != null){
-        // 	theModel.addAttribute("crmUser", new CrmUser());
-		// 	theModel.addAttribute("registrationError", "User name already exists.");
+        
+        if (!bindingResult.hasErrors()) {
+            //Registration successful, saving user
+            userService.save(user);       
+            logger.info("Successfully created user: " + username);
+            return "home";
+        }
 
-		// 	logger.warning("User name already exists.");
-        // 	return "registration-form";
-        // }
-        
-        // // create user account        						
-        userService.save(user);
-        
-        logger.info("Successfully created user: " + username);
-        
-        return "registration_confirmation";
+        return "regForm";
     }
 }
