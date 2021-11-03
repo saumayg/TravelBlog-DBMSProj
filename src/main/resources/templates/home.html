@@ -9,7 +9,24 @@
 	<div th:replace="/fragments/header :: header"></div>
 	<h2>Home Page</h2>
 	<hr>
-	
+	<table class="table table-bordered table-striped">
+		<thead class="thead-dark">
+			<tr>
+				<th>Title</th>
+				<th>Body</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="tempPost : ${post}">
+			
+				<td th:text="${tempPost.title}" />	
+				<td th:text="${tempPost.user.firstName}" />	
+				
+				
+			</tr>
+		</tbody>		
+	</table>
 	<p>
 	
 	</p>

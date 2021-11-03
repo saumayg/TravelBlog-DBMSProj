@@ -7,13 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "role")
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
 
     @Column(name = "name")

@@ -19,37 +19,40 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
 
 	@NotBlank(message = "Username is required")
 	@Size(min = 3, message = "Minimum 3 characters required")
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     private String username;
 
 	@NotBlank(message = "Password is required")
 	@Size(min = 5, message = "Minimum 5 characters required")
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
 	@NotBlank(message = "First name is required")
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
 	@NotBlank(message = "Last name is required")
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
 	@NotBlank(message = "Email is required")
 	@Email(message = "Valid email is required")
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "phone")
@@ -58,8 +61,8 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
         name = "user_role",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id") 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") 
     )
     private Collection<Role> roles;
     
