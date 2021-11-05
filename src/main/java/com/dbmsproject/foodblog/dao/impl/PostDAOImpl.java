@@ -7,7 +7,6 @@ import javax.persistence.Query;
 
 import com.dbmsproject.foodblog.dao.PostDAO;
 import com.dbmsproject.foodblog.entity.Post;
-import com.dbmsproject.foodblog.entity.Tag;
 import com.dbmsproject.foodblog.utils.AppUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,10 +67,24 @@ public class PostDAOImpl implements PostDAO {
 		return post;
 	}
 
+	/// Get a single post using its id (Parameter: Int id)
 	@Override
-	public List<Post> findByTag(List<Tag> tag) {
+	public Post findById(int id) {
 		
-		return null;
+		Post post = entityManager.find(Post.class, id);
+
+		return post;
+	}
+
+	///Get all posts under a particular tag (Parameter: int id)
+	@Override
+	public List<Post> findByTag(int id) {
+		
+		Query query = entityManager.createQuery("select p from Post p join p.tag t where t.id=:tagId");
+		query.setParameter("tagId", id);
+		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
+
+		return post;
 	}
 
 	@Override
@@ -89,13 +102,4 @@ public class PostDAOImpl implements PostDAO {
 		Post dbPost = entityManager.merge(post);
 		post.setId(dbPost.getId());
 	}
-
-	@Override
-	public Post findById(int id) {
-		
-		Post post = entityManager.find(Post.class, id);
-
-		return post;
-	}
-
 }

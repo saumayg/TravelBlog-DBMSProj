@@ -31,12 +31,22 @@ ul {
 	text-align: left;
 }
 
-.page-heading .text-content h2 {
+.page-heading .text-content h4 {
 	color: #fff;
-	font-size: 36px;
+	font-size: 18px;
 	font-weight: 700;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	letter-spacing: 0.5px;
+	margin-top: 15px;
+}
+
+.page-heading .text-content h2 {
+	color: #f48840;
+	font-size: 36px;
+	text-transform: uppercase;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+	
 }
 
 /* Header Style */
@@ -155,6 +165,7 @@ header .navbar {
 .blog-posts .down-content p {
 	padding: 15px 0px;
 	margin: 10px 0px;
+	font-size: 16px;
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
 }
@@ -162,6 +173,7 @@ header .navbar {
 .blog-posts .down-content ul.post-tags li {
 	color: #aaa;
 	display: inline-block;
+	text-transform: capitalize;
 }
 
 .blog-posts .down-content ul.post-tags li:first-child i {
@@ -180,6 +192,51 @@ header .navbar {
 .blog-posts .down-content ul.post-tags li a:hover,
 .blog-posts .down-content ul.post-share li a:hover {
 	color: #f48840;
+}
+
+.blog-posts .comments {
+	margin-top: 30px;
+}
+
+.blog-posts .comments ul li {
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-posts .comments ul li:last-child {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	border-bottom: none;
+}
+
+.blog-posts .comments ul li .author-thumb {
+	display: inline;
+	float: left;
+}
+
+.blog-posts .comments ul li .author-thumb img {
+	max-width: 100px;
+	display: inline;
+}
+
+.blog-posts .comments ul li .comment-content {
+	margin-left: 130px;
+}
+
+.blog-posts .comments ul li .comment-content h4  a{
+	color: #20232e;
+	font-size: 19px;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+}
+
+.blog-posts .comments ul li .comment-content span {
+	font-size: 14px;
+    color: #aaa;
+	font-weight: 400;
+	letter-spacing: 0.25px;
+	margin-left: 20px;
 }
 
 /* Search all posts button */
@@ -245,6 +302,7 @@ header .navbar {
 	color: #20232e;
 	line-height: 30px;
 	transition: all 0.3s;
+	text-transform: capitalize;
 }
 
 .sidebar .recent-posts ul li h5:hover {

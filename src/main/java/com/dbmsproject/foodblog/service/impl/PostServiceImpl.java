@@ -46,4 +46,17 @@ public class PostServiceImpl implements PostService {
 		
 		return postDAO.findLatestPost();
 	}
+
+    /// Get a single post using its id (Parameter: Int id)
+	@Override
+	public Post getPostById(int id) {
+
+		return postDAO.findById(id);
+	}
+
+	// Get all posts under a particular tag (Parameter: int id)
+    public List<Post> getPostByTag(int id) {
+
+		return postDAO.findByTag(id);
+	}
 }

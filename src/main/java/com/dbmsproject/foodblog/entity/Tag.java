@@ -19,28 +19,33 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
 
+///Tag entity
+///(int id, String name, String description, Instant createdAt)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tag")
 public class Tag {
 
-    private static final long serialVersionUID = 1L;
-
+	///Private key for role entity (SQL: id)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private int id;
 
+	///Name of tag (SQL: name)
     @NotBlank(message = "Tag name is required")
     @Column(name = "name", nullable = false)
     private String name;
 
+	///Description of tag(SQL: description)
     @Column(name = "description")
     private String description;
 
+	///Time instant when tag was created (SQL: created_at)
 	@Column(name = "created_at")
 	private Instant createdAt;
 
+	///List of posts which have a particular tag (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -49,6 +54,8 @@ public class Tag {
         inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
     )
     private List<Post> post;
+
+	//Constructors
 
     public Tag() {}
 
@@ -67,6 +74,8 @@ public class Tag {
 		this.createdAt = createdAt;
 		this.post = post;
 	}
+
+	//Getters and Setters
 
 	public int getId() {
 		return id;
@@ -108,9 +117,7 @@ public class Tag {
 		this.post = post;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	//To string method
 
 	@Override
 	public String toString() {

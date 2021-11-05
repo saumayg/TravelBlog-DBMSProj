@@ -14,13 +14,7 @@
         <section class="page-heading">
             <div class="container">
                 <div class="text-content">
-                    <h2 th:if="${tag == null}">Recent Blog Entries</h2>
-                    <div th:if="${tag != null}">
-                        <h2 th:inline = "text">
-                            [[${tag.name}]]
-                        </h2>
-                        <h4 th:text="${tag.description}"></h4>
-                    </div>
+                    <h2 th:text="${postById.title}" style="text-transform: capitalize;"></h2>
                 </div>
             </div>
         </section>
@@ -30,45 +24,69 @@
     <section class="blog-posts grid-system">
         <div class="container">
             <div class="row">
-                <!-- Blog posts -->
+                <!-- Blog post -->
                 <div class="col-lg-8">
                     <div class="row">
-                        <!-- Individual Blog posts -->
-                        <div class="col-lg-6" th:each="tempAllPost : ${allPost}">
+                        <!-- Blog details -->
+                        <div class="col-lg-12">
                             <div class="blog-post">
                                 <div class="blog-thumb">
-                                    <a th:href="@{'/post/' + ${tempAllPost.id}}">
-                                        <!-- Have to work on images -->
-										<img class="post-img" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
-									</a>                                
+                                    <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
                                 </div>
                                 <div class="down-content">
-                                    <a th:href="@{'/post/' + ${tempAllPost.id}}">
-                                        <h4 th:text="${tempAllPost.title}"></h4>
+                                    <a>
+                                        <h4 th:text="${postById.description}" style="font-weight: 300; font-size: 18x;"></h4>
                                     </a>
                                     <ul class="post-info">
                                         <li>
-                                            <!-- Have to add user profile link -->
-                                            <a th:href="@{/}" th:text="${tempAllPost.user.username}"></a>
+                                            <!-- Have to add link for user profile page -->
+                                            <a th:href="@{/}" th:text="${postById.user.username}"></a>
                                         </li>
                                         <li>
-                                            <a th:text="${#temporals.format(tempAllPost.createdAt, 'MMMM dd, yyyy')}"></a>
+                                            <a th:text="${#temporals.format(postById.createdAt, 'MMMM dd, yyyy')}"></a>
                                         </li>
                                         <li>
-                                            <a th:inline = "text">[[${#lists.size(tempAllPost.comment)}]] Comments</a>
+                                            <a th:inline = "text">[[${#lists.size(postById.comment)}]] Comments</a>
                                         </li>
                                     </ul>
-                                    <p th:text="${tempAllPost.description}"></p>
+                                    <p th:text="${postById.body}"></p>
                                     <div class="post-options">
                                         <div class="row">
                                             <ul class="post-tags">
                                                 <li><i class="fa fa-tags"></i></li>
                                                 <li>
-                                                    <a th:each="tempTag, iterStat : ${tempAllPost.tag}" th:href="@{'/post/tag/' + ${tempTag.id}}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                                                    <a th:each="tempTag, iterStat : ${postById.tag}" th:href="@{'/post/tag/' + ${tempTag.id}}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="sidebar-item comments">
+                                <div class="sidebar-heading">
+                                    <h2 th:inline = "text">
+                                        [[${#lists.size(postById.comment)}]] Comments
+                                    </h2>
+                                </div>
+                                <div>
+                                    <ul>
+                                        <li th:each="tempComment : ${postById.comment}">
+                                            <div class="author-thumb">
+                                                <!-- Have to work on images -->
+                                                <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+                                            </div>
+                                            <div class="comment-content">
+                                                <h4 th:inline = "text">
+                                                    <!-- Have to add link for user profile page -->
+                                                    <a th:href="@{/}" th:text = "${tempComment.user.username}"></a>
+                                                    <span th:text="${#temporals.format(postById.createdAt, 'MMMM dd, yyyy')}"></span>
+                                                </h4>
+                                                <p th:text="${tempComment.body}"></p>
+                                            </div>
+                                        </li>                                  
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +109,7 @@
                                         <ul>
                                             <!-- Individual latest post -->
 						  					<li th:each="tempLatestPost : ${latestPost}">
-												<a th:href="@{'/post/' + ${tempLatestPost.id}}">
+												<a th:href="@{/}">
 													<h5 th:text="${tempLatestPost.title}"></h5>
 													<span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
 						  						</a>

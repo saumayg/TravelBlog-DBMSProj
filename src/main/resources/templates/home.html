@@ -14,6 +14,7 @@
 	<!-- Header fragment containing navbar -->
 	<div th:replace="/fragments/header :: header"></div>
 
+	<!-- Can put a scrolling banner -->
 
 	<!-- Body section containg blog posts and sidebar -->
 	<section class="blog-posts">
@@ -26,21 +27,25 @@
 				  		<div class="col-lg-12" th:each="tempRandomPost : ${randomPost}">
 							<div class="blog-post">
 					  			<div class="blog-thumb">
-									<img class="post-img" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
-					  			</div>
+									<a th:href="@{'/post/' + ${tempRandomPost.id}}">
+										<!-- Have to work on images -->
+										<img class="post-img" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+									</a>
+								</div>
 					  			<div class="down-content">
-									<a th:href="@{/}">
+									<a th:href="@{'/post/' + ${tempRandomPost.id}}">
 										<h4 th:text="${tempRandomPost.title}"></h4>
 									</a>
 									<ul class="post-info">
 						  				<li>
+											<!-- Have to link user profile page -->
 											<a th:href="@{/}" th:text="${tempRandomPost.user.username}"></a>
 										</li>
 						  				<li>
-											<a th:href="@{/}" th:text="${#temporals.format(tempRandomPost.createdAt, 'MMMM dd, yyyy')}"></a>
+											<a th:text="${#temporals.format(tempRandomPost.createdAt, 'MMMM dd, yyyy')}"></a>
 										</li>
 						  				<li>
-											<a th:href="@{/}">12 Comments</a>
+											<a th:inline = "text">[[${#lists.size(tempRandomPost.comment)}]] Comments</a>
 										</li>
 									</ul>
 									<p th:text="${tempRandomPost.description}"></p>
@@ -49,7 +54,7 @@
 							  				<ul class="post-tags">
 												<li><i class="fa fa-tags"></i></li>
 												<li>
-													<a th:each="tempTag, iterStat : ${tempRandomPost.tag}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+													<a th:each="tempTag, iterStat : ${tempRandomPost.tag}" th:href="@{'/post/tag/' + ${tempTag.id}}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
 												</li>
 											</ul>
 						  				</div>
@@ -84,7 +89,7 @@
 										<ul>
 											<!-- Individual latest post -->
 						  					<li th:each="tempLatestPost : ${latestPost}">
-												<a th:href="@{/}">
+												<a th:href="@{'/post/' + ${tempLatestPost.id}}">
 													<h5 th:text="${tempLatestPost.title}"></h5>
 													<span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
 						  						</a>
@@ -93,6 +98,7 @@
 					  				</div>
 								</div>
 				  			</div>
+							<!-- This part left start -->
 				  			<div class="col-lg-12">
 								<div class="sidebar-item categories">
 					  				<div class="sidebar-heading">
@@ -130,6 +136,7 @@
 					  				</div>
 								</div>
 				  			</div>
+							<!-- This part left end -->
 						</div>
 			  		</div>
 				</div>

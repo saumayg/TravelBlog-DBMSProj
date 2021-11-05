@@ -134,3 +134,36 @@ VALUES
 (4, 2),
 (4, 3),
 (5, 1);
+
+
+-- Comment table
+CREATE TABLE comment (
+    id int NOT NULL UNIQUE AUTO_INCREMENT,
+    body text NOT NULL,
+    post_id int DEFAULT NULL,
+    user_id int DEFAULT NULL,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY Key (id),
+    KEY FK_COMMENT_POST (post_id),
+    KEY FK_COMMENT_USER (user_id),
+
+    CONSTRAINT FK_COMMENT_POST FOREIGN KEY (post_id)
+    REFERENCES post (id),
+    CONSTRAINT FK_COMMENT_USER FOREIGN KEY (user_id)
+    REFERENCES user (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- DATA FOR comment TABLE
+INSERT INTO comment (body, post_id, user_id, created_at)
+VALUES
+('bod1', 1, 1, CURRENT_TIMESTAMP()),
+('bod2', 2, 1, CURRENT_TIMESTAMP()),
+('bod3', 3, 1, CURRENT_TIMESTAMP()),
+('bod4', 4, 1, CURRENT_TIMESTAMP()),
+('bod5', 5, 1, CURRENT_TIMESTAMP()),
+('bod6', 2, 2, CURRENT_TIMESTAMP()),
+('bod7', 4, 2, CURRENT_TIMESTAMP()),
+('bod8', 3, 2, CURRENT_TIMESTAMP()),
+('bod9', 1, 3, CURRENT_TIMESTAMP()),
+('bod10', 2, 3, CURRENT_TIMESTAMP()),
+('bod11', 5, 3, CURRENT_TIMESTAMP());

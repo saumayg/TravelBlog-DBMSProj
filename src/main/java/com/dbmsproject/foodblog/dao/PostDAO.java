@@ -3,7 +3,6 @@ package com.dbmsproject.foodblog.dao;
 import java.util.List;
 
 import com.dbmsproject.foodblog.entity.Post;
-import com.dbmsproject.foodblog.entity.Tag;
 
 ///Post DAO interface
 public interface PostDAO {
@@ -20,15 +19,15 @@ public interface PostDAO {
     /// Get 3 latest posts among all users 
     public List<Post> findLatestPost();
 
-    // tag
-    public List<Post> findByTag(List<Tag> tag);
+    /// Get a single post using its id (Parameter: Int id)
+    public Post findById(int id);
+
+    // Get all posts under a particular tag (Parameter: int id)
+    public List<Post> findByTag(int id);
 
     // delete
     public void deleteById(int id);
 
     // add / update
     public void saveOrUpdate(Post post);
-
-    // post (id)
-    public Post findById(int id);
 }

@@ -18,4 +18,10 @@ public interface PostService {
     
     ///Get 3 latest posts among all users
     public List<Post> getLatestPost();
+
+    /// Get a single post using its id (Parameter: Int id)
+    public Post getPostById(int id);
+
+    // Get all posts under a particular tag (Parameter: int id)
+    public List<Post> getPostByTag(int id);
 }

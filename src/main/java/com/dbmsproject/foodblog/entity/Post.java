@@ -3,6 +3,7 @@ package com.dbmsproject.foodblog.entity;
 import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,13 +23,11 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 ///Post entity 
-///(Int id, String title, String description, String body, Instant createdAt, User user, List<Tag> tag)
+///(Int id, String title, String description, String body, Instant createdAt, User user, List<Tag> tag, List<Comment> comment)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "post")
 public class Post {
-
-	private static final long serialVersionUID = 1L;
 
 	///Private key for Post entity (SQL: id)
 	@Id
@@ -37,7 +37,7 @@ public class Post {
 
 	///Title for post (SQL: title)
     @NotBlank(message = "Title is required")
-    @Size(min = 3, message = "Minimum 3 characters required")
+    @Size(max = 20, message = "Character limit of 20 exceeded")
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -72,6 +72,15 @@ public class Post {
     )
     private List<Tag> tag;
 
+	/// List of comments under a post (One to many relationship with comment)
+	@OneToMany(
+		mappedBy = "post",
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)
+	private List<Comment> comment;
+
 	//Constructors
 
     public Post() {}
@@ -92,7 +101,7 @@ public class Post {
 			@NotBlank(message = "Title is required") @Size(min = 3, message = "Minimum 3 characters required") String title,
 			@NotBlank(message = " Description is required") @Size(min = 10, message = "Minimum 10 characters required") String description,
 			@NotBlank(message = "Body content is required") @Size(min = 10, message = "Minimum 10 characters required") String body,
-			Instant createdAt, @NotNull User user, List<Tag> tag) {
+			Instant createdAt, @NotNull User user, List<Tag> tag, List<Comment> comment) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -100,6 +109,7 @@ public class Post {
 		this.createdAt = createdAt;
 		this.user = user;
 		this.tag = tag;
+		this.comment = comment;
 	}
 
 	//Getters and Setters
@@ -135,7 +145,7 @@ public class Post {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	
+
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
@@ -160,17 +170,19 @@ public class Post {
 		this.tag = tag;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public List<Comment> getComment() {
+		return comment;
 	}
 
-	//To string method
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
 
+	// To string method
+	
 	@Override
 	public String toString() {
 		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", body=" + body
-				+ ", createdAt=" + createdAt + ", user=" + user + ", tag=" + tag + "]";
+				+ ", createdAt=" + createdAt + ", user=" + user + ", tag=" + tag + ", comment=" + comment + "]";
 	}
-
-    
 }
