@@ -1,3 +1,346 @@
-.nav-item {
-    font-size: 20px;
+body {
+	font-family: 'Roboto', sans-serif;
+	overflow-x: hidden;
+}
+
+p {
+	margin-bottom: 0px;
+	font-size: 15px;
+	font-weight: 400;
+	color: #7a7a7a;
+	line-height: 30px;
+}
+
+a {
+	text-decoration: none!important;
+}
+  
+ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.heading-page {
+	padding-top: 50px;
+	background-color: #20232e;
+	padding-bottom: 50px;
+}
+
+.page-heading {
+	text-align: left;
+}
+
+.page-heading .text-content h2 {
+	color: #fff;
+	font-size: 36px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* Header Style */
+header {
+	width: 100%;
+	height: 100px;
+	background-color: #f7f7f7;
+}
+
+header .navbar {
+	padding: 25px 0px;
+}
+
+.navbar .navbar-brand {
+	margin-top: -12px;
+}
+
+.navbar .navbar-brand h2 {
+	color: #1e1e1e;
+	text-transform: uppercase;
+	font-size: 24px;
+	font-weight: 900;
+}
+
+.navbar .navbar-brand h2 em {
+	font-size: 44px;
+	color: #f48840;
+}
+
+.navbar .navbar-nav .nav-item {
+	margin: 0px 15px;
+}
+
+.navbar .navbar-nav a.nav-link {
+	text-transform: capitalize;
+	font-size: 15px;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #1e1e1e;
+}
+
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .active>.nav-link,
+.navbar .navbar-nav .nav-link.active,
+.navbar .navbar-nav .nav-link.show,
+.navbar .navbar-nav .show>.nav-link {
+	color: #f48840;
+}
+
+
+/* Blog posts */
+.blog-posts {
+	margin-top: 50px;
+}
+
+.blog-posts .blog-post {
+	margin-bottom: 30px;
+}
+
+.blog-posts .blog-thumb img {
+	width: 100%;
+	overflow: hidden;
+}
+
+.post-img {
+	max-height: 350px;
+	object-fit: cover;
+}
+
+.blog-posts .down-content {
+	padding: 20px;
+	border-right: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-posts .down-content h4 {
+	font-size: 22px;
+	text-transform: capitalize;
+	letter-spacing: 0.25px;
+	font-weight: 900;
+	color: #20232e;
+	margin: 10px 0px 12px 0px;
+}
+
+.blog-posts .down-content ul.post-info li {
+	display: inline-block;
+	margin-right: 4px;
+}
+
+.blog-posts .down-content ul.post-info li:after {
+	content: '|';
+	color: #aaa;
+	margin-left: 4px;
+}
+
+.grid-system .down-content ul.post-info li {
+	margin-right: 3px;
+}
+
+.grid-system .down-content ul.post-info li:after {
+	margin-left: 5px;
+}
+
+.blog-posts .down-content ul.post-info li a {
+	font-size: 14px;
+	color: #aaa;
+	font-weight: 400;
+}
+
+.blog-posts .down-content ul.post-info li a:hover {
+	color: #f48840;
+}
+
+.blog-posts .down-content p {
+	padding: 15px 0px;
+	margin: 10px 0px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-posts .down-content ul.post-tags li {
+	color: #aaa;
+	display: inline-block;
+}
+
+.blog-posts .down-content ul.post-tags li:first-child i {
+	color: #f48840;
+	margin-right: 5px;
+}
+
+.blog-posts .down-content ul.post-tags li a,
+.blog-posts .down-content ul.post-share li a {
+	font-size: 14px;
+	color: #aaa;
+	font-weight: 400;
+	transition: all .3s;
+}
+
+.blog-posts .down-content ul.post-tags li a:hover,
+.blog-posts .down-content ul.post-share li a:hover {
+	color: #f48840;
+}
+
+/* Search all posts button */
+.blog-posts .main-button a {
+	height: 60px;
+	line-height: 60px;
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+}
+
+.main-button a {
+	display: inline-block;
+	background-color: #f48840;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 12px 20px;
+	text-transform: uppercase;
+	transition: all .3s;
+}
+
+.main-button a:hover {
+	background-color: #fb9857;
+}
+
+
+/* Sidebar */
+.blog-posts .sidebar-heading h2 {
+	font-size: 18px;
+	text-transform: uppercase;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+	color: #20232e;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 15px;
+	margin-bottom: 25px;
+}
+
+.sidebar {
+	margin-left: 30px;
+}
+
+.sidebar .sidebar-item {
+	margin-top: 30px;
+}
+
+.sidebar .recent-posts ul li {
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #eee;
+}
+
+.sidebar .recent-posts ul li:last-child {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	border-bottom: none;
+}
+
+.sidebar .recent-posts ul li h5 {
+	font-size: 19px;
+	font-weight: 900;
+	color: #20232e;
+	line-height: 30px;
+	transition: all 0.3s;
+}
+
+.sidebar .recent-posts ul li h5:hover {
+	color: #f48840;
+}
+
+.sidebar .recent-posts ul li span {
+	display: block;
+	font-size: 14px;
+	color: #aaa;
+	margin-top: 8px;
+}
+
+/* Login page */
+.log-reg-page {
+	margin-top: 100px;
+	margin-bottom: 158px;
+}
+
+.log-reg-card-description {
+	font-size: 30px;
+}
+
+.log-reg-card {
+	border-radius: 27.5px;
+	background-color: #f7f7f7;
+}
+
+.log-reg-card .scroll {
+	max-height: 485px;
+	overflow-y: auto;
+}
+
+.log-reg-card-img {
+	border-radius: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; 
+}
+
+.log-reg-card .card-body {
+	padding: 60px 60px 60px; 
+}
+
+.log-reg-card form {
+	max-width: 400px; 
+}
+
+.log-reg-card .form-control {
+	border: 1px solid #d5dae2;
+	padding: 15px 25px;
+	margin-bottom: 20px;
+	min-height: 45px;
+	font-size: 13px;
+	line-height: 15;
+}
+
+.log-reg-card .log-reg-btn {
+	padding: 13px 20px 12px;
+	background-color: #000;
+	border-radius: 4px;
+	font-size: 17px;
+	font-weight: bold;
+	line-height: 20px;
+	color: #fff;
+	margin-bottom: 24px; 
+}
+
+.log-reg-card .log-reg-btn:hover {
+	  border: 1px solid #000;
+	  background-color: transparent;
+	  color: #000; 
+}
+
+.log-reg-card-footer-text {
+	font-size: 16px;
+	color: #0d2366;
+	margin-bottom: 60px; 
+}
+
+.log-reg-card-footer-nav a {
+	font-size: 14px;
+	color: #919aa3; 
+}
+
+/* Footer */
+footer {
+	margin-top: 60px;
+	text-align: center;
+	background-color: #20232e;
+	padding: 30px 0px;
+}
+
+footer p {
+	font-size: 13px;
+	text-transform: uppercase;
+	color: #fff;
 }

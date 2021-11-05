@@ -5,13 +5,20 @@ import java.util.List;
 import com.dbmsproject.foodblog.entity.Post;
 import com.dbmsproject.foodblog.entity.Tag;
 
+///Post DAO interface
 public interface PostDAO {
     
-    // all posts
+    /// Get all posts by all users
     public List<Post> findAll();
 
-    // created by
-    public List<Post> findByCreatedBy(int id); 
+    /// Get all posts by a single user (Parameter: Int id)
+    public List<Post> findByUserId(int id); 
+
+    /// Get 3 posts among all users randomly 
+    public List<Post> findRandomPost();
+    
+    /// Get 3 latest posts among all users 
+    public List<Post> findLatestPost();
 
     // tag
     public List<Post> findByTag(List<Tag> tag);

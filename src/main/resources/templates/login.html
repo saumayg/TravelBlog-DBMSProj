@@ -1,148 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-	<title>Login Page</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Travel Blog - Login</title>
 	
-	<!-- Reference Bootstrap and font files -->
-	<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
-  	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-
-	<style>
-		body {
-  			font-family: "Karla", sans-serif;
-			background-color: #d0d0ce;
-			min-height: 100vh; 
-		}
-
-		.login-card-description {
-			font-size: 30px;
-		}
-
-		.login-card {
-  			border: 0;
-  			border-radius: 27.5px;
- 
-		}
-  
-		.login-card-img {
-    		border-radius: 0;
-    		position: absolute;
-    		width: 100%;
-    		height: 100%;
-       		object-fit: cover; 
-		}
-  
-		.login-card .card-body {
-    		padding: 85px 60px 60px; 
-		}
-  
-		.login-card form {
-    		max-width: 326px; 
-		}
-  
-		.login-card .form-control {
-    		border: 1px solid #d5dae2;
-    		padding: 15px 25px;
-    		margin-bottom: 20px;
-    		min-height: 45px;
-    		font-size: 13px;
-    		line-height: 15;
-		}
-  
-		.login-card .login-btn {
-    		padding: 13px 20px 12px;
-    		background-color: #000;
-    		border-radius: 4px;
-    		font-size: 17px;
-    		font-weight: bold;
-    		line-height: 20px;
-    		color: #fff;
-    		margin-bottom: 24px; 
-		}
-    
-		.login-card .login-btn:hover {
-      		border: 1px solid #000;
-      		background-color: transparent;
-      		color: #000; 
-		}
-  
-		.login-card-footer-text {
-    		font-size: 16px;
-    		color: #0d2366;
-    		margin-bottom: 60px; 
-		}
-  
-		.login-card-footer-nav a {
-    		font-size: 14px;
-    		color: #919aa3; 
-		}
-	</style>
 </head>
 
 <body>
+	<!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
 
-	<div class="d-flex align-items-center min-vh-100 py-3 py-md-0">
-		<div class="container">
-			<div class="card login-card">
-				<div class="row no-gutters">
-			  		<div class="col-md-5">
-						<img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="login" class="login-card-img">
-			  		</div>
-			  		<div class="col-md-7">
-						<div class="card-body">
-							<p class="login-card-description">
-								Sign into your account
-							</p>
-				  			<form th:action="@{/login}" method="POST">
-								<!-- Errors, alerts etc -->
-								<div class="form-group">
-									<div>
-										<!-- Login error -->
-										<div th:if="${param.error}" class="alert alert-danger">
-											Invalid username or password.
-										</div>
-										<!-- Logout -->
-										<div th:if="${param.logout}" class="alert alert-success">
-											You have been logged out.
+	<!-- Login card -->
+	<section class="log-reg-page">
+			<div class="container">
+				<div class="card log-reg-card">
+					<div class="row">
+						<div class="col-md-5">
+							<img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="login" class="log-reg-card-img">
+						</div>
+						<div class="col-md-7 scroll">
+							<div class="card-body">
+								<p class="log-reg-card-description">
+									Sign into your account
+								</p>
+								<form th:action="@{/login}" method="POST">
+									<!-- Errors, alerts etc -->
+									<div class="form-group">
+										<div>
+											<!-- Login error -->
+											<div th:if="${param.error}" class="alert alert-danger">
+												Invalid username or password.
+											</div>
+											<!-- Logout -->
+											<div th:if="${param.logout}" class="alert alert-success">
+												You have been logged out.
+											</div>
 										</div>
 									</div>
-								</div>
-								<!-- Username field -->
-					  			<div class="form-group">
-									<input type="text" name="username" id="textinp" class="form-control" placeholder="Username">
-					  			</div>
-								<!-- Password field -->
-					  			<div class="form-group mb-4">
-									<input type="password" name="password" id="password" class="form-control" placeholder="***********">
-					  			</div>
-								<!-- Submit button -->
-					  			<button name="login" id="login" class="btn btn-block login-btn mb-4" type="submit">
-									Login
-								</button>
-							</form>
-							<p class="login-card-footer-text">
-								Don't have an account? 
-								<a th:href="@{/register}" class="text-reset">
-									Register here
-								</a>
-							</p>
-							<nav class="login-card-footer-nav">
-					  			<a href="#!">
-									Terms of use.
-								</a>
-					  			<a href="#!">
-									Privacy policy
-								</a>
-							</nav>
+									<!-- Username field -->
+									<div class="form-group">
+										<input type="text" name="username" id="textinp" class="form-control" placeholder="Username">
+									</div>
+									<!-- Password field -->
+									<div class="form-group mb-4">
+										<input type="password" name="password" id="password" class="form-control" placeholder="***********">
+									</div>
+									<!-- Submit button -->
+									<button name="login" id="login" class="btn btn-block log-reg-btn mb-4" type="submit">
+										Login
+									</button>
+								</form>
+								<p class="log-reg-card-footer-text">
+									Don't have an account? 
+									<a th:href="@{/register}" class="text-reset">
+										Register here
+									</a>
+								</p>
+								<nav class="log-reg-card-footer-nav">
+									<a href="#!">
+										Terms of use.
+									</a>
+									<a href="#!">
+										Privacy policy
+									</a>
+								</nav>
+							</div>
 						</div>
-			  		</div>
+					</div>
 				</div>
-		  	</div>
 		</div>
-	</div>
+	</section>
+
+	<!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
 </body>
 </html>

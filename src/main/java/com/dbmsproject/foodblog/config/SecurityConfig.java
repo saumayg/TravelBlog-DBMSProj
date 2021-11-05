@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +31,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/home").permitAll()
+		.antMatchers("/home", "/login", "/register").permitAll()
 		.and()
 		.formLogin()
 			.loginPage("/login")
@@ -40,29 +41,14 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 		.and()
 		.logout().permitAll()
 		.and()
-		.exceptionHandling().accessDeniedPage("/access-denied");	}
-	
-//	@Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/home", "/registration", "/error", "/blog/**", "/post/**", "/h2-console/**").permitAll()
-//                .antMatchers("/newPost/**", "/commentPost/**", "/createComment/**").hasAnyRole("USER")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .defaultSuccessUrl("/home")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
-////                .and()
-////                .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-//                // Fix for H2 console
-////                .and().headers().frameOptions().disable();
-//    }
+		.exceptionHandling().accessDeniedPage("/access-denied");	
+
+	}
+
+	@Override
+	public void configure(WebSecurity webSecurity) throws Exception {
+        webSecurity.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**");
+    }
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Travel Blog - Blog entries</title>
+</head>
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+
+    <!-- Heading banner -->
+    <div class="heading-page">
+        <section class="page-heading">
+            <div class="container">
+                <div class="text-content">
+                    <h2>Our Recent Blog Entries</h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Body section containing blog posts and sidebar -->
+    <section class="blog-posts grid-system"> <!-- grid-system-->
+        <div class="container">
+            <div class="row">
+                <!-- Blog posts -->
+                <div class="col-lg-8">
+                    <div class="row">
+                        <!-- Individual Blog posts -->
+                        <div class="col-lg-6" th:each="tempAllPost : ${allPost}">
+                            <div class="blog-post">
+                                <div class="blog-thumb">
+                                    <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+                                </div>
+                                <div class="down-content">
+                                    <a th:href="@{/}">
+                                        <h4 th:text="${tempAllPost.title}"></h4>
+                                    </a>
+                                    <ul class="post-info">
+                                        <li>
+                                            <a th:href="@{/}" th:text="${tempAllPost.user.username}"></a>
+                                        </li>
+                                        <li>
+                                            <a th:href="@{/}" th:text="${#temporals.format(tempAllPost.createdAt, 'MMMM dd, yyyy')}"></a>
+                                        </li>
+                                        <li>
+                                            <a th:href="@{/}">12 Comments</a>
+                                        </li>
+                                    </ul>
+                                    <p th:text="${tempAllPost.description}"></p>
+                                    <div class="post-options">
+                                        <div class="row">
+                                            <ul class="post-tags">
+                                                <li><i class="fa fa-tags"></i></li>
+                                                <li>
+                                                    <a th:each="tempTag, iterStat : ${tempAllPost.tag}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="row">
+                            <!-- Recent posts column -->          
+                            <div class="col-lg-12">
+                                <div class="sidebar-item recent-posts">
+                                    <div class="sidebar-heading">
+                                        <h2>
+                                            Recent Posts
+                                        </h2>
+                                    </div>
+                                    <div class="content">
+                                        <ul>
+                                            <!-- Individual latest post -->
+						  					<li th:each="tempLatestPost : ${latestPost}">
+												<a th:href="@{/}">
+													<h5 th:text="${tempLatestPost.title}"></h5>
+													<span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
+						  						</a>
+											</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="sidebar-item categories">
+                                    <div class="sidebar-heading">
+                                        <h2>Categories</h2>
+                                    </div>
+                                    <div class="content">
+                                        <ul>
+                                            <li><a href="#">- Nature Lifestyle</a></li>
+                                            <li><a href="#">- Awesome Layouts</a></li>
+                                            <li><a href="#">- Creative Ideas</a></li>
+                                            <li><a href="#">- Responsive Templates</a></li>
+                                            <li><a href="#">- HTML5 / CSS3 Templates</a></li>
+                                            <li><a href="#">- Creative &amp; Unique</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="sidebar-item tags">
+                                    <div class="sidebar-heading">
+                                        <h2>Tag Clouds</h2>
+                                    </div>
+                                    <div class="content">
+                                        <ul>
+                                            <li><a href="#">Lifestyle</a></li>
+                                            <li><a href="#">Creative</a></li>
+                                            <li><a href="#">HTML5</a></li>
+                                            <li><a href="#">Inspiration</a></li>
+                                            <li><a href="#">Motivation</a></li>
+                                            <li><a href="#">PSD</a></li>
+                                            <li><a href="#">Responsive</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
+</body>
+</html>

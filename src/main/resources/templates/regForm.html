@@ -1,101 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-	<title>Register new user</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Travel Blog - Register</title>
 	
-	<!-- Reference Bootstrap and font files -->
-	<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
-  	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
 
-	<style>
-		body {
-  			font-family: "Karla", sans-serif;
-			background-color: #d0d0ce;
-			min-height: 100vh; 
-		}
-
-		.register-card-description {
-			font-size: 30px;
-		}
-
-		.register-card {
-  			border: 0;
-  			border-radius: 27.5px;
- 
-		}
-  
-		.register-card-img {
-    		border-radius: 0;
-    		position: absolute;
-    		width: 100%;
-    		height: 100%;
-       		object-fit: cover; 
-		}
-  
-		.register-card .card-body {
-    		padding: 85px 60px 60px; 
-		}
-  
-		.register-card form {
-    		max-width: 326px; 
-		}
-  
-		.register-card .form-control {
-    		border: 1px solid #d5dae2;
-    		padding: 15px 25px;
-    		margin-bottom: 20px;
-    		min-height: 45px;
-    		font-size: 13px;
-    		line-height: 15;
-		}
-  
-		.register-card .register-btn {
-    		padding: 13px 20px 12px;
-    		background-color: #000;
-    		border-radius: 4px;
-    		font-size: 17px;
-    		font-weight: bold;
-    		line-height: 20px;
-    		color: #fff;
-    		margin-bottom: 24px; 
-		}
-    
-		.register-card .register-btn:hover {
-      		border: 1px solid #000;
-      		background-color: transparent;
-      		color: #000; 
-		}
-  
-		.register-card-footer-text {
-    		font-size: 16px;
-    		color: #0d2366;
-    		margin-bottom: 60px; 
-		}
-  
-		.register-card-footer-nav a {
-    		font-size: 14px;
-    		color: #919aa3; 
-		}
-	</style>
 </head>
 
 <body>
+	<!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
 
-	<div class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+	<!-- Register card -->
+	<section class="log-reg-page">
 		<div class="container">
-			<div class="card register-card">
-				<div class="row no-gutters">
+			<div class="card log-reg-card">
+				<div class="row">
 			  		<div class="col-md-5">
-						<img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="register" class="register-card-img">
+						<img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="register" class="log-reg-card-img">
 			  		</div>
-			  		<div class="col-md-7">
+			  		<div class="col-md-7 scroll">
 						<div class="card-body">
-							<p class="register-card-description">
-								Sign into your account
+							<p class="log-reg-card-description">
+								Register a new account
 							</p>
 				  			<form th:action="@{/register}" th:object="${user}" method="POST">
 								<!-- Errors, alerts etc -->
@@ -153,17 +82,17 @@
 								</ul>						
 								</div>
 								<!-- Submit button -->
-					  			<button name="register" id="register" class="btn btn-block register-btn mb-4" type="submit">
+					  			<button name="register" id="register" class="btn btn-block log-reg-btn mb-4" type="submit">
 									Register
 								</button>
 							</form>
-							<p class="register-card-footer-text">
+							<p class="log-reg-card-footer-text">
 								Already have an account? 
 								<a th:href="@{/login}" class="text-reset">
 									Login here
 								</a>
 							</p>
-							<nav class="register-card-footer-nav">
+							<nav class="log-reg-card-footer-nav">
 					  			<a href="#!">
 									Terms of use.
 								</a>
@@ -176,6 +105,9 @@
 				</div>
 		  	</div>
 		</div>
-	</div>
+	</section>
+
+	<!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
 </body>
 </html>

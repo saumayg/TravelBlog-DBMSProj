@@ -69,12 +69,10 @@ VALUES
 CREATE TABLE post (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     title varchar(255) NOT NULL,
+    description text NOT NULL,
     body text NOT NULL,
     user_id int DEFAULT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by int NOT NULL,
-    updated_by int NOT NULL,
     PRIMARY KEY (id),
     KEY FK_USER_POST (user_id),
 
@@ -83,13 +81,13 @@ CREATE TABLE post (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- DATA FOR post TABLE
-INSERT INTO post (title, body, user_id, created_at, updated_at, created_by, updated_by)
+INSERT INTO post (title, description, body, user_id, created_at)
 VALUES
-('title1', 'body1', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 2, 3),
-('title2', 'body2', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 2, 2),
-('title3', 'body3', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 3, 3),
-('title4', 'body4', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 3, 1),
-('title5', 'body5', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 1, 1);
+('title1', 'description1', 'body1', 2, CURRENT_TIMESTAMP()),
+('title2', 'description2', 'body2', 2, CURRENT_TIMESTAMP()),
+('title3', 'description3', 'body3', 3, CURRENT_TIMESTAMP()),
+('title4', 'description4', 'body4', 3, CURRENT_TIMESTAMP()),
+('title5', 'description5', 'body5', 1, CURRENT_TIMESTAMP());
 
 -- TAGS TABLE
 CREATE TABLE tag (
@@ -97,18 +95,15 @@ CREATE TABLE tag (
     name varchar(255) NOT NULL,
     description text DEFAULT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_by int NOT NULL,
-    updated_by int NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- DATA FOR tag TABLE
-INSERT INTO tag (name, description, created_at, updated_at, created_by, updated_by)
+INSERT INTO tag (name, description, created_at)
 VALUES
-('tag1', 'description1', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 1, 1),
-('tag2', 'description2', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 2, 1),
-('tag3', 'description3', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 3, 3);
+('tag1', 'description1', CURRENT_TIMESTAMP()),
+('tag2', 'description2', CURRENT_TIMESTAMP()),
+('tag3', 'description3', CURRENT_TIMESTAMP());
 
 -- POST TAG TABLE CONNECTING POST AND TAG
 -- (MANY TO MANY RELATIONSHIP)

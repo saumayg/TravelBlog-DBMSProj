@@ -13,6 +13,7 @@ import com.dbmsproject.foodblog.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+///Implementation of Post DAO interface
 @Repository
 public class PostDAOImpl implements PostDAO {
 
@@ -24,18 +25,20 @@ public class PostDAOImpl implements PostDAO {
 	}
 
 	@Override
+	/// Get all posts by all users
 	public List<Post> findAll() {
 		
-		Query query = entityManager.createQuery("from Post");
+		Query query = entityManager.createQuery("select p from Post p order by p.createdAt desc");
 		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
 		
 		return post;
 	}
 
 	@Override
-	public List<Post> findByCreatedBy(int id) {
+    /// Get all posts by a single user (Parameter: Int id)
+	public List<Post> findByUserId(int id) {
 		
-		Query query = entityManager.createQuery("SELECT p FROM Post p where p.user_id=:userId");
+		Query query = entityManager.createQuery("SELECT p FROM Post p where p.user.id=:userId");
 		query.setParameter("userId", id);
 
 		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
@@ -43,9 +46,31 @@ public class PostDAOImpl implements PostDAO {
 		return post;
 	}
 
+	///Get 3 posts among all users randomly 
+	@Override
+	public List<Post> findRandomPost() {
+		
+		Query query = entityManager.createQuery("select p from Post as p order by rand()");
+		query.setMaxResults(3);
+		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
+
+		return post;
+	}
+	
+	///Get 3 latest posts among all users 
+	@Override
+	public List<Post> findLatestPost() {
+		
+		Query query = entityManager.createQuery("select p from Post as p order by p.createdAt desc");
+		query.setMaxResults(3);
+		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
+
+		return post;
+	}
+
 	@Override
 	public List<Post> findByTag(List<Tag> tag) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

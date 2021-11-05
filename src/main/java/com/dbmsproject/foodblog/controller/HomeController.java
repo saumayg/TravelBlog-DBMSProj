@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+///Controller for home page
 @Controller
 public class HomeController {
 
@@ -20,10 +21,18 @@ public class HomeController {
 		this.postService = postService;
 	}
 	
+	///show home method
 	@GetMapping("/")
 	public String showHome(Model model) {
-		List <Post> post = postService.getAll();
-		model.addAttribute("post", post);
+		
+		//Any 3 random posts among all users
+		List<Post> randomPost = postService.getRandomPost();
+		model.addAttribute("randomPost", randomPost);
+		
+		//3 latest posts by all users
+		List<Post> latestPost = postService.getLatestPost();
+		model.addAttribute("latestPost", latestPost);
+		
 		return "home";
 	}
 }

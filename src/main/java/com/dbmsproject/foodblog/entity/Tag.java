@@ -1,5 +1,6 @@
 package com.dbmsproject.foodblog.entity;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,7 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import com.dbmsproject.foodblog.entity.audit.UserAudit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tag")
-public class Tag extends UserAudit {
+public class Tag {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,6 +38,9 @@ public class Tag extends UserAudit {
     @Column(name = "description")
     private String description;
 
+	@Column(name = "created_at")
+	private Instant createdAt;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -49,14 +52,19 @@ public class Tag extends UserAudit {
 
     public Tag() {}
 
-	public Tag(@NotBlank(message = "Tag name is required") String name, String description) {
+	public Tag(@NotBlank(message = "Tag name is required") String name, String description, Instant createdAt) {
+		super();
 		this.name = name;
 		this.description = description;
+		this.createdAt = createdAt;
 	}
 
-	public Tag(@NotBlank(message = "Tag name is required") String name, String description, List<Post> post) {
+	public Tag(@NotBlank(message = "Tag name is required") String name, String description, Instant createdAt,
+			List<Post> post) {
+		super();
 		this.name = name;
 		this.description = description;
+		this.createdAt = createdAt;
 		this.post = post;
 	}
 
@@ -84,6 +92,14 @@ public class Tag extends UserAudit {
 		this.description = description;
 	}
 
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public List<Post> getPost() {
 		return post;
 	}
@@ -98,8 +114,7 @@ public class Tag extends UserAudit {
 
 	@Override
 	public String toString() {
-		return "Tag [id=" + id + ", name=" + name + ", description=" + description + ", post=" + post + "]";
+		return "Tag [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt
+				+ ", post=" + post + "]";
 	}
-
-
 }
