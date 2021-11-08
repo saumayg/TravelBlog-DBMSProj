@@ -60,8 +60,8 @@
 													</li>
 												</ul>
 											</div>
-											<div class="col-6" style="text-align: right;">
-												<a class="btn btn-outline-dark" th:href="@{'/post/update' + ${postById.id}}">Update</a>
+											<div th:if="${owner}" class="col-6" style="text-align: right;">
+												<a class="btn btn-outline-dark" th:href="@{'/post/update/' + ${postById.id}}">Update</a>
 												<a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
 											</div>
 						  				</div>
@@ -95,6 +95,20 @@
                                         </li>                                  
                                     </ul>
                                 </div>
+                            </div>
+                            <div>
+                                <form th:action="@{/comment/save(postId=${postById.id})}" method="POST" th:object="${comment}">
+                                    <input type="hidden" th:field="*{id}">
+
+                                    <!-- Body field -->
+                                    <div class="form-group">
+                                        <input type="text" th:field="*{body}" name="body" id="bodyInp" class="form-control" placeholder="Body">
+                                    </div>
+                                    <!-- Submit button -->
+                                    <button name="submit" id="submit" type="submit">
+                                        Submit
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

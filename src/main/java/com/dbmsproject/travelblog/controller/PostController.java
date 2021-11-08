@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.dbmsproject.travelblog.entity.Comment;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
 import com.dbmsproject.travelblog.entity.User;
@@ -106,6 +107,8 @@ public class PostController {
         if( principal != null && isPrincipalOwnerOfPost(principal, postById) ) {
             model.addAttribute("owner", true);
         }
+
+        model.addAttribute("comment", new Comment());
 
         return "postDetail";
     }
@@ -216,11 +219,11 @@ public class PostController {
 
     ///Add a new post, post method handler
     @PostMapping("/save")
-    public String addNewPost(
+    public String savePost(
         @Valid @ModelAttribute("post") Post post,
+        BindingResult bindingResult,
         @RequestParam(value = "tgs", required = false) int[] tgs,
         @RequestParam(value = "update", required = false) boolean update,
-        BindingResult bindingResult,
         Principal principal,
         Model model
     ) {

@@ -77,7 +77,7 @@
                     <th:block th:each="tempTag : ${allTag}">
                         <div class="btn-group btn-group-toggle btn-check" data-toggle="buttons">
                           <label class="btn btn-outline-success" th:inline = "text" style="text-transform: capitalize;">
-                            <input type="checkbox" name="tgs" th:value="${tempTag.id}">
+                            <input th:checked = "${#lists.contains(post.tag, tempTag)}" type="checkbox" name="tgs" th:value="${tempTag.id}">
                             [[${tempTag.name}]]
                           </label>
                         </div>

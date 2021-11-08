@@ -25,6 +25,19 @@ public class HomeController {
 		this.postService = postService;
 		this.tagService = tagService;
 	}
+
+	///Private method to add common attributes to sidebar
+    private Model addSidebarAttr(Model model) {
+        //3 latest posts by all users
+		List<Post> latestPost = postService.getLatestPost();
+		model.addAttribute("latestPost", latestPost);
+
+        //List of all tags
+		List<Tag> allTag = tagService.getAll();
+		model.addAttribute("allTag", allTag);
+
+        return model;
+    }
 	
 	///show home method
 	@GetMapping("/")
@@ -34,13 +47,7 @@ public class HomeController {
 		List<Post> randomPost = postService.getRandomPost();
 		model.addAttribute("randomPost", randomPost);
 		
-		//3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
-		
-		//List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		addSidebarAttr(model);
 
 		return "home";
 	}

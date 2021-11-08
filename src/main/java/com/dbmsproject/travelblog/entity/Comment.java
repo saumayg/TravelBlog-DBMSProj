@@ -37,27 +37,23 @@ public class Comment {
     private String body;
 
     ///Time instant at which comment was created (SQL: created_at)
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt = Instant.now();
+    @Column(name = "created_at")
+    private Instant createdAt;
 
     ///Post under which comment exists (SQL: post_id, Many to one relationship with post)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-        name = "post_id"
-        // referencedColumnName = "id",
-        // nullable = false
+        name = "post_id",
+        referencedColumnName = "id"
     )
-    @NotNull
     private Post post;
 
     ///User who created comment (SQL: user_id, Many to one relationship with user)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
         name = "user_id",
-        referencedColumnName = "id",
-        nullable = false
+        referencedColumnName = "id"
     )
-    @NotNull
     private User user;
 
     //Constructors
