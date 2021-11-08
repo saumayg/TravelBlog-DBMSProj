@@ -1,5 +1,6 @@
 package com.dbmsproject.travelblog.service;
 
+import java.security.Principal;
 import java.util.List;
 
 import com.dbmsproject.travelblog.entity.Post;
@@ -22,6 +23,9 @@ public interface PostService {
     /// Get a single post using its id (Parameter: Int id)
     public Post getPostById(int id);
 
-    // Get all posts under a particular tag (Parameter: int id)
+    /// Get all posts under a particular tag (Parameter: int id)
     public List<Post> getPostByTag(int id);
+
+    ///Save a new post
+    public void saveOrUpdate(Post post, Principal principal, int[] tagList, boolean update);
 }

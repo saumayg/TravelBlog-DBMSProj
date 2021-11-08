@@ -126,9 +126,9 @@ public class Comment {
 	
 	//To string method
 
-	@Override
-	public String toString() {
-		return "Comment [id=" + id + ", body=" + body + ", createdAt=" + createdAt + ", post=" + post + ", user=" + user
-				+ "]";
-	};
+	// @Override
+	// public String toString() {
+	// 	return "Comment [id=" + id + ", body=" + body + ", createdAt=" + createdAt + ", post=" + post + ", user=" + user
+	// 			+ "]";
+	// };
 }

@@ -1,6 +1,7 @@
 package com.dbmsproject.travelblog.entity;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -43,24 +44,23 @@ public class Post {
 
     ///Short description for post (SQL: description)
     @NotBlank(message = " Description is required")
-    @Size(min = 10, message = "Minimum 10 characters required")
+    @Size(min = 5, max = 50, message = "Number of characters should be between 5 and 50")
     @Column(name = "description", nullable = false)
     private String description;
     
     ///Body content for post (SQL: body)
     @NotBlank(message = "Body content is required")
-    @Size(min = 10, message = "Minimum 10 characters required")
+    @Size(min = 5, message = "Minimum 5 characters required")
     @Column(name = "body", nullable = false)
     private String body;
 
     ///Time instant at which this post was created (SQL: created_at)
-	@Column(name = "created_at", nullable = false)
-	private Instant createdAt = Instant.now();
+	@Column(name = "created_at")
+	private Instant createdAt;
     
 	///User who created the post (SQL: user_id, Many to one relationship)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @NotNull
     private User user;
 
     /// Tags related to the post (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
@@ -70,14 +70,14 @@ public class Post {
         joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id") 
     )
-    private List<Tag> tag;
+    private List<Tag> tag = new ArrayList<>();
 
 	/// List of comments under a post (One to many relationship with comment)
 	@OneToMany(
 		mappedBy = "post",
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL,
-		orphanRemoval = true
+		fetch = FetchType.LAZY
+		// cascade = CascadeType.ALL,
+		// orphanRemoval = true
 	)
 	private List<Comment> comment;
 
@@ -180,9 +180,9 @@ public class Post {
 
 	// To string method
 	
-	@Override
-	public String toString() {
-		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", body=" + body
-				+ ", createdAt=" + createdAt + ", user=" + user + ", tag=" + tag + ", comment=" + comment + "]";
-	}
+	// @Override
+	// public String toString() {
+	// 	return "Post [id=" + id + ", title=" + title + ", description=" + description + ", body=" + body
+	// 			+ ", createdAt=" + createdAt + ", user=" + user + ", tag=" + tag + ", comment=" + comment + "]";
+	// }
 }

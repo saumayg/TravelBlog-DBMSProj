@@ -49,20 +49,27 @@
                                             <a th:inline = "text">[[${#lists.size(postById.comment)}]] Comments</a>
                                         </li>
                                     </ul>
-                                    <p th:text="${postById.body}"></p>
+                                    <p th:utext="${postById.body}" style="font-size: 18px;"></p>
                                     <div class="post-options">
                                         <div class="row">
-                                            <ul class="post-tags">
-                                                <li><i class="fa fa-tags"></i></li>
-                                                <li>
-                                                    <a th:each="tempTag, iterStat : ${postById.tag}" th:href="@{'/post/tag/' + ${tempTag.id}}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
-                                                </li>
-                                            </ul>
-                                        </div>
+											<div class="col-6">
+												<ul class="post-tags">
+													<li><i class="fa fa-tags"></i></li>
+													<li>
+														<a th:each="tempTag, iterStat : ${postById.tag}" th:href="@{'/post/tag/' + ${tempTag.id}}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+													</li>
+												</ul>
+											</div>
+											<div class="col-6" style="text-align: right;">
+												<a class="btn btn-outline-dark" th:href="@{'/post/update' + ${postById.id}}">Update</a>
+												<a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+											</div>
+						  				</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Comments -->
                         <div class="col-lg-12">
                             <div class="sidebar-item comments">
                                 <div class="sidebar-heading">
@@ -109,7 +116,7 @@
                                         <ul>
                                             <!-- Individual latest post -->
 						  					<li th:each="tempLatestPost : ${latestPost}">
-												<a th:href="@{/}">
+												<a th:href="@{'/post/' + ${tempLatestPost.id}}">
 													<h5 th:text="${tempLatestPost.title}"></h5>
 													<span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
 						  						</a>

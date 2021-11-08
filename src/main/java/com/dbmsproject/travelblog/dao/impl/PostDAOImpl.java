@@ -98,6 +98,8 @@ public class PostDAOImpl implements PostDAO {
 
 	@Override
 	public void saveOrUpdate(Post post) {
+
+		System.out.println(post.getId());
 		
 		Post dbPost = entityManager.merge(post);
 		post.setId(dbPost.getId());

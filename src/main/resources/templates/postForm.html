@@ -1,71 +1,173 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>
-            Post form
-        </title>
-    </head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-    <body>
-        <form th:action="@{/post/new}" th:object="${post}" method="POST">
-            <!-- Errors, alerts etc -->
-            <!-- <div class="form-group">
-                <div>
-                    Registration error
-                    <div th:if="${registrationError}" class="alert alert-danger">
-                        <span th:text="${registrationError}"></span>
-                    </div>
+<head>
+    <!-- Header fragment containing css and js imports -->
+	  <div th:replace="/fragments/header :: header-css"></div>
+    <title>New post</title>
+
+</head>
+
+<body>
+    <!-- Header fragment containing navbar -->
+	  <div th:replace="/fragments/header :: header"></div>
+
+    <!-- Heading banner -->
+    <div class="heading-page">
+      <section class="page-heading">
+          <div class="container">
+            <div class="text-content">
+              <h2 style="text-transform: capitalize;">
+                New post
+              </h2>
+            </div>
+          </div>
+      </section>
+  </div>
+
+  <!-- Body section containig post form and sidebar -->
+  <section class="blog-posts">
+    <div class="container">
+      <div class="row">
+        <!-- Post form -->
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="new-form">
+              <p>
+                Add a new post
+              </p>
+              <hr>
+              <form th:action="@{/post/save(update=${update})}" method="POST" th:object="${post}">
+                  <input type="hidden" th:field="*{id}"/>
+
+                  <!-- Title field -->
+                  <div class="form-group">
+                    <label for="titleInp">Title</label>
+                    <input type="text" th:field="*{title}" name="title" id="titleInp" class="form-control" placeholder="Title">
+                  </div>
+                  <div th:if="${#fields.hasErrors('title')}" style="margin-bottom: 5px;" class="text-danger">
+                    <ul>
+                      <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+                  <!-- Description field -->
+                  <div class="form-group">
+                    <label for="descriptionInp">Description</label>
+                    <textarea name="description" th:field="*{description}" id="descriptionInp" class="textarea form-control" placeholder="Description"></textarea>
+                  </div>
+                  <div th:if="${#fields.hasErrors('description')}" style="margin-bottom: 5px;" class="text-danger">
+                    <ul>
+                      <li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+                  <!-- Body field -->
+                  <div class="form-group">
+                    <label for="bodyInp">Body</label>
+                    <textarea type="text" th:field="*{body}" name="body" id="bodyInp" class="form-control" placeholder="Body"></textarea>
+                  </div>
+                  <div th:if="${#fields.hasErrors('body')}" style="margin-bottom: 5px;" class="text-danger">
+                    <ul>
+                      <li th:each="err : ${#fields.errors('body')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+                  <!-- Tags -->
+                  <div class="form-group">
+                    <label>Tags</label>
+                    <br>
+                    <th:block th:each="tempTag : ${allTag}">
+                        <div class="btn-group btn-group-toggle btn-check" data-toggle="buttons">
+                          <label class="btn btn-outline-success" th:inline = "text" style="text-transform: capitalize;">
+                            <input type="checkbox" name="tgs" th:value="${tempTag.id}">
+                            [[${tempTag.name}]]
+                          </label>
+                        </div>
+                    </th:block>
+
+                  </div>
+                  <!-- Submit Button -->
+                  <button name="submit" id="submit" class="btn btn-outline-dark btn-block" style="margin-top: 50px;" type="submit">
+                    Submit
+                  </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <div class="row">
+            <!-- Recent posts column -->
+              <div class="col-lg-12">
+                <div class="sidebar-item recent-posts">
+                  <div class="sidebar-heading">
+                    <h2>
+                      Recent Posts
+                    </h2>
+                  </div>
+                  <div class="content">
+                    <ul>
+                    <!-- Individual latest post -->
+                      <li th:each="tempLatestPost : ${latestPost}">
+                        <a th:href="@{'/post/' + ${tempLatestPost.id}}">
+                        <h5 th:text="${tempLatestPost.title}"></h5>
+                        <span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-            </div> -->
-            <!-- Title field -->
-              <div class="form-group">
-                <input type="text" th:field="*{title}" name="title" id="textinp" class="form-control" placeholder="Title">
               </div>
-            <!-- <div th:if="${#fields.hasErrors('username')}" style="margin-bottom: 5px" class="text-danger">
-            <ul>
-                  <li th:each="err : ${#fields.errors('username')}" th:text="${err}" />
-            </ul>						
-            </div> -->
-            <!-- Description field -->
-              <div class="form-group">
-                <input type="text" th:field="*{description}" name="description" id="textinp" class="form-control" placeholder = "Description">
+              <!-- This part left start -->
+              <div class="col-lg-12">
+                <div class="sidebar-item categories">
+                  <div class="sidebar-heading">
+                    <h2>
+                      Categories
+                    </h2>
+                  </div>
+                  <div class="content">
+                    <ul>
+                      <li><a href="#">- Nature Lifestyle</a></li>
+                      <li><a href="#">- Awesome Layouts</a></li>
+                      <li><a href="#">- Creative Ideas</a></li>
+                      <li><a href="#">- Responsive Templates</a></li>
+                      <li><a href="#">- HTML5 / CSS3 Templates</a></li>
+                      <li><a href="#">- Creative &amp; Unique</a></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            <!-- <div th:if="${#fields.hasErrors('password')}" style="margin-bottom: 5px" class="text-danger">
-            <ul>
-                  <li th:each="err : ${#fields.errors('password')}" th:text="${err}" />
-            </ul>						
-            </div>	 -->
-            <!-- Body field -->
-            <div class="form-group">
-                <input type="text" th:field="*{body}" name="body" id="textinp" class="form-control" placeholder="Body">
+              <!-- This part left end -->
+              <div class="col-lg-12">
+                <div class="sidebar-item tags">
+                  <div class="sidebar-heading">
+                    <h2>Tags</h2>
+                  </div>
+                  <div class="content">
+                    <ul>
+                      <li th:each="tempAllTag : ${allTag}">
+                        <a th:href="@{'/post/tag/' + ${tempAllTag.id}}" th:text="${tempAllTag.name}"></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            <!-- <div th:if="${#fields.hasErrors('firstName')}" style="margin-bottom: 5px" class="text-danger">
-            <ul>
-                  <li th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-            </ul>						
-            </div> -->
-            <!-- Last name field -->
-            <!-- <div class="form-group">
-                <input type="text" th:field="*{lastName}" name="lastName" id="textinp" class="form-control" placeholder="Last Name">
-              </div>
-            <div th:if="${#fields.hasErrors('lastName')}" style="margin-bottom: 5px" class="text-danger">
-            <ul>
-                  <li th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-            </ul>						
-            </div> -->
-            <!-- Email field -->
-            <!-- <div class="form-group">
-                <input type="email" th:field="*{email}" name="email" id="textinp" class="form-control" placeholder="Email id">
-              </div>
-            <div th:if="${#fields.hasErrors('email')}" style="margin-bottom: 5px" class="text-danger">
-            <ul>
-                  <li th:each="err : ${#fields.errors('email')}" th:text="${err}" />
-            </ul>						
-            </div> -->
-            <!-- Submit button -->
-              <button name="register" id="register" class="btn btn-block log-reg-btn mb-4" type="submit">
-                Submit
-            </button>
-        </form>
-    </body>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer fragment -->
+  <div th:replace="/fragments/footer :: footer"></div>
+
+  <script>
+    $('#bodyInp').summernote({
+      height: 200
+    });
+  </script>
+
+</body>
+
 </html>

@@ -66,13 +66,15 @@ VALUES
 
 -- POST TABLE 
 -- (CONNECTED TO USER BY A MANY TO ONE RELATIONSHIP (MANY POSTS UNDER ONE USER))
+DROP TABLE IF EXISTS post;
+
 CREATE TABLE post (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     title varchar(255) NOT NULL,
     description text NOT NULL,
     body text NOT NULL,
     user_id int DEFAULT NULL,
-    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     KEY FK_USER_POST (user_id),
 
@@ -90,6 +92,8 @@ VALUES
 ('title5', 'description5', 'body5', 1, CURRENT_TIMESTAMP());
 
 -- TAGS TABLE
+DROP TABLE IF EXISTS tag;
+
 CREATE TABLE tag (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     name varchar(255) NOT NULL,
@@ -107,6 +111,8 @@ VALUES
 
 -- POST TAG TABLE CONNECTING POST AND TAG
 -- (MANY TO MANY RELATIONSHIP)
+DROP TABLE IF EXISTS post_tag;
+
 CREATE TABLE post_tag (
     post_id int NOT NULL,
     tag_id int NOT NULL,
@@ -137,6 +143,8 @@ VALUES
 
 
 -- Comment table
+DROP TABLE IF EXISTS comment;
+
 CREATE TABLE comment (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     body text NOT NULL,
