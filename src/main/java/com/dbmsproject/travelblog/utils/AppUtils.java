@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.utils;
+package com.dbmsproject.travelblog.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

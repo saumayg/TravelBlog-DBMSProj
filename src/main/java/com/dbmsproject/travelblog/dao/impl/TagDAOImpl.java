@@ -1,16 +1,16 @@
-package com.dbmsproject.foodblog.dao.impl;
+package com.dbmsproject.travelblog.dao.impl;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.dbmsproject.foodblog.dao.TagDAO;
-import com.dbmsproject.foodblog.entity.Tag;
-import com.dbmsproject.foodblog.utils.AppUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.dbmsproject.travelblog.dao.TagDAO;
+import com.dbmsproject.travelblog.entity.Tag;
+import com.dbmsproject.travelblog.utils.AppUtils;
 
 ///Implementation of Tag DAO Interface
 @Repository

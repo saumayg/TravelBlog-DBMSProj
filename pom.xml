@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dbmsproject</groupId>
-	<artifactId>FoodBlog</artifactId>
+	<artifactId>TravelBlog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>FoodBlog</name>
+	<name>TravelBlog</name>
 	<description>Blog Application</description>
 	<properties>
 		<java.version>11</java.version>

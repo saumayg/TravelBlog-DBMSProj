@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.entity;
+package com.dbmsproject.travelblog.entity;
 
 import java.time.Instant;
 import java.util.List;
@@ -43,7 +43,7 @@ public class Tag {
 
 	///Time instant when tag was created (SQL: created_at)
 	@Column(name = "created_at")
-	private Instant createdAt;
+	private Instant createdAt = Instant.now();
 
 	///List of posts which have a particular tag (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
     @JsonIgnore

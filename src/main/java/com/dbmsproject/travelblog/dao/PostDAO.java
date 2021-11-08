@@ -1,8 +1,8 @@
-package com.dbmsproject.foodblog.dao;
+package com.dbmsproject.travelblog.dao;
 
 import java.util.List;
 
-import com.dbmsproject.foodblog.entity.Post;
+import com.dbmsproject.travelblog.entity.Post;
 
 ///Post DAO interface
 public interface PostDAO {
@@ -10,8 +10,8 @@ public interface PostDAO {
     /// Get all posts by all users
     public List<Post> findAll();
 
-    /// Get all posts by a single user (Parameter: Int id)
-    public List<Post> findByUserId(int id); 
+    /// Get all posts by a single user (Parameter: String username)
+    public List<Post> findByUsername(String username); 
 
     /// Get 3 posts among all users randomly 
     public List<Post> findRandomPost();

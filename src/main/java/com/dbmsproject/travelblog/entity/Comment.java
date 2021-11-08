@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.entity;
+package com.dbmsproject.travelblog.entity;
 
 import java.time.Instant;
 
@@ -38,7 +38,7 @@ public class Comment {
 
     ///Time instant at which comment was created (SQL: created_at)
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
     ///Post under which comment exists (SQL: post_id, Many to one relationship with post)
     @ManyToOne(fetch = FetchType.LAZY)

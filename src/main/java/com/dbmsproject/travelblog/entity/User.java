@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.entity;
+package com.dbmsproject.travelblog.entity;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.controller;
+package com.dbmsproject.travelblog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

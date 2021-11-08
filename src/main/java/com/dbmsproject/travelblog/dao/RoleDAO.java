@@ -1,6 +1,6 @@
-package com.dbmsproject.foodblog.dao;
+package com.dbmsproject.travelblog.dao;
 
-import com.dbmsproject.foodblog.entity.Role;
+import com.dbmsproject.travelblog.entity.Role;
 
 public interface RoleDAO {
 

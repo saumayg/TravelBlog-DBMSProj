@@ -1,8 +1,8 @@
-package com.dbmsproject.foodblog.dao;
+package com.dbmsproject.travelblog.dao;
 
 import java.util.List;
 
-import com.dbmsproject.foodblog.entity.Tag;
+import com.dbmsproject.travelblog.entity.Tag;
 
 ///Tag DAO Interface
 public interface TagDAO {

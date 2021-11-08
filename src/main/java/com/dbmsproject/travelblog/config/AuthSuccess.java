@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.config;
+package com.dbmsproject.travelblog.config;
 
 import java.io.IOException;
 
@@ -12,8 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.dbmsproject.foodblog.entity.User;
-import com.dbmsproject.foodblog.service.UserService;
+import com.dbmsproject.travelblog.entity.User;
+import com.dbmsproject.travelblog.service.UserService;
 
 @Component
 public class AuthSuccess implements AuthenticationSuccessHandler {

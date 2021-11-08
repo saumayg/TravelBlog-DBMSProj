@@ -1,11 +1,8 @@
-package com.dbmsproject.foodblog.controller;
+package com.dbmsproject.travelblog.controller;
 
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
-
-import com.dbmsproject.foodblog.entity.User;
-import com.dbmsproject.foodblog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -18,6 +15,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.dbmsproject.travelblog.entity.User;
+import com.dbmsproject.travelblog.service.UserService;
 
 @Controller
 @RequestMapping("/register")

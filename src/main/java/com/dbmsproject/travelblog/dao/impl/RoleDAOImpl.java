@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.dao.impl;
+package com.dbmsproject.travelblog.dao.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -6,8 +6,8 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.dbmsproject.foodblog.dao.RoleDAO;
-import com.dbmsproject.foodblog.entity.Role;
+import com.dbmsproject.travelblog.dao.RoleDAO;
+import com.dbmsproject.travelblog.entity.Role;
 
 @Repository
 public class RoleDAOImpl implements RoleDAO {

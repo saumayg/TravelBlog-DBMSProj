@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.entity;
+package com.dbmsproject.travelblog.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

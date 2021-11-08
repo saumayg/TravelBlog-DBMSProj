@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.config;
+package com.dbmsproject.travelblog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.dbmsproject.foodblog.service.UserService;
+import com.dbmsproject.travelblog.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -31,7 +31,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/home", "/login", "/register", "/post/**").permitAll()
+		.antMatchers("/").permitAll()
+		.antMatchers("/post/user/**").hasAnyRole("USER")
 		.and()
 		.formLogin()
 			.loginPage("/login")
@@ -39,9 +40,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 			.successHandler(authSuccess)
 			.permitAll()
 		.and()
-		.logout().permitAll()
-		.and()
-		.exceptionHandling().accessDeniedPage("/access-denied");	
+		.logout().permitAll();	
 
 	}
 

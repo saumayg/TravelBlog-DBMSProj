@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Header fragment containing css and js imports -->
+    <div th:replace="/fragments/header :: header-css"></div>
+	<title>404 Error</title>
+    
+</head>
+
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+        
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-page">
+                    <h1>
+                        Oops!
+                    </h1>
+                    <h2>
+                        404 Not Found
+                    </h2>
+                    <div class="error-detail">
+                        Requested page not found!
+                    </div>
+                    <div class="error-action">
+                        <a th:href="@{/}" class="btn btn-outline-dark">
+                            Take Me Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
+</body>
+</html>

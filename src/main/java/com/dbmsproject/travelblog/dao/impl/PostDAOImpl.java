@@ -1,16 +1,16 @@
-package com.dbmsproject.foodblog.dao.impl;
+package com.dbmsproject.travelblog.dao.impl;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.dbmsproject.foodblog.dao.PostDAO;
-import com.dbmsproject.foodblog.entity.Post;
-import com.dbmsproject.foodblog.utils.AppUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.dbmsproject.travelblog.dao.PostDAO;
+import com.dbmsproject.travelblog.entity.Post;
+import com.dbmsproject.travelblog.utils.AppUtils;
 
 ///Implementation of Post DAO interface
 @Repository
@@ -34,11 +34,11 @@ public class PostDAOImpl implements PostDAO {
 	}
 
 	@Override
-    /// Get all posts by a single user (Parameter: Int id)
-	public List<Post> findByUserId(int id) {
+    /// Get all posts by a single user (Parameter: String username)
+	public List<Post> findByUsername(String username) {
 		
-		Query query = entityManager.createQuery("SELECT p FROM Post p where p.user.id=:userId");
-		query.setParameter("userId", id);
+		Query query = entityManager.createQuery("SELECT p FROM Post p where p.user.username=:username order by p.createdAt desc");
+		query.setParameter("username", username);
 
 		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
 
@@ -80,7 +80,7 @@ public class PostDAOImpl implements PostDAO {
 	@Override
 	public List<Post> findByTag(int id) {
 		
-		Query query = entityManager.createQuery("select p from Post p join p.tag t where t.id=:tagId");
+		Query query = entityManager.createQuery("select p from Post p join p.tag t where t.id=:tagId order by p.createdAt desc");
 		query.setParameter("tagId", id);
 		List<Post> post = AppUtils.castList(Post.class, query.getResultList());
 

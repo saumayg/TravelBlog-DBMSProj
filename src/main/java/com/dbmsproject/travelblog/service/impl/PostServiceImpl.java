@@ -1,13 +1,13 @@
-package com.dbmsproject.foodblog.service.impl;
+package com.dbmsproject.travelblog.service.impl;
 
 import java.util.List;
 
-import com.dbmsproject.foodblog.dao.PostDAO;
-import com.dbmsproject.foodblog.entity.Post;
-import com.dbmsproject.foodblog.service.PostService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dbmsproject.travelblog.dao.PostDAO;
+import com.dbmsproject.travelblog.entity.Post;
+import com.dbmsproject.travelblog.service.PostService;
 
 ///Implementation for Post service
 @Service
@@ -27,11 +27,11 @@ public class PostServiceImpl implements PostService {
 		return postDAO.findAll();
 	}
 
-	/// Get all posts by a single user (Parameter: Int id)
+	/// Get all posts by a single user (Parameter: String username)
 	@Override
-	public List<Post> getPostByUserId(int id) {
+	public List<Post> getPostByUsername(String username) {
 		
-		return postDAO.findByUserId(id);
+		return postDAO.findByUsername(username);
 	}
 	
 	///Get 3 posts among all users randomly

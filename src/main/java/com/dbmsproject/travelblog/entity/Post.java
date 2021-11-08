@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.entity;
+package com.dbmsproject.travelblog.entity;
 
 import java.time.Instant;
 import java.util.List;
@@ -55,7 +55,7 @@ public class Post {
 
     ///Time instant at which this post was created (SQL: created_at)
 	@Column(name = "created_at", nullable = false)
-	private Instant createdAt;
+	private Instant createdAt = Instant.now();
     
 	///User who created the post (SQL: user_id, Many to one relationship)
     @ManyToOne(fetch = FetchType.LAZY)

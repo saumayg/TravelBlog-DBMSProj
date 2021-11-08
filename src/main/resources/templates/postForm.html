@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>
+            Post form
+        </title>
+    </head>
+
+    <body>
+        <form th:action="@{/post/new}" th:object="${post}" method="POST">
+            <!-- Errors, alerts etc -->
+            <!-- <div class="form-group">
+                <div>
+                    Registration error
+                    <div th:if="${registrationError}" class="alert alert-danger">
+                        <span th:text="${registrationError}"></span>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Title field -->
+              <div class="form-group">
+                <input type="text" th:field="*{title}" name="title" id="textinp" class="form-control" placeholder="Title">
+              </div>
+            <!-- <div th:if="${#fields.hasErrors('username')}" style="margin-bottom: 5px" class="text-danger">
+            <ul>
+                  <li th:each="err : ${#fields.errors('username')}" th:text="${err}" />
+            </ul>						
+            </div> -->
+            <!-- Description field -->
+              <div class="form-group">
+                <input type="text" th:field="*{description}" name="description" id="textinp" class="form-control" placeholder = "Description">
+              </div>
+            <!-- <div th:if="${#fields.hasErrors('password')}" style="margin-bottom: 5px" class="text-danger">
+            <ul>
+                  <li th:each="err : ${#fields.errors('password')}" th:text="${err}" />
+            </ul>						
+            </div>	 -->
+            <!-- Body field -->
+            <div class="form-group">
+                <input type="text" th:field="*{body}" name="body" id="textinp" class="form-control" placeholder="Body">
+              </div>
+            <!-- <div th:if="${#fields.hasErrors('firstName')}" style="margin-bottom: 5px" class="text-danger">
+            <ul>
+                  <li th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+            </ul>						
+            </div> -->
+            <!-- Last name field -->
+            <!-- <div class="form-group">
+                <input type="text" th:field="*{lastName}" name="lastName" id="textinp" class="form-control" placeholder="Last Name">
+              </div>
+            <div th:if="${#fields.hasErrors('lastName')}" style="margin-bottom: 5px" class="text-danger">
+            <ul>
+                  <li th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+            </ul>						
+            </div> -->
+            <!-- Email field -->
+            <!-- <div class="form-group">
+                <input type="email" th:field="*{email}" name="email" id="textinp" class="form-control" placeholder="Email id">
+              </div>
+            <div th:if="${#fields.hasErrors('email')}" style="margin-bottom: 5px" class="text-danger">
+            <ul>
+                  <li th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+            </ul>						
+            </div> -->
+            <!-- Submit button -->
+              <button name="register" id="register" class="btn btn-block log-reg-btn mb-4" type="submit">
+                Submit
+            </button>
+        </form>
+    </body>
+</html>

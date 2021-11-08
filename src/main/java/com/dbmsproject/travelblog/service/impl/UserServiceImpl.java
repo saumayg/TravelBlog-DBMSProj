@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.service.impl;
+package com.dbmsproject.travelblog.service.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,11 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dbmsproject.foodblog.dao.RoleDAO;
-import com.dbmsproject.foodblog.dao.UserDAO;
-import com.dbmsproject.foodblog.entity.Role;
-import com.dbmsproject.foodblog.entity.User;
-import com.dbmsproject.foodblog.service.UserService;
+import com.dbmsproject.travelblog.dao.RoleDAO;
+import com.dbmsproject.travelblog.dao.UserDAO;
+import com.dbmsproject.travelblog.entity.Role;
+import com.dbmsproject.travelblog.entity.User;
+import com.dbmsproject.travelblog.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {

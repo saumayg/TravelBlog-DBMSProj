@@ -1,13 +1,13 @@
-package com.dbmsproject.foodblog;
+package com.dbmsproject.travelblog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FoodBlogApplication {
+public class TravelBlogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FoodBlogApplication.class, args);
+		SpringApplication.run(TravelBlogApplication.class, args);
 	}
 
 }

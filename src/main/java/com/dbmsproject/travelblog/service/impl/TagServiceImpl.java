@@ -1,13 +1,13 @@
-package com.dbmsproject.foodblog.service.impl;
+package com.dbmsproject.travelblog.service.impl;
 
 import java.util.List;
 
-import com.dbmsproject.foodblog.dao.TagDAO;
-import com.dbmsproject.foodblog.entity.Tag;
-import com.dbmsproject.foodblog.service.TagService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dbmsproject.travelblog.dao.TagDAO;
+import com.dbmsproject.travelblog.entity.Tag;
+import com.dbmsproject.travelblog.service.TagService;
 
 ///Implementation for tag service
 @Service

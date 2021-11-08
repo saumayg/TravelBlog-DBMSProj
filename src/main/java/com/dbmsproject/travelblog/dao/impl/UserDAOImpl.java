@@ -1,4 +1,4 @@
-package com.dbmsproject.foodblog.dao.impl;
+package com.dbmsproject.travelblog.dao.impl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -6,8 +6,8 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.dbmsproject.foodblog.dao.UserDAO;
-import com.dbmsproject.foodblog.entity.User;
+import com.dbmsproject.travelblog.dao.UserDAO;
+import com.dbmsproject.travelblog.entity.User;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -22,7 +22,7 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public User findByUserName(String userName) {
 		
-		Query theQuery = entityManager.createQuery("from User where userName=:uName", User.class);
+		Query theQuery = entityManager.createQuery("from User where username=:uName", User.class);
 		theQuery.setParameter("uName", userName);
 
 		User user = null;

@@ -1,8 +1,8 @@
-package com.dbmsproject.foodblog.service;
+package com.dbmsproject.travelblog.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.dbmsproject.foodblog.entity.User;
+import com.dbmsproject.travelblog.entity.User;
 
 public interface UserService extends UserDetailsService {
     

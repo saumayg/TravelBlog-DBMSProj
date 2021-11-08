@@ -1,8 +1,8 @@
-package com.dbmsproject.foodblog.service;
+package com.dbmsproject.travelblog.service;
 
 import java.util.List;
 
-import com.dbmsproject.foodblog.entity.Tag;
+import com.dbmsproject.travelblog.entity.Tag;
 
 ///Tag service interface
 public interface TagService {
