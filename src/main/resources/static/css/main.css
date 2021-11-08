@@ -194,13 +194,8 @@ header .navbar {
 	color: #f48840;
 }
 
-.blog-posts .comments {
-	margin-top: 30px;
-}
-
 .blog-posts .comments ul li {
-	margin-bottom: 20px;
-	padding-bottom: 20px;
+	margin-bottom: 10px;
 	border-bottom: 1px solid #eee;
 }
 
@@ -213,15 +208,17 @@ header .navbar {
 .blog-posts .comments ul li .author-thumb {
 	display: inline;
 	float: left;
+	align-items: center;
 }
 
 .blog-posts .comments ul li .author-thumb img {
-	max-width: 100px;
+	max-width: 80px;
 	display: inline;
 }
 
 .blog-posts .comments ul li .comment-content {
-	margin-left: 130px;
+	margin-left: 100px;
+	margin-bottom: 5px;
 }
 
 .blog-posts .comments ul li .comment-content h4  a{
@@ -237,6 +234,38 @@ header .navbar {
 	font-weight: 400;
 	letter-spacing: 0.25px;
 	margin-left: 20px;
+}
+
+.blog-posts .submit-comment {
+	margin-top: 20px;
+}
+
+.blog-posts .submit-comment textarea {
+	width: 100%;
+	height: 150px;
+	border: 1px solid white;
+	font-size: 18px;
+	color: white;
+	background-color: #20232e;
+	outline: none;
+	padding: 15px 15px;
+	margin-bottom: 10px;
+	resize: vertical;
+}
+
+.blog-posts .submit-comment button {
+	background-color: #f48840;
+	color: white;
+	font-size: 15px;
+	padding: 12px 20px;
+	text-transform: uppercase;
+	transition: all .3s;
+	border: none;
+	outline: none;
+}
+
+.blog-posts .submit-comment button:hover {
+	background-color: #fb9857;
 }
 
 /* Search all posts button */
@@ -272,7 +301,6 @@ header .navbar {
 	color: #20232e;
 	border-bottom: 1px solid #eee;
 	padding-bottom: 15px;
-	margin-bottom: 25px;
 }
 
 .sidebar {
@@ -280,17 +308,18 @@ header .navbar {
 }
 
 .sidebar .sidebar-item {
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
 .sidebar .recent-posts ul li {
 	margin-bottom: 15px;
 	padding-bottom: 15px;
+	padding-left: 20px;
 	border-bottom: 1px solid #eee;
 }
 
 .sidebar .recent-posts ul li:last-child {
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 	padding-bottom: 0px;
 	border-bottom: none;
 }

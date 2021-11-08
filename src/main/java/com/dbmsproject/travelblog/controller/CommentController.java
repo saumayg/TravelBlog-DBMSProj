@@ -95,8 +95,6 @@ public class CommentController {
                 model.addAttribute("owner", true);
             }
 
-            model.addAttribute("comment", new Comment());
-
             //redirects back showing the error
             return "postDetail";
         }
