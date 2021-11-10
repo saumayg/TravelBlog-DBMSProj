@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 ///Comment Entity
-///(int id, String body, Instant createdAt, Post post, User user)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "comment")
@@ -41,19 +40,19 @@ public class Comment {
     private Instant createdAt;
 
     ///Post under which comment exists (SQL: post_id, Many to one relationship with post)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "post_id",
-        referencedColumnName = "id"
-    )
+    @ManyToOne(
+		fetch = FetchType.LAZY,
+		targetEntity = Post.class
+	)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
     ///User who created comment (SQL: user_id, Many to one relationship with user)
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-        name = "user_id",
-        referencedColumnName = "id"
-    )
+    @ManyToOne(
+		fetch = FetchType.EAGER,
+		targetEntity = User.class
+	)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     //Constructors
@@ -122,9 +121,8 @@ public class Comment {
 	
 	//To string method
 
-	// @Override
-	// public String toString() {
-	// 	return "Comment [id=" + id + ", body=" + body + ", createdAt=" + createdAt + ", post=" + post + ", user=" + user
-	// 			+ "]";
-	// };
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", body=" + body + ", createdAt=" + createdAt + "]";
+	}
 }

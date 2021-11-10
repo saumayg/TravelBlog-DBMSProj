@@ -28,9 +28,9 @@ public class TagDAOImpl implements TagDAO {
 	public List<Tag> findAll() {
 		
 		Query query = entityManager.createQuery("select t from Tag t");
-		List<Tag> tag = AppUtils.castList(Tag.class, query.getResultList());
+		List<Tag> tags = AppUtils.castList(Tag.class, query.getResultList());
 
-		return tag;
+		return tags;
 	}
 
 	///Get tag according to its id (Parameter: int id)

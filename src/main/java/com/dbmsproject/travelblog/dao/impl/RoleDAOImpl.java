@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.dbmsproject.travelblog.dao.RoleDAO;
 import com.dbmsproject.travelblog.entity.Role;
 
+///Implementation of Role DAO Interface
 @Repository
 public class RoleDAOImpl implements RoleDAO {
 
@@ -19,6 +20,7 @@ public class RoleDAOImpl implements RoleDAO {
 		this.entityManager = entityManager;
 	}
 
+	///Find role using its name (Parameter: String rolename)
 	@Override
 	public Role findRoleByName(String roleName) {
 

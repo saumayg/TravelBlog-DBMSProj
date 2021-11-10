@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -111,53 +110,6 @@ public class PostController {
         model.addAttribute("comment", new Comment());
 
         return "postDetail";
-    }
-
-    ///Show all posts belonging to a tag according to id
-    ///Visible to all
-    @GetMapping("/tag/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public String showPostByTagId(
-        @PathVariable int id,
-        Principal principal,
-        Model model
-    ) {
-        //All posts according to tag id
-        List<Post> postByTagId = postService.getPostByTag(id);
-        model.addAttribute("allPost", postByTagId);
-
-        //Tag information
-        Tag tagById = tagService.getTagById(id);
-        model.addAttribute("tag", tagById);
-
-        //Adds 3 latest posts and all tags
-        addSidebarAttr(model);
-
-        return "blogEntries";
-    }
-
-    ///Show all posts bolonging to a user 
-    ///Page to be shown only to user
-    @GetMapping("/user/{username}")
-    public String showAllPostByUser(
-        @PathVariable String username,
-        Principal principal,
-        Model model
-    ) {
-        //All posts by the user
-        List<Post> allPostUser = postService.getPostByUsername(username);
-        // Throws forbidden error when not logged in or, current user is not owner
-        if (principal == null || !principal.getName().equals(username)) {
-            throw new ResponseStatusException(
-                HttpStatus.FORBIDDEN, ""
-            );
-        }
-        model.addAttribute("allPost", allPostUser);
-        
-        //Adds 3 latest posts and all tags
-        addSidebarAttr(model);
-        
-        return "userEntries";
     }
 
     ///Get mapping for new post , shows post form

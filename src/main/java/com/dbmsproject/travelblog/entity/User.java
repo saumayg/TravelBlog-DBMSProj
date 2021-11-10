@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 
 ///User entity
-///(int id, String username, String password, String firstName, String lastName, String email, String phone, Collection<Role> roles, List<Comment> comment)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
@@ -70,7 +70,11 @@ public class User {
     private String phone;
 
 	///Roles a user has (Many to many relationship with roles (USER, ADMIN))
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(
+		fetch = FetchType.EAGER, 
+		cascade = CascadeType.ALL,
+		targetEntity = Role.class
+	)
     @JoinTable(
         name = "user_role",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -81,17 +85,47 @@ public class User {
 	/// List of comments under a user (One to many relationship with comment)
 	@OneToMany(
 		mappedBy = "user",
+		targetEntity = Comment.class,
 		fetch = FetchType.LAZY,
 		cascade = CascadeType.ALL,
 		orphanRemoval = true
 	)
-	private List<Comment> comment;
+	private List<Comment> comments;
+
+	/// User profile photo (SQL: photo_id, One to one mapping)
+	@OneToOne(
+		cascade = CascadeType.ALL,
+		targetEntity = Photo.class,
+		fetch = FetchType.EAGER
+	)
+	@JoinColumn(
+		name = "photo_id",
+		referencedColumnName = "id"
+	)
+	private Photo profilePhoto;
     
+	///Posts under the user (One to many mapping)
+	@OneToMany(
+		mappedBy = "user",
+		targetEntity = Post.class,
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.ALL,
+		orphanRemoval = true
+	)
+	private List<Post> posts;
+
 	//Constructors
 
     public User() {}
 
-	public User(String username, String password, String firstName, String lastName, String email, String phone) {
+	public User(
+			@NotBlank(message = "Username is required") @Size(min = 3, message = "Minimum 3 characters required") String username,
+			@NotBlank(message = "Password is required") @Size(min = 5, message = "Minimum 5 characters required") String password,
+			@NotBlank(message = "First name is required") String firstName,
+			@NotBlank(message = "Last name is required") String lastName,
+			@NotBlank(message = "Email is required") @Email(message = "Valid email is required") String email,
+			String phone) {
+		super();
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -106,7 +140,7 @@ public class User {
 			@NotBlank(message = "First name is required") String firstName,
 			@NotBlank(message = "Last name is required") String lastName,
 			@NotBlank(message = "Email is required") @Email(message = "Valid email is required") String email,
-			String phone, Collection<Role> roles, List<Comment> comment) {
+			String phone, Collection<Role> roles, List<Comment> comments, Photo profilePhoto, List<Post> posts) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -115,7 +149,9 @@ public class User {
 		this.email = email;
 		this.phone = phone;
 		this.roles = roles;
-		this.comment = comment;
+		this.comments = comments;
+		this.profilePhoto = profilePhoto;
+		this.posts = posts;
 	}
 
 	//Getters and setters
@@ -184,24 +220,35 @@ public class User {
 		this.roles = roles;
 	}
 
-	public List<Comment> getComment() {
-		return comment;
+	public List<Comment> getComments() {
+		return comments;
 	}
 
-	public void setComment(List<Comment> comment) {
-		this.comment = comment;
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Photo getProfilePhoto() {
+		return profilePhoto;
+	}
+
+	public void setProfilePhoto(Photo profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 
 	//To string method
-
+	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", roles=" + roles + ", comment="
-				+ comment + "]";
+		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", phone=" + phone + "]";
 	}
-
-	
-    
-    
 }

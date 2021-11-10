@@ -1,16 +1,22 @@
 package com.dbmsproject.travelblog.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
 
 ///Role entity
-///(int id, String name)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "role")
@@ -25,6 +31,19 @@ public class Role {
 	///Name of role (SQL: body, Current roles: User, Admin)
     @Column(name = "name")
     private String name;
+
+	///Users under the role (Many to many relationship)
+	@ManyToMany(
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.ALL,
+		targetEntity = User.class
+	)
+	@JoinTable(
+		name = "user_role",
+		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+	)
+	private List<User> users;
     
 	//Constructors
 
@@ -32,6 +51,12 @@ public class Role {
 
 	public Role(String name) {
 		this.name = name;
+	}
+
+	public Role(String name, List<User> users) {
+		super();
+		this.name = name;
+		this.users = users;
 	}
 
 	//Getters and Setters
@@ -52,8 +77,16 @@ public class Role {
 		this.name = name;
 	}
 
-	//To string method
+	public List<User> getUsers() {
+		return users;
+	}
 
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	//To string method
+	
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", name=" + name + "]";

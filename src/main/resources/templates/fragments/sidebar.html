@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head></head>
+<body>
+    <!-- Sidebar fragment -->
+    <div th:fragment="sidebar (latestPost, allTag)" class="col-lg-4">
+        <div class="sidebar">
+          <div class="row">
+                <!-- Recent posts column -->
+               <div class="col-lg-12">
+                  <div class="sidebar-item recent-posts">
+                        <div class="sidebar-heading">
+                          <h2>
+                              Recent Posts
+                          </h2>
+                        </div>
+                        <div class="content">
+                          <ul>
+                              <!-- Individual latest post -->
+                                <li th:each="tempLatestPost : ${latestPost}">
+                                  <a th:href="@{'/post/' + ${tempLatestPost.id}}">
+                                      <h5 th:text="${tempLatestPost.title}"></h5>
+                                      <span th:text="${#temporals.format(tempLatestPost.createdAt, 'MMMM dd, yyyy')}"></span>
+                                    </a>
+                              </li>
+                          </ul>
+                        </div>
+                  </div>
+                </div>
+              <!-- This part left start -->
+                <div class="col-lg-12">
+                  <div class="sidebar-item categories">
+                        <div class="sidebar-heading">
+                          <h2>
+                              Categories
+                          </h2>
+                        </div>
+                        <div class="content">
+                          <ul>
+                                <li><a href="#">- Nature Lifestyle</a></li>
+                                <li><a href="#">- Awesome Layouts</a></li>
+                                <li><a href="#">- Creative Ideas</a></li>
+                                <li><a href="#">- Responsive Templates</a></li>
+                                <li><a href="#">- HTML5 / CSS3 Templates</a></li>
+                                <li><a href="#">- Creative &amp; Unique</a></li>
+                          </ul>
+                        </div>
+                  </div>
+                </div>
+              <!-- This part left end -->
+                <div class="col-lg-12">
+                  <div class="sidebar-item tags">
+                        <div class="sidebar-heading">
+                          <h2>Tags</h2>
+                        </div>
+                        <div class="content">
+                          <ul>
+                                <li th:each="tempAllTag : ${allTag}">
+                                  <a th:href="@{'/tag/' + ${tempAllTag.id} + '/all'}" th:text="${tempAllTag.name}"></a>
+                              </li>
+                          </ul>
+                        </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+  </div>
+</body>

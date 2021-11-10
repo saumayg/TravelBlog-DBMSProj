@@ -3,6 +3,30 @@ DROP DATABASE IF EXISTS dbms_proj;
 CREATE DATABASE IF NOT EXISTS dbms_proj;
 USE dbms_proj;
 
+-- Album table
+DROP TABLE IF EXISTS album;
+
+CREATE TABLE album (
+    id int NOT NULL UNIQUE AUTO_INCREMENT,
+    name varchar(64) DEFAULT NULL,
+    description text DEFAULT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- Image table
+DROP TABLE IF EXISTS photo;
+
+CREATE TABLE photo (
+    id int NOT NULL UNIQUE AUTO_INCREMENT,
+    name varchar(64) DEFAULT NULL,
+    album_id int DEFAULT NULL, -- many to one relationship (many photos for one album)
+    PRIMARY KEY (id),
+    KEY FK_PHOTO_ALBUM (album_id),
+
+    CONSTRAINT FK_PHOTO_ALBUM FOREIGN KEY (album_id)
+    REFERENCES album (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 -- USER TABLE
 DROP TABLE IF EXISTS user;
 
@@ -14,7 +38,12 @@ CREATE TABLE user (
     last_name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     phone varchar(255),
-    PRIMARY KEY (id)
+    photo_id int DEFAULT NULL, -- One to one relationship
+    PRIMARY KEY (id),
+    KEY FK_USER_PHOTO (photo_id),
+
+    CONSTRAINT FK_USER_PHOTO FOREIGN KEY (photo_id)
+    REFERENCES photo (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- DATA FOR USER TABLE
@@ -42,7 +71,7 @@ VALUES
 DROP TABLE IF EXISTS user_role;
 
 CREATE TABLE user_role (
-    user_id int NOT NULL,
+    user_id int NOT NULL, -- many to many relationship
     role_id int NOT NULL,
     PRIMARY KEY (user_id, role_id),
     KEY FK_ROLE_idx (role_id),
@@ -73,13 +102,17 @@ CREATE TABLE post (
     title varchar(255) NOT NULL,
     description text NOT NULL,
     body text NOT NULL,
-    user_id int DEFAULT NULL,
+    user_id int DEFAULT NULL, -- many to one relationship (many post for one user)
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    album_id int DEFAULT NULL, -- one to one relationship
     PRIMARY KEY (id),
-    KEY FK_USER_POST (user_id),
+    KEY FK_POST_USER (user_id),
+    KEY FK_POST_ALBUM (album_id),
 
-    CONSTRAINT FK_USER_POST FOREIGN KEY (user_id) 
-    REFERENCES user (id)
+    CONSTRAINT FK_POST_USER FOREIGN KEY (user_id) 
+    REFERENCES user (id),
+    CONSTRAINT FK_POST_ALBUM FOREIGN KEY (album_id)
+    REFERENCES album (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- DATA FOR post TABLE
@@ -148,8 +181,8 @@ DROP TABLE IF EXISTS comment;
 CREATE TABLE comment (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     body text NOT NULL,
-    post_id int DEFAULT NULL,
-    user_id int DEFAULT NULL,
+    post_id int DEFAULT NULL, -- many to one relationship (many comments for one post)
+    user_id int DEFAULT NULL, -- many to one relationship (many comments for one user)
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY Key (id),
     KEY FK_COMMENT_POST (post_id),

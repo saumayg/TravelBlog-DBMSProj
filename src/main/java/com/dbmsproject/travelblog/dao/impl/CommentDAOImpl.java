@@ -33,18 +33,6 @@ public class CommentDAOImpl implements CommentDAO {
 		return comment;
 	}
 
-    ///Get all comments under a post
-	@Override
-	public List<Comment> findByPostId(int id) {
-
-		Query query = entityManager.createQuery("select c from Comment c where c.post.id=:postId order by asc");
-		query.setParameter("postId", id);
-
-		List<Comment> comment = AppUtils.castList(Comment.class, query.getResultList());
-
-		return comment;
-	}
-
 	@Override
 	public void saveOrUpdate(Comment comment) {
 

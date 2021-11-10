@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.dbmsproject.travelblog.dao.PostDAO;
+import com.dbmsproject.travelblog.dao.TagDAO;
 import com.dbmsproject.travelblog.dao.UserDAO;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
@@ -25,14 +26,17 @@ public class PostServiceImpl implements PostService {
 
 	private PostDAO postDAO;
 	private UserDAO userDAO;
+	private TagDAO tagDAO;
 
 	@Autowired
 	public PostServiceImpl(
 		PostDAO postDAO,
-		UserDAO userDAO
+		UserDAO userDAO,
+		TagDAO tagDAO
 	) {
 		this.postDAO = postDAO;
 		this.userDAO = userDAO;
+		this.tagDAO = tagDAO;
 	}
 
 	/// Get all posts by all users
@@ -41,14 +45,6 @@ public class PostServiceImpl implements PostService {
 	public List<Post> getAll() {
 
 		return postDAO.findAll();
-	}
-
-	/// Get all posts by a single user (Parameter: String username)
-	@Override
-	@Transactional
-	public List<Post> getPostByUsername(String username) {
-		
-		return postDAO.findByUsername(username);
 	}
 	
 	///Get 3 posts among all users randomly
@@ -83,27 +79,19 @@ public class PostServiceImpl implements PostService {
 		return postById;
 	}
 
-	// Get all posts under a particular tag (Parameter: int id)
-	@Override
-	@Transactional
-    public List<Post> getPostByTag(int id) {
-
-		return postDAO.findByTag(id);
-	}
-
 	///Save or update a new post
 	@Override
 	@Transactional
 	public void saveOrUpdate(Post newPost, Principal principal, int[] tagList, boolean update) {
 
 		//Sets incoming tags
-		newPost.setTag(new ArrayList<>());
+		newPost.setTags(new ArrayList<>());
 		if (tagList != null) {
             Tag tag = null;
             for (int i = 0 ; i < tagList.length; i++) {
                 tag = new Tag();
-                tag.setId(tagList[i]);
-                newPost.getTag().add(tag);
+                tag = tagDAO.findById(tagList[i]);
+                newPost.getTags().add(tag);
             }
         }
 		
@@ -132,7 +120,7 @@ public class PostServiceImpl implements PostService {
 			post.setTitle(newPost.getTitle());
 			post.setBody(newPost.getBody());
 			post.setDescription(newPost.getDescription());
-			post.setTag(newPost.getTag());
+			post.setTags(newPost.getTags());
 
 			//Save updated data
 			postDAO.saveOrUpdate(post);

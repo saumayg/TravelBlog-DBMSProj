@@ -3,6 +3,7 @@ package com.dbmsproject.travelblog.entity;
 import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 ///Tag entity
-///(int id, String name, String description, Instant createdAt)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tag")
@@ -47,13 +47,17 @@ public class Tag {
 
 	///List of posts which have a particular tag (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.ALL,
+		targetEntity = Post.class
+	)
     @JoinTable(
         name = "post_tag",
         joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id")
     )
-    private List<Post> post;
+    private List<Post> posts;
 
 	//Constructors
 
@@ -72,7 +76,7 @@ public class Tag {
 		this.name = name;
 		this.description = description;
 		this.createdAt = createdAt;
-		this.post = post;
+		this.posts = post;
 	}
 
 	//Getters and Setters
@@ -109,19 +113,18 @@ public class Tag {
 		this.createdAt = createdAt;
 	}
 
-	public List<Post> getPost() {
-		return post;
+	public List<Post> getPosts() {
+		return posts;
 	}
 
-	public void setPost(List<Post> post) {
-		this.post = post;
+	public void setPosts(List<Post> post) {
+		this.posts = post;
 	}
 
 	//To string method
-
+	
 	@Override
 	public String toString() {
-		return "Tag [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt
-				+ ", post=" + post + "]";
+		return "Tag [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + "]";
 	}
 }

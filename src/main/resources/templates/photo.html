@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>photo save</title>
+    </head>
+
+    <body>
+        <form enctype="multipart/form-data" th:action="@{/photo/save}" th:object="${photo}" method="POST">
+            <input type="hidden" th:field="*{id}">
+            
+            <input type="file" name="image" accept="image/png, image/jpg, image/jpeg" />
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+</html>

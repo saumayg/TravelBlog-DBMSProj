@@ -16,15 +16,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.EqualsAndHashCode;
 
 ///Post entity 
-///(Int id, String title, String description, String body, Instant createdAt, User user, List<Tag> tag, List<Comment> comment)
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "post")
@@ -59,27 +58,41 @@ public class Post {
 	private Instant createdAt;
     
 	///User who created the post (SQL: user_id, Many to one relationship)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+		fetch = FetchType.EAGER,
+		targetEntity = User.class
+	)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     /// Tags related to the post (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+		fetch = FetchType.LAZY,
+		targetEntity = Tag.class,
+		cascade = CascadeType.ALL
+	)
     @JoinTable(
         name = "post_tag",
         joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id") 
     )
-    private List<Tag> tag = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 
 	/// List of comments under a post (One to many relationship with comment)
 	@OneToMany(
 		mappedBy = "post",
-		fetch = FetchType.LAZY
-		// cascade = CascadeType.ALL,
-		// orphanRemoval = true
+		fetch = FetchType.LAZY,
+		targetEntity = Comment.class
 	)
-	private List<Comment> comment;
+	private List<Comment> comments;
+
+	@OneToOne(
+		cascade = CascadeType.ALL,
+		targetEntity = Album.class,
+		fetch = FetchType.EAGER
+	)
+	@JoinColumn(name = "album_id", referencedColumnName = "id")
+	private Album album;
 
 	//Constructors
 
@@ -98,22 +111,23 @@ public class Post {
 	}
 
 	public Post(
-			@NotBlank(message = "Title is required") @Size(min = 3, message = "Minimum 3 characters required") String title,
-			@NotBlank(message = " Description is required") @Size(min = 10, message = "Minimum 10 characters required") String description,
-			@NotBlank(message = "Body content is required") @Size(min = 10, message = "Minimum 10 characters required") String body,
-			Instant createdAt, @NotNull User user, List<Tag> tag, List<Comment> comment) {
+			@NotBlank(message = "Title is required") @Size(max = 20, message = "Character limit of 20 exceeded") String title,
+			@NotBlank(message = " Description is required") @Size(min = 5, max = 50, message = "Number of characters should be between 5 and 50") String description,
+			@NotBlank(message = "Body content is required") @Size(min = 5, message = "Minimum 5 characters required") String body,
+			Instant createdAt, User user, List<Tag> tags, List<Comment> comments, Album album) {
 		super();
 		this.title = title;
 		this.description = description;
 		this.body = body;
 		this.createdAt = createdAt;
 		this.user = user;
-		this.tag = tag;
-		this.comment = comment;
+		this.tags = tags;
+		this.comments = comments;
+		this.album = album;
 	}
 
 	//Getters and Setters
-
+	
 	public int getId() {
 		return id;
 	}
@@ -162,27 +176,35 @@ public class Post {
 		this.user = user;
 	}
 
-	public List<Tag> getTag() {
-		return tag;
+	public List<Tag> getTags() {
+		return tags;
 	}
 
-	public void setTag(List<Tag> tag) {
-		this.tag = tag;
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 
-	public List<Comment> getComment() {
-		return comment;
+	public List<Comment> getComments() {
+		return comments;
 	}
 
-	public void setComment(List<Comment> comment) {
-		this.comment = comment;
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 
-	// To string method
+	public Album getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(Album album) {
+		this.album = album;
+	}
 	
-	// @Override
-	// public String toString() {
-	// 	return "Post [id=" + id + ", title=" + title + ", description=" + description + ", body=" + body
-	// 			+ ", createdAt=" + createdAt + ", user=" + user + ", tag=" + tag + ", comment=" + comment + "]";
-	// }
+	//To string method
+
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", body=" + body
+				+ ", createdAt=" + createdAt + "]";
+	}
 }
