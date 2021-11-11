@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -59,6 +60,18 @@ public class UserController {
 		model.addAttribute("allTag", allTag);
 
         return model;
+    }
+
+    @GetMapping("/{username}")
+    public String userProfile(
+        @PathVariable String username,
+        Model model
+    ) {
+        //Get user details
+        User user = userService.findByUserName(username);
+        model.addAttribute("user", user);
+
+        return "userProfile";
     }
 
     ///Show all posts bolonging to a user 

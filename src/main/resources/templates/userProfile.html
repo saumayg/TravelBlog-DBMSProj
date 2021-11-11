@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>User Profile</title>
+</head>
+
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+
+	<!-- Heading banner -->
+    <div class="heading-page">
+        <section class="page-heading">
+            <div class="container">
+                <div class="text-content">
+                    <h2 style="text-transform: capitalize;">
+						User Profile
+					</h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div>
+        <p th:text="${user.username}"></p>
+        <p th:text="${user.firstName}"></p>
+        <p th:text="${user.lastName}"></p>
+        <p th:text="${user.email}"></p>
+        <p th:text="${user.phone}"></p>
+        <p th:text="${user.roles}"></p>
+    </div>
+</body>
+
+</html>

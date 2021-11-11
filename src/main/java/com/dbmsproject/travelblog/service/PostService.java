@@ -1,9 +1,12 @@
 package com.dbmsproject.travelblog.service;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
 import com.dbmsproject.travelblog.entity.Post;
+
+import org.springframework.web.multipart.MultipartFile;
 
 ///Post service interface
 public interface PostService {
@@ -21,5 +24,5 @@ public interface PostService {
     public Post getPostById(int id);
 
     ///Save a new post
-    public void saveOrUpdate(Post post, Principal principal, int[] tagList, boolean update);
+    public void saveOrUpdate(Post post, Principal principal, int[] tagList, boolean update, MultipartFile[] multipartFiles) throws IOException;
 }

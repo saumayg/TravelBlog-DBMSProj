@@ -87,7 +87,7 @@ public class Post {
 	private List<Comment> comments;
 
 	@OneToOne(
-		cascade = CascadeType.ALL,
+		cascade = {CascadeType.ALL},
 		targetEntity = Album.class,
 		fetch = FetchType.EAGER
 	)

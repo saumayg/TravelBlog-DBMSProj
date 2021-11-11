@@ -1,5 +1,6 @@
 package com.dbmsproject.travelblog.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.dbmsproject.travelblog.entity.Comment;
@@ -133,6 +135,8 @@ public class PostController {
         //add function
         model.addAttribute("update", false);
 
+        model.addAttribute("imageCounter", 1);
+
         return "postForm";
     }
 
@@ -176,11 +180,11 @@ public class PostController {
         BindingResult bindingResult,
         @RequestParam(value = "tgs", required = false) int[] tgs,
         @RequestParam(value = "update", required = false) boolean update,
+        @RequestParam(value = "image", required = false) MultipartFile[] multipartFiles,
         Principal principal,
         Model model
-    ) {
+    ) throws IOException {
         logger.info("Processing new post form");
-        // logger.info(model.getAttribute("type").toString());
         System.out.println(update);
 
         //If validation errors return form
@@ -195,7 +199,7 @@ public class PostController {
         }
         else {
             //save or update form
-            postService.saveOrUpdate(post, principal, tgs, update);
+            postService.saveOrUpdate(post, principal, tgs, update, multipartFiles);
             return "redirect:/post/" + post.getId();
         }
     }

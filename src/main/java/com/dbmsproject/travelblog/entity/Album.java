@@ -52,7 +52,8 @@ public class Album {
     ///Post under which album was created (One to one relationship)
     @OneToOne(
         mappedBy = "album",
-        targetEntity = Post.class
+        targetEntity = Post.class,
+		cascade = CascadeType.ALL
     )
     private Post post;
 

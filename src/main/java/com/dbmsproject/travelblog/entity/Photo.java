@@ -1,5 +1,7 @@
 package com.dbmsproject.travelblog.entity;
 
+import java.beans.Transient;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -96,6 +98,13 @@ public class Photo {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Transient
+	public String getAlbumImagePath() {
+		if (name == null)
+			return null;
+		return "images/album" + album.getId() + "/" + id + "/" + name;
 	}
 
     //To string method

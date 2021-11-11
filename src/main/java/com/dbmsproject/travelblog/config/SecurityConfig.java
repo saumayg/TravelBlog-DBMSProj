@@ -31,7 +31,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/").permitAll()
+		.antMatchers("/", "/favicon.ico", "/images/**").permitAll()
 		.antMatchers("/post/user/**").hasAnyRole("USER")
 		.and()
 		.formLogin()
@@ -46,7 +46,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity webSecurity) throws Exception {
-        webSecurity.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**");
+        webSecurity.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 	
 	@Bean

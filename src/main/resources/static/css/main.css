@@ -110,6 +110,8 @@ header .navbar {
 .blog-posts .blog-thumb img {
 	width: 100%;
 	overflow: hidden;
+	max-height: 450px;
+	object-fit: cover;
 }
 
 .post-img {
@@ -492,7 +494,30 @@ footer p {
 	width: 100%;
 	overflow: hidden;
 	resize: vertical;
-  }
+}
+
+.imageInput input {
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.imageInput button {
+	background-color: #f48840;
+	color: white;
+	font-size: 15px;
+	padding: 6px 10px;
+	transition: all .3s;
+	border: none;
+	outline: none;
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.imageInput button:hover {
+	background-color: #fb9857;
+}
 
 /* Form checkbox */
 
