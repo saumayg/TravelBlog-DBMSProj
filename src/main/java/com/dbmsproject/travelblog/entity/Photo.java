@@ -100,11 +100,20 @@ public class Photo {
 		this.user = user;
 	}
 
+	///Image path under an album
 	@Transient
 	public String getAlbumImagePath() {
 		if (name == null)
 			return null;
 		return "images/album" + album.getId() + "/" + id + "/" + name;
+	}
+
+	///Profile photo image path
+	@Transient
+	public String getUserImagePath() {
+		if (name == null)
+			return null;
+		return "images/user" + user.getId() + "/" + id + "/" + name;
 	}
 
     //To string method

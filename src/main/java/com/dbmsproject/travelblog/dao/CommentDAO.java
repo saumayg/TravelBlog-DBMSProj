@@ -12,4 +12,6 @@ public interface CommentDAO {
 
     ///Save or Update a comment
     public void saveOrUpdate(Comment comment);
+
+    public void delete(int id);
 }

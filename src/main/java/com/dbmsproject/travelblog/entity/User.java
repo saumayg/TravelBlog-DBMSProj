@@ -114,6 +114,14 @@ public class User {
 	)
 	private List<Post> posts;
 
+	@OneToMany(
+		mappedBy = "user",
+		targetEntity = Album.class,
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.ALL
+	)
+	private List<Album> albums;
+
 	//Constructors
 
     public User() {}
@@ -140,7 +148,8 @@ public class User {
 			@NotBlank(message = "First name is required") String firstName,
 			@NotBlank(message = "Last name is required") String lastName,
 			@NotBlank(message = "Email is required") @Email(message = "Valid email is required") String email,
-			String phone, Collection<Role> roles, List<Comment> comments, Photo profilePhoto, List<Post> posts) {
+			String phone, Collection<Role> roles, List<Comment> comments, Photo profilePhoto, List<Post> posts,
+			List<Album> albums) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -152,6 +161,7 @@ public class User {
 		this.comments = comments;
 		this.profilePhoto = profilePhoto;
 		this.posts = posts;
+		this.albums = albums;
 	}
 
 	//Getters and setters
@@ -243,9 +253,17 @@ public class User {
 	public void setPosts(List<Post> posts) {
 		this.posts = posts;
 	}
-
-	//To string method
 	
+	public List<Album> getAlbums() {
+		return albums;
+	}
+
+	public void setAlbums(List<Album> albums) {
+		this.albums = albums;
+	}
+	
+	//To string method
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName

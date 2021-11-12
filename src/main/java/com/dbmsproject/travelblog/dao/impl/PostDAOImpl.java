@@ -65,6 +65,40 @@ public class PostDAOImpl implements PostDAO {
 		return post;
 	}
 
+	///Get all posts by the user in sorted fashion(Parameter: String username)
+	public List<Post> allPostsSortedByUser(String username) {
+
+		Query query = entityManager.createQuery("select p from Post p where p.user.username=:uName order by p.createdAt desc");
+		query.setParameter("uName", username);
+
+		List<Post> posts = AppUtils.castList(Post.class, query.getResultList());
+
+		return posts;
+	}
+
+	///Get latest 3 posts by the user in sorted fashion(Parameter: String username)
+	public List<Post> allLatestPostsSortedByUser(String username) {
+
+		Query query = entityManager.createQuery("select p from Post p where p.user.username=:uName order by p.createdAt desc");
+		query.setMaxResults(3);
+		query.setParameter("uName", username);
+
+		List<Post> posts = AppUtils.castList(Post.class, query.getResultList());
+
+		return posts;
+	}
+
+	///Get all posts by the tag in sorted fashion(Parameter: int id)
+	public List<Post> allPostsSortedByTag(int id) {
+
+		Query query = entityManager.createQuery("select p from Post p join p.tags t where t.id=:idTag order by p.createdAt desc");
+		query.setParameter("idTag", id);
+
+		List<Post> posts = AppUtils.castList(Post.class, query.getResultList());
+
+		return posts;
+	}
+
 	@Override
 	public void deleteById(int id) {
 		

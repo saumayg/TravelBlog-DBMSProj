@@ -52,7 +52,8 @@ public class UserDAOImpl implements UserDAO {
 	///Save a user
 	@Override
 	public void save(User user) {
-		entityManager.merge(user);
+		User dbUser = entityManager.merge(user);
+		user.setId(dbUser.getId());
 	}
 
 }

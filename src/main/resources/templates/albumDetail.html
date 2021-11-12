@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Album Detail</title>
+</head>
+
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+
+	<!-- Heading banner -->
+    <div class="heading-page">
+        <section class="page-heading">
+            <div class="container">
+                <div class="text-content">
+                    <h2 style="text-transform: capitalize;">
+						<h2 th:inline = "text">
+                            [[${albumById.name}]]
+                        </h2>
+                        <h4 th:text="${albumById.description}"></h4>
+					</h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Body section album details and sidebar -->
+    <section class="blog-albums">
+        <div class="container">
+            <div class="row">
+                <!-- Album details -->
+                <div class="col-lg-8">
+                    <div class="blog-album">
+                        <div class="row">
+                            <ul class="col-6">
+                                <li style="font-size: 30px;">
+                                    <a class="album-det-u" th:href="@{'/user/' + ${albumById.user.username}}" th:text="${albumById.user.username}"></a>
+                                </li>
+                                <li style="font-size: 15px">
+                                    <a style="color: gray;" th:text="${#temporals.format(albumById.createdAt, 'MMMM dd, yyyy')}"></a>
+                                </li>
+                            </ul>
+                            <div class="col-6" th:if="${owner}" style="text-align: right;">
+                                <!-- <button class="btn btn-outline-success" th:href="@{/}"> -->
+                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modalCenter">
+                                    New image
+                                </button>
+                                <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${albumById.id}}">Update details</a>
+                                <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Add post button -->
+						<div class="col-lg-12" th:if="${owner}">
+							
+				  		</div>
+                        <div class="row">
+                            <div th:each="albumPhoto : ${albumById.photos}" class="col-6" style="padding: 8px;">
+                                <img style="width: 100%; padding: 3px; border: 1px solid #eee;" th:src="@{'/' + ${albumPhoto.albumImagePath}}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+				<div th:replace="/fragments/sidebar :: sidebar (latestPost = ${latestPost}, allTag = ${allTag})"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLongTitle">Add image to album</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <form id="imageForm" th:action="@{/photo/save}" method="POST" enctype="multipart/form-data">
+                   <div id="imageList">
+                    <input type="file" name="image" accept="image/png, image/jpg, image/jpeg">
+                </div>
+                <input type="hidden" name="albumId" th:value="${albumById.id}">
+                <button type="submit" id="addImage" onclick="addImageInput()">
+                    Add another image
+                  </button>
+               </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="imageForm" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
+
+    <script>
+        function addImageInput() {
+          var imageInput = document.createElement("input");
+          imageInput.setAttribute("type", "file");
+          imageInput.setAttribute("name", "image");
+          imageInput.setAttribute("accept", "image/png, image/jpg, image/jpeg");
+    
+          document.getElementById("imageList").appendChild(imageInput);
+        }
+    </script>
+</body>
+
+</html>

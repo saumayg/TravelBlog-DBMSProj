@@ -10,6 +10,8 @@ CREATE TABLE album (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     name varchar(64) DEFAULT NULL,
     description text DEFAULT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    user_id int DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -45,6 +47,8 @@ CREATE TABLE user (
     CONSTRAINT FK_USER_PHOTO FOREIGN KEY (photo_id)
     REFERENCES photo (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE album ADD FOREIGN KEY (user_id) REFERENCES user (id);
 
 -- DATA FOR USER TABLE
 INSERT INTO user (username, password, first_name, last_name, email, phone)

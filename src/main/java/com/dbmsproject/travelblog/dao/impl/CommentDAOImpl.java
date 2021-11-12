@@ -41,4 +41,13 @@ public class CommentDAOImpl implements CommentDAO {
 		Comment dbComment = entityManager.merge(comment);
 		comment.setId(dbComment.getId());
 	}
+
+	@Override
+	public void delete(int id) {
+		
+		Query query = entityManager.createQuery("delete from Comment c where c.id=:cmntId");
+		query.setParameter("cmntId", id);
+
+		query.executeUpdate();
+	}
 }

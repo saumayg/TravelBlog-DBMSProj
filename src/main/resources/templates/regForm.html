@@ -26,7 +26,7 @@
 							<p class="log-reg-card-description">
 								Register a new account
 							</p>
-				  			<form th:action="@{/register}" th:object="${user}" method="POST">
+				  			<form enctype="multipart/form-data" th:action="@{/register}" th:object="${user}" method="POST">
 								<!-- Errors, alerts etc -->
 								<div class="form-group">
 									<div>
@@ -36,6 +36,12 @@
 										</div>
 									</div>
 								</div>
+								<hr>
+								<!-- Profile Photo -->
+								<div class="form-group">
+									<label>Profile Photo : </label>
+									<input type="file" name="profile" accept="image/png, image/jpg, image/jpeg" />
+					  			</div>
 								<!-- Username field -->
 					  			<div class="form-group">
 									<input type="text" th:field="*{username}" name="username" id="textinp" class="form-control" placeholder="Username">

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
@@ -27,5 +28,11 @@ public class FileUploadUtil {
         } catch (IOException ioe) {
             throw new IOException("Could not save image : " + fileName, ioe);
         } 
+    }
+
+    public static void deleteFile(String uploadDir) throws IOException {
+        Path deleteFilePath = Paths.get(uploadDir);
+        FileSystemUtils.deleteRecursively(deleteFilePath);
+        System.out.println("Successfully deleted");
     }
 }

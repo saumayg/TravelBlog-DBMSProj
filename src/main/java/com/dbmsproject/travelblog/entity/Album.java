@@ -1,5 +1,6 @@
 package com.dbmsproject.travelblog.entity;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,6 +43,10 @@ public class Album {
     @Column(name = "description")
     private String description;
 
+	///Time instant at which this album was created (SQL: created_at)
+	@Column(name = "created_at")
+	private Instant createdAt;
+
     ///List of photos under an album (One to many relationship)
     @OneToMany(
         mappedBy = "album",
@@ -57,6 +64,13 @@ public class Album {
     )
     private Post post;
 
+	@ManyToOne(
+		fetch = FetchType.LAZY,
+		targetEntity = User.class
+	)
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+	private User user;
+
     //Constructors
 
     public Album() {}
@@ -69,18 +83,20 @@ public class Album {
 		this.description = description;
 	}
 
-	public Album(
+    public Album(
 			@NotBlank(message = "Name is required") @Size(max = 64, message = "Character limit of 64 exceeded") String name,
-			@Size(max = 100, message = "Character limit of 100 exceeded") String description, List<Photo> photos,
-			Post post) {
+			@Size(max = 100, message = "Character limit of 100 exceeded") String description, Instant createdAt,
+			List<Photo> photos, Post post, User user) {
 		super();
 		this.name = name;
 		this.description = description;
+		this.createdAt = createdAt;
 		this.photos = photos;
 		this.post = post;
+		this.user = user;
 	}
 
-    //Getters and Setters
+	//Getters and Setters
 
 	public int getId() {
 		return id;
@@ -122,7 +138,23 @@ public class Album {
 		this.post = post;
 	}
 
-    //To string method
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	//To string method
 
 	@Override
 	public String toString() {

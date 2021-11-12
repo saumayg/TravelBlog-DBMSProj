@@ -4,7 +4,7 @@
 <head>
     <!-- Header fragment containing css and js imports -->
 	  <div th:replace="/fragments/header :: header-css"></div>
-    <title>New post</title>
+    <title>New album</title>
 
 </head>
 
@@ -18,36 +18,36 @@
           <div class="container">
             <div class="text-content">
               <h2 style="text-transform: capitalize;">
-                New post
+                New album
               </h2>
             </div>
           </div>
       </section>
   </div>
 
-  <!-- Body section containig post form and sidebar -->
+  <!-- Body section containig album form and sidebar -->
   <section class="blog-posts">
     <div class="container">
       <div class="row">
-        <!-- Post form -->
+        <!-- album form -->
         <div class="col-lg-8">
           <div class="row">
             <div class="new-form">
               <p>
-                Add a new post
+                Add a new album
               </p>
               <hr>
-              <form th:action="@{/post/save(update=${update})}" method="POST" th:object="${post}" enctype="multipart/form-data">
+              <form th:action="@{/album/save(update=${update})}" method="POST" th:object="${album}" enctype="multipart/form-data">
                   <input type="hidden" th:field="*{id}"/>
 
                   <!-- Title field -->
                   <div class="form-group">
                     <label for="titleInp">Title</label>
-                    <input type="text" th:field="*{title}" name="title" id="titleInp" class="form-control" placeholder="Title">
+                    <input type="text" th:field="*{name}" name="name" id="titleInp" class="form-control" placeholder="Name">
                   </div>
-                  <div th:if="${#fields.hasErrors('title')}" style="margin-bottom: 5px;" class="text-danger">
+                  <div th:if="${#fields.hasErrors('name')}" style="margin-bottom: 5px;" class="text-danger">
                     <ul>
-                      <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+                      <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
                     </ul>
                   </div>
                   <!-- Description field -->
@@ -60,41 +60,8 @@
                       <li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
                     </ul>
                   </div>
-                  <!-- Body field -->
-                  <div class="form-group">
-                    <label for="bodyInp">Body</label>
-                    <textarea type="text" th:field="*{body}" name="body" id="bodyInp" class="form-control" placeholder="Body"></textarea>
-                  </div>
-                  <div th:if="${#fields.hasErrors('body')}" style="margin-bottom: 5px;" class="text-danger">
-                    <ul>
-                      <li th:each="err : ${#fields.errors('body')}" th:text="${err}"></li>
-                    </ul>
-                  </div>
-                  <!-- Tags -->
-                  <div class="form-group">
-                    <label>Tags</label>
-                    <br>
-                    <th:block th:each="tempTag : ${allTag}">
-                        <div class="btn-group btn-group-toggle btn-check" data-toggle="buttons">
-                          <label class="btn btn-outline-success" th:inline = "text" style="text-transform: capitalize;">
-                            <input th:checked = "${#lists.contains(post.tags, tempTag)}" type="checkbox" name="tgs" th:value="${tempTag.id}">
-                            [[${tempTag.name}]]
-                          </label>
-                        </div>
-                    </th:block>
-                  </div>
                   <!-- Album -->
                   <div class="form-group">
-                    <label>Album</label>
-                    <br>
-                    <div class="form-row">
-                      <div class="col-4">
-                        <input type="text" class="form-control" th:field="*{album.name}" placeholder="Album name">
-                      </div>
-                      <div class="col">
-                        <textarea rows="1" type="text" class="form-control" th:field="*{album.description}" placeholder="Album description" />
-                      </div>
-                    </div>
                     <!-- Images in album (only shown for new post) -->
                     <label th:if="${update == false}">Add image(s) to album</label>
                     <div th:if="${update == false}" class="imageInput">
@@ -124,10 +91,6 @@
   <div th:replace="/fragments/footer :: footer"></div>
 
   <script>
-    $('#bodyInp').summernote({
-      height: 200
-    });
-
     function addImageInput() {
       var imageInput = document.createElement("input");
       imageInput.setAttribute("type", "file");

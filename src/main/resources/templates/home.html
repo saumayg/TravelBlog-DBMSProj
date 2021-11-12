@@ -39,8 +39,14 @@
 							<div class="blog-post">
 					  			<div class="blog-thumb">
 									<a th:href="@{'/post/' + ${tempRandomPost.id}}">
-										<!-- Have to work on images -->
-										<img class="post-img" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+										<!-- Default image -->
+										<div th:if="${tempRandomPost.album == null || tempRandomPost.album.photos == null}">
+											<img th:src="@{/images/defaultImage.jpeg}">
+										</div>
+										<!-- Image carousel without slide -->
+										<div th:unless="${tempRandomPost.album == null || tempRandomPost.album.photos == null}">
+											<div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${tempRandomPost.album.photos}, slide = 'false')"></div>
+										</div>
 									</a>
 								</div>
 					  			<div class="down-content">
@@ -49,8 +55,7 @@
 									</a>
 									<ul class="post-info">
 						  				<li>
-											<!-- Have to link user profile page -->
-											<a th:href="@{/}" th:text="${tempRandomPost.user.username}"></a>
+											<a th:href="@{'/user/' + ${tempRandomPost.user.username}}" th:text="${tempRandomPost.user.username}"></a>
 										</li>
 						  				<li>
 											<a th:text="${#temporals.format(tempRandomPost.createdAt, 'MMMM dd, yyyy')}"></a>

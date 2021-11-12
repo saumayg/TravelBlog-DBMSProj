@@ -20,7 +20,8 @@
             <div class="container">
                 <div class="text-content">
                     <h2 style="text-transform: capitalize;">
-						My blog entries
+						Blog entries by - 
+						<span style="text-transform: none;" th:text="${username}"></span>
 					</h2>
                 </div>
             </div>
@@ -38,7 +39,7 @@
 				<div class="col-lg-8">
 					<div class="row">
 						<!-- Add post button -->
-						<div class="col-lg-12">
+						<div class="col-lg-12" th:if="${owner}">
 							<div class="main-button" style="margin-bottom: 25px;">
 					  			<a th:href="@{/post/new}" style="font-size: 20px;">
 									Create a new post
@@ -46,12 +47,18 @@
 							</div>
 				  		</div>
 						<!-- Individual blog posts -->
-				  		<div class="col-lg-12" th:each="tempAllPost : ${user.posts}">
+				  		<div class="col-lg-12" th:each="tempAllPost : ${allPosts}">
 							<div class="blog-post">
 					  			<div class="blog-thumb">
 									<a th:href="@{'/post/' + ${tempAllPost.id}}">
-										<!-- Have to work on images -->
-										<img class="post-img" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+										<!-- Default image -->
+										<div th:if="${tempAllPost.album == null || tempAllPost.album.photos == null}">
+											<img th:src="@{/images/defaultImage.jpeg}">
+										</div>
+										<!-- Image carousel without slide -->
+										<div th:unless="${tempAllPost.album == null || tempAllPost.album.photos == null}">
+											<div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${tempAllPost.album.photos}, slide = 'false')"></div>
+										</div>
 									</a>
 								</div>
 					  			<div class="down-content">
@@ -60,8 +67,7 @@
 									</a>
 									<ul class="post-info">
 						  				<li>
-											<!-- Have to link user profile page -->
-											<a th:href="@{/}" th:text="${tempAllPost.user.username}"></a>
+											<a th:href="@{'/user/' + ${tempAllPost.user.username}}" th:text="${tempAllPost.user.username}"></a>
 										</li>
 						  				<li>
 											<a th:text="${#temporals.format(tempAllPost.createdAt, 'MMMM dd, yyyy')}"></a>
@@ -81,7 +87,7 @@
 													</li>
 												</ul>
 											</div>
-											<div class="col-6" style="text-align: right;">
+											<div th:if="${owner}" class="col-6" style="text-align: right;">
 												<a class="btn btn-outline-dark" th:href="@{'/post/update/' + ${tempAllPost.id}}">Update</a>
 												<a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
 											</div>

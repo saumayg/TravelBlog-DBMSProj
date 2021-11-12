@@ -66,27 +66,30 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" th:href="@{/}">
-                                    Forum
+                                <a class="nav-link" th:href="@{/album}">
+                                    Albums
                                 </a>
                             </li>
                             <li class="nav-item" sec:authorize="hasRole('USER')">
-                                <!-- <a class="nav-link dropdown" th:href="@{/}">
-                                    User Profile
-                                </a> -->
                                 <div class="dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:inline = "text" style="text-transform: none;">
                                         Welcome [[${#authentication.getPrincipal().getUsername()}]]
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" th:href="@{/}">
+                                        <a class="dropdown-item" th:href="@{'/user/' + ${#authentication.getPrincipal().getUsername()}}">
                                             Profile
                                         </a>
-                                        <a class="dropdown-item" th:href="@{'/user/posts'}">
+                                        <a class="dropdown-item" th:href="@{'/user/' + ${#authentication.getPrincipal().getUsername()} + '/posts'}">
                                             My Posts
+                                        </a>
+                                        <a class="dropdown-item" th:href="@{'/user/' + ${#authentication.getPrincipal().getUsername()} + '/albums'}">
+                                            My Albums
                                         </a>
                                         <a class="dropdown-item" th:href="@{/post/new}">
                                             New Post
+                                        </a>
+                                        <a class="dropdown-item" th:href="@{/album/new}">
+                                            New Album
                                         </a>
                                     </div>
                                 </div>

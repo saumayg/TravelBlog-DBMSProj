@@ -1,5 +1,6 @@
 package com.dbmsproject.travelblog.controller;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dbmsproject.travelblog.entity.User;
 import com.dbmsproject.travelblog.service.UserService;
@@ -44,14 +47,16 @@ public class RegistrationController {
     public String processRegistrationForm(
         @Valid @ModelAttribute("user") User user,
         BindingResult bindingResult,
+        @RequestParam(value = "profile", required = false) MultipartFile multipartFile,
         Model model
-    ) {
+    ) throws IOException {
 
 		logger.info("Processing registration form ");
 
         String username = user.getUsername();
         		
 		 if (bindingResult.hasErrors()){
+             System.out.println(bindingResult.getAllErrors().toString());
 			 return "regForm";
 	        }
 
@@ -64,9 +69,9 @@ public class RegistrationController {
         
         if (!bindingResult.hasErrors()) {
             //Registration successful, saving user
-            userService.save(user);       
+            userService.save(user, false, multipartFile);       
             logger.info("Successfully created user: " + username);
-            return "home";
+            return "redirect:/";
         }
 
         return "regForm";

@@ -68,7 +68,9 @@ public class TagController {
         //Tag information
         Tag tagById = tagService.getTagById(id);
         model.addAttribute("tag", tagById);
-        model.addAttribute("allPost", tagById.getPosts());
+
+        List<Post> posts = tagService.getAllPostsSorted(id);
+        model.addAttribute("allPost", posts);
 
         //Adds 3 latest posts and all tags
         addSidebarAttr(model);

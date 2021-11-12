@@ -23,14 +23,185 @@
         </section>
     </div>
 
-    <div>
-        <p th:text="${user.username}"></p>
-        <p th:text="${user.firstName}"></p>
-        <p th:text="${user.lastName}"></p>
-        <p th:text="${user.email}"></p>
-        <p th:text="${user.phone}"></p>
-        <p th:text="${user.roles}"></p>
-    </div>
+    <section class="user-profile">
+        <form th:object="${user}" method="POST" th:action="@{/user/update}">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{username}">
+            <input type="hidden" th:field="*{password}">
+            <div class="row">
+                <!-- Profile photo -->
+                <div class="col-4">
+                    <div th:if="${user.profilePhoto == null}">
+                        <img th:src="@{/images/defaultUser.png}">
+                    </div>
+                    <div th:unless="${user.profilePhoto == null}">
+                        <img th:src = "@{'/' + ${user.profilePhoto.userImagePath}}">
+                    </div>
+                    <br>
+                    <button th:if="${update == false}" type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#modalCenter">
+                        Update profile photo
+                    </button>
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        <h1 class="col-6" th:text="${user.username}"></h1>
+                        <div class="col-6" th:if="${owner}" style="text-align: right;">
+                            <a class="btn btn-outline-dark" th:unless="${update}" th:href="@{'/user/' + ${user.username} + '/update'}">Update</a>
+                            <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="firstName">First Name</label>
+                            <input type="text" th:field="*{firstName}" name="firstName" id="firstName" class="form-control" th:disabled="${update == false}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" th:field="*{lastName}" name="lastName" id="lastName" class="form-control" th:disabled="${update == false}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="email" th:field="*{email}" name="email" id="email" class="form-control" th:disabled="${update == false}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="phone">Contact no.</label>
+                            <input type="text" th:field="*{phone}" name="phone" id="phone" class="form-control" th:disabled="${update == false}">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-dark" th:if="${update}">Update</button>
+                    <a th:href="@{'/user/' + ${user.username}}" class="btn btn-outline-success" th:if="${update}">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- User content like latest albums and posts -->
+    <section class="user-content" th:unless="${update}">
+        <div class="row">
+            <!-- Latest posts -->
+            <div class="col-lg-6 latest-post">
+                <div class="row">
+                    <h2 class="col-6">Latest Posts</h2>
+                    <div class="col-6" style="text-align: right;">
+                        <a class="orange-cstm-btn" name="allPosts" id="submit" th:href="@{'/user/' + ${user.username} + '/posts'}">
+                            All posts
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-lg-12 blog-posts" th:each="templatestPost : ${latestPosts}" style="padding-left: 50px; padding-right: 50px;">
+                    <div class="blog-post">
+                        <div class="blog-thumb">
+                            <a th:href="@{'/post/' + ${templatestPost.id}}">
+                                <!-- Default image -->
+                                <div th:if="${templatestPost.album == null || templatestPost.album.photos == null}">
+                                    <img th:src="@{/images/defaultImage.jpeg}">
+                                </div>
+                                <!-- Image carousel without slide -->
+                                <div th:unless="${templatestPost.album == null || templatestPost.album.photos == null}">
+                                    <div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${templatestPost.album.photos}, slide = 'false')"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="down-content">
+                            <a th:href="@{'/post/' + ${templatestPost.id}}">
+                                <h4 th:text="${templatestPost.title}"></h4>
+                            </a>
+                            <ul class="post-info">
+                                <li>
+                                    <a th:href="@{'/user/' + ${templatestPost.user.username}}" th:text="${templatestPost.user.username}"></a>
+                                </li>
+                                <li>
+                                    <a th:text="${#temporals.format(templatestPost.createdAt, 'MMMM dd, yyyy')}"></a>
+                                </li>
+                                <li>
+                                    <a th:inline = "text">[[${#lists.size(templatestPost.comments)}]] Comments</a>
+                                </li>
+                            </ul>
+                            <p th:text="${templatestPost.description}"></p>
+                            <div class="post-options">
+                                <div class="row">
+                                    <ul class="post-tags">
+                                        <li><i class="fa fa-tags"></i></li>
+                                        <li>
+                                            <a th:each="tempTag, iterStat : ${templatestPost.tags}" th:href="@{'/tag/' + ${tempTag.id} + '/all'}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 latest-album">
+                <div class="row">
+                    <h2 class="col-6">Latest Albums</h2>
+                    <div class="col-6" style="text-align: right;">
+                        <a class="orange-cstm-btn" name="allAlbums" id="submit" th:href="@{'/user/' + ${user.username} + '/albums'}">
+                            All albums
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-lg-12 blog-albums" th:each="tempLatestAlbum : ${latestAlbums}" style="padding-left: 50px; padding-right: 50px;">
+                    <div class="blog-album">
+                        <div class="album-content">
+                            <a th:href="@{'/album/' + ${tempLatestAlbum.id}}">
+                                <h3 th:text="${tempLatestAlbum.name}"></h3>
+                            </a>
+                            <ul class="album-info">
+                                <li>
+                                    <a th:href="@{'/user/' + ${tempLatestAlbum.user.username}}" th:text="${tempLatestAlbum.user.username}"></a>
+                                </li>
+                                <li>
+                                    <a th:text="${#temporals.format(tempLatestAlbum.createdAt, 'MMMM dd, yyyy')}"></a>
+                                </li>
+                            </ul>
+                            <p th:text="${tempLatestAlbum.description}"></p>
+                            <div class="album-images">
+                                <div class="album-image" th:each="albumPhoto : ${tempLatestAlbum.photos}">
+                                    <img th:src="@{'/' + ${albumPhoto.albumImagePath}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLongTitle">Add image to album</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <form id="imageForm" th:action="@{/user/update/profilePhoto}" method="POST" enctype="multipart/form-data">
+                   <div id="imageList">
+                    <input type="file" name="image" accept="image/png, image/jpg, image/jpeg">
+                    <input type="hidden" name="username" th:value="${user.username}">
+                </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="imageForm" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Footer fragment -->
+	  <div th:replace="/fragments/footer :: footer"></div>
 </body>
 
 </html>

@@ -21,11 +21,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 ///Controller for comment related services
 @Controller
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -70,7 +73,7 @@ public class CommentController {
     }
 
     ///Save post method handler
-    @PostMapping("/comment/save")
+    @PostMapping("/save")
     public String saveComment(
         @Valid @ModelAttribute("comment") Comment comment,
         BindingResult bindingResult,
@@ -103,5 +106,15 @@ public class CommentController {
             commentService.saveOrUpdate(comment, principal, postId);
             return "redirect:/post/" + postId;
         }
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteComment(
+        @PathVariable int id,
+        @RequestParam("postId") int postId,
+        Model model
+    ) {
+        commentService.delete(id);
+        return "redirect:/post/" + postId;
     }
 }

@@ -19,6 +19,12 @@ public class PhotoDAOImpl implements PhotoDAO {
     }
 
     @Override
+    public Photo findById(int id) {
+
+        return entityManager.find(Photo.class, id);
+    }
+
+    @Override
     public void save(Photo photo) {
         Photo dbPhoto = entityManager.merge(photo);
         photo.setId(dbPhoto.getId());

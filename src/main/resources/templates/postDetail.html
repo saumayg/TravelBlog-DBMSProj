@@ -31,12 +31,13 @@
                         <div class="col-lg-12">
                             <div class="blog-post">
                                 <div class="blog-thumb">
-                                    <!-- <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt=""> -->
+                                    <!-- Default image -->
                                     <div th:if="${postById.album == null || postById.album.photos == null}">
                                         <img th:src="@{/images/defaultImage.jpeg}">
                                     </div>
+                                    <!-- Image carousel with slide -->
                                     <div th:unless="${postById.album == null || postById.album.photos == null}">
-                                        <img th:src="@{'/' + ${postById.album.photos[0].albumImagePath}}">
+                                        <div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${postById.album.photos}, slide = '6000')"></div>
                                     </div>
                                 </div>
                                 <div class="down-content">
@@ -45,8 +46,7 @@
                                     </a>
                                     <ul class="post-info">
                                         <li>
-                                            <!-- Have to add link for user profile page -->
-                                            <a th:href="@{/}" th:text="${postById.user.username}"></a>
+                                            <a th:href="@{'/user/' + ${postById.user.username}}" th:text="${postById.user.username}"></a>
                                         </li>
                                         <li>
                                             <a th:text="${#temporals.format(postById.createdAt, 'MMMM dd, yyyy')}"></a>
@@ -75,6 +75,44 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-12" th:unless="${postById.album == null}">
+                            <div class="sidebar-heading">
+                                <h2>
+                                    Album
+                                </h2>
+                            </div>
+                            <div class="blog-albums" style="margin-top: 20px;">
+                                <div class="blog-album">
+                                    <div class="album-content">
+                                      <div class="row">	
+                                          <div class="col-6">
+                                              <a th:href="@{'/album/' + ${postById.album.id}}">
+                                                  <h3 th:text="${postById.album.name}"></h3>
+                                              </a>
+                                              <ul class="album-info">
+                                                    <li>
+                                                      <a th:href="@{'/user/' + ${postById.user.username}}" th:text="${postById.user.username}"></a>
+                                                  </li>
+                                                    <li>
+                                                      <a th:text="${#temporals.format(postById.album.createdAt, 'MMMM dd, yyyy')}"></a>
+                                                  </li>
+                                              </ul>
+                                          </div>		
+                                          <div class="col-6" th:if="${owner}" style="text-align: right;">
+                                              <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${postById.album.id}}">Update</a>
+                                              <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+                                          </div>						  
+                                      </div>
+                                      <p th:text="${postById.album.description}"></p>
+                                      <div class="album-images">
+                                          <div class="album-image" th:each="albumPhoto : ${postById.album.photos}">
+                                              <img th:src="@{'/' + ${albumPhoto.albumImagePath}}">
+                                          </div>
+                                      </div>
+                                    </div>
+                              </div>
+                            </div>
+                        </div>
                         <!-- Comments -->
                         <div class="col-lg-12">
                             <div class="comments">
@@ -87,14 +125,28 @@
                                     <ul>
                                         <li th:each="tempComment : ${postById.comments}">
                                             <div class="author-thumb">
-                                                <!-- Have to work on images -->
-                                                <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Travel_Insights_with_Google_Hero_Image_1.max-1000x1000.jpg" alt="">
+                                                <div th:if="${tempComment.user.profilePhoto == null}">
+                                                    <img th:src="@{/images/defaultUser.png}">
+                                                </div>
+                                                <div th:unless="${tempComment.user.profilePhoto == null}">
+                                                    <img th:src = "@{'/' + ${tempComment.user.profilePhoto.userImagePath}}">
+                                                </div>
                                             </div>
                                             <div class="comment-content">
                                                 <h4 th:inline = "text">
-                                                    <!-- Have to add link for user profile page -->
-                                                    <a th:href="@{/}" th:text = "${tempComment.user.username}"></a>
-                                                    <span th:text="${#temporals.format(postById.createdAt, 'MMMM dd, yyyy')}"></span>
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <a class="user" th:href="@{'/user/' + ${tempComment.user.username}}" th:text = "${tempComment.user.username}"></a>
+                                                            <span th:text="${#temporals.format(postById.createdAt, 'MMMM dd, yyyy')}"></span>
+                                                        </div>
+                                                        <div class="col-4" style="text-align: right;">
+                                                            <form th:action="@{'/comment/delete/' + ${tempComment.id}}" method="POST">
+                                                                <input type="hidden" name="postId" th:value="${postById.id}">
+                                                                <button style="margin-right: 10px;" class="btn btn-outline-danger" type="submit">Delete</button>
+                                                            </form>
+                                                            <!-- <a  style="margin-right: 10px;" th:href="@{/}" class="btn btn-outline-danger">Delete</a> -->
+                                                        </div>
+                                                    </div>
                                                 </h4>
                                                 <p th:text="${tempComment.body}"></p>
                                             </div>

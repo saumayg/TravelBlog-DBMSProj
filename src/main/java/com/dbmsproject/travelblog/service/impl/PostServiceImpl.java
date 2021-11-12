@@ -120,6 +120,8 @@ public class PostServiceImpl implements PostService {
 			//Assigns album details to empty album, saves it and then joins to post enity
 			Album album = new Album();
 			album = newPost.getAlbum();
+			album.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
+			album.setUser(user);
 			albumDAO.saveOrUpdate(album);
 			newPost.setAlbum(album);
 
