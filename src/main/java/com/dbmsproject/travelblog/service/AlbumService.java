@@ -19,4 +19,7 @@ public interface AlbumService {
 
     ///Save or update album
     public void saveOrUpdate(Album album, Principal principal, boolean update, MultipartFile[] multipartFiles) throws IOException;
+
+    //Delete album
+    public void deleteById(int id) throws IOException;
 }

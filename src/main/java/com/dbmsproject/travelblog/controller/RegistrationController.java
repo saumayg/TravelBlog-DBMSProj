@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.dbmsproject.travelblog.entity.User;
 import com.dbmsproject.travelblog.service.UserService;
 
+///Controller for registration related services
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
@@ -37,12 +38,16 @@ public class RegistrationController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
+    ///Show registration page
     @GetMapping()
     public String showRegForm(Model model) {
+        logger.info("RegistrationController: Show registration page");
+
         model.addAttribute("user", new User());
         return "regForm";
     }
 
+    ///Registration handler
     @PostMapping()
     public String processRegistrationForm(
         @Valid @ModelAttribute("user") User user,
@@ -50,18 +55,17 @@ public class RegistrationController {
         @RequestParam(value = "profile", required = false) MultipartFile multipartFile,
         Model model
     ) throws IOException {
+		logger.info("RegistrationController: Processing registration form ");
 
-		logger.info("Processing registration form ");
-
+        //Get username
         String username = user.getUsername();
         		
 		 if (bindingResult.hasErrors()){
-             System.out.println(bindingResult.getAllErrors().toString());
 			 return "regForm";
-	        }
+	    }
 
+        //If user with username exists
         User existing = userService.findByUserName(username);
-
         if (existing != null) {
             logger.warning("User name already exists.");
             bindingResult.rejectValue("username", "error.user", "There is already a user registered with the username provided");
@@ -69,8 +73,7 @@ public class RegistrationController {
         
         if (!bindingResult.hasErrors()) {
             //Registration successful, saving user
-            userService.save(user, false, multipartFile);       
-            logger.info("Successfully created user: " + username);
+            userService.save(user, false, multipartFile);
             return "redirect:/";
         }
 

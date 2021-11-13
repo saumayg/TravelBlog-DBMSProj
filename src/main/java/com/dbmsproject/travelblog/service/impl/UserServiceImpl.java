@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +56,18 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	private Logger logger = Logger.getLogger(getClass().getName());
+
+	///Get all users
 	@Override
 	@Transactional
 	public List<User> findAll() {
+		logger.info("UserService: findAll()");
 		
 		return userDAO.findAll();
 	}
 
-	///Get all users
+	///Load user
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -85,6 +90,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User findByUserName(String username) {
+		logger.info("UserService: findByUserName(String username)");
+
 		User user =  userDAO.findByUserName(username);
 
 		if (user == null) {
@@ -100,6 +107,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
     public List<Post> getAllPostsSorted(String username) {
+		logger.info("UserService: getAllPostsSorted(String username)");
+
 		return postDAO.allPostsSortedByUser(username);
 	}
 
@@ -107,6 +116,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
     public List<Post> getAllLatestPostsSorted(String username) {
+		logger.info("UserService: getAllLatestPostsSorted(String username)");
+
 		return postDAO.allLatestPostsSortedByUser(username);
 	}
 
@@ -114,6 +125,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
     public List<Album> getAllAlbumsSorted(String username) {
+		logger.info("UserService: getAllAlbumsSorted(String username)");
+
 		return albumDAO.allAlbumsSortedByUser(username);
 	}
 
@@ -121,12 +134,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
     public List<Album> getAllLatestAlbumsSorted(String username) {
+		logger.info("UserService: getAllLatestAlbumsSorted(String username)");
+
 		return albumDAO.allLatestAlbumsSortedByUser(username);
 	}
 
+	///Update profile photo of user
 	@Override
 	@Transactional
-	public void updateProfilePhoto(Principal principal, String username, MultipartFile multipartFile) throws IOException {
+	public void updateProfilePhoto(
+		Principal principal, 
+		String username, 
+		MultipartFile multipartFile
+	) throws IOException {
+		logger.info("UserService: updateProfilePhoto(Principal principal, String username, MultipartFile multipartFile)");
+
+		//Gets the user by username
 		User user = userDAO.findByUserName(username);
 
 		if (user == null) {
@@ -135,22 +158,25 @@ public class UserServiceImpl implements UserService {
 			);
 		}
 
+		//Get user profile photo
 		Photo photo = user.getProfilePhoto();
 
 		String uploadDir;
 
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+		//If no user profilPhoto, saves it as new photo
 		if (photo == null) {
+
 			photo = new Photo();
 			photo.setName(fileName);
+			photo.setUser(user);
 			photoDAO.save(photo);
-
-			user.setProfilePhoto(photo);
-			userDAO.save(user);
 
 			uploadDir = "images/user" + user.getId() + "/" + photo.getId();
 		}
 		else {
+			//First deletes the existing profilePhoto from image directory
 			uploadDir = "images/user" + user.getId() + "/" + photo.getId();
 			FileUploadUtil.deleteFile(uploadDir);
 
@@ -164,31 +190,42 @@ public class UserServiceImpl implements UserService {
 	///Save a user
 	@Override
 	@Transactional
-	public void save(User user, boolean update, MultipartFile multipartFile) throws IOException {
-		System.out.println("Reached here");
+	public void save(
+		User user, 
+		boolean update, 
+		MultipartFile multipartFile
+	) throws IOException {
+		logger.info("UserService: save(User user, boolean update, MultipartFile multipartFile)");
 
+		//If update is false then save
 		if (!update) {
-			Photo profilePhoto = new Photo();
-			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-			profilePhoto.setName(fileName);
-			photoDAO.save(profilePhoto);
-
-			user.setProfilePhoto(profilePhoto);
+			//Save user
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			user.setRoles(Arrays.asList(roleDAO.findRoleByName("ROLE_USER")));
 			userDAO.save(user);
+
+			//New profilePhoto
+			Photo profilePhoto = new Photo();
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+			profilePhoto.setName(fileName);
+			profilePhoto.setUser(user);
+			photoDAO.save(profilePhoto);
 
 			String uploadDir = "images/user" + user.getId() + "/" + profilePhoto.getId();
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}
 		else {
+			//Update is true
+			//Old user details
 			User oldUser = userDAO.findByUserName(user.getUsername());
 
+			//Set details
 			oldUser.setFirstName(user.getFirstName());
 			oldUser.setLastName(user.getLastName());
 			oldUser.setEmail(user.getEmail());
 			oldUser.setPhone(user.getPhone());
 
+			//Save
 			userDAO.save(oldUser);
 		}
 	}

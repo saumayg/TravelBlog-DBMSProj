@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.dbmsproject.travelblog.dao.AlbumDAO;
 import com.dbmsproject.travelblog.dao.PhotoDAO;
@@ -23,12 +24,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+///Implementation for Album Service interface
 @Service
 public class AlbumServiceImpl implements AlbumService {
     
     private AlbumDAO albumDAO;
     private UserDAO userDAO;
     private PhotoDAO photoDAO;
+
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @Autowired
     public AlbumServiceImpl(
@@ -45,6 +49,8 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     @Transactional
     public List<Album> getAll() {
+        logger.info("AlbumService: getAll()");
+
         return albumDAO.findAll();
     }
 
@@ -52,6 +58,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     @Transactional
     public Album getAlbumById(int id) {
+        logger.info("AlbumService: getAlbumById(int id)");
 
         Album albumById = albumDAO.findById(id);
         //If album not found throws exception
@@ -67,15 +74,28 @@ public class AlbumServiceImpl implements AlbumService {
     ///Save or update album
     @Override
     @Transactional
-    public void saveOrUpdate(Album newAlbum, Principal principal, boolean update, MultipartFile[] multipartFiles) throws IOException {
+    public void saveOrUpdate(
+        Album newAlbum, 
+        Principal principal, 
+        boolean update, 
+        MultipartFile[] multipartFiles
+    ) throws IOException {
+        logger.info("AlbumService: saveOrUpdate(Album newAlbum, Principal principal, boolean update, MultipartFile[] multipartFiles)");
 
         if (!update) {
+            //Update is false, save a new album
+
+            //Get new album
             Album album = new Album();
+            //Get user
             User user = userDAO.findByUserName(principal.getName());
             
             album = newAlbum;
+            //Set user
             album.setUser(user);
+            //Set created at
             album.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
+            //Save album
             albumDAO.saveOrUpdate(album);
 
             //Save the images input by user and connect them to album
@@ -91,6 +111,7 @@ public class AlbumServiceImpl implements AlbumService {
 			}
         }
         else {
+            //Update album details
             Album album = albumDAO.findById(newAlbum.getId());
 
             if (album == null) {
@@ -104,5 +125,29 @@ public class AlbumServiceImpl implements AlbumService {
 
             albumDAO.saveOrUpdate(album);
         }
+    }
+
+    ///Delete album
+    @Override
+    @Transactional
+    public void deleteById(int id) throws IOException {
+        logger.info("AlbumService: deleteById(int id)");
+
+        //Get album by id
+        Album album = albumDAO.findById(id);
+
+        //Throws exception if album not found
+		if (album == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
+        //Delete album directory
+        String deleteDir = "images/album" + id;
+        FileUploadUtil.deleteFile(deleteDir);
+
+        //Delete album (Cascade set in sql script)
+        albumDAO.deleteById(id);
     }
 }

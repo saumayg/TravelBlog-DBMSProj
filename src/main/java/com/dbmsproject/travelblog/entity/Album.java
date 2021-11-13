@@ -3,7 +3,6 @@ package com.dbmsproject.travelblog.entity;
 import java.time.Instant;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,17 +50,16 @@ public class Album {
     @OneToMany(
         mappedBy = "album",
         targetEntity = Photo.class,
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL
+        fetch = FetchType.LAZY
     )
     private List<Photo> photos;
 
     ///Post under which album was created (One to one relationship)
     @OneToOne(
-        mappedBy = "album",
-        targetEntity = Post.class,
-		cascade = CascadeType.ALL
+		fetch = FetchType.LAZY,
+        targetEntity = Post.class
     )
+	@JoinColumn(name = "post_id" ,referencedColumnName = "id")
     private Post post;
 
 	@ManyToOne(
@@ -77,13 +75,14 @@ public class Album {
 
 	public Album(
 			@NotBlank(message = "Name is required") @Size(max = 64, message = "Character limit of 64 exceeded") String name,
-			@Size(max = 100, message = "Character limit of 100 exceeded") String description) {
+			@Size(max = 100, message = "Character limit of 100 exceeded") String description, Instant createdAt) {
 		super();
 		this.name = name;
 		this.description = description;
+		this.createdAt = createdAt;
 	}
 
-    public Album(
+	public Album(
 			@NotBlank(message = "Name is required") @Size(max = 64, message = "Character limit of 64 exceeded") String name,
 			@Size(max = 100, message = "Character limit of 100 exceeded") String description, Instant createdAt,
 			List<Photo> photos, Post post, User user) {
@@ -96,8 +95,8 @@ public class Album {
 		this.user = user;
 	}
 
-	//Getters and Setters
-
+	//Getters and setters
+	
 	public int getId() {
 		return id;
 	}
@@ -122,6 +121,14 @@ public class Album {
 		this.description = description;
 	}
 
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public List<Photo> getPhotos() {
 		return photos;
 	}
@@ -138,14 +145,6 @@ public class Album {
 		this.post = post;
 	}
 
-	public Instant getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Instant createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -153,11 +152,11 @@ public class Album {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	//To string method
 
+	//To string method
+	
 	@Override
 	public String toString() {
-		return "Album [id=" + id + ", name=" + name + ", description=" + description + "]";
-	};
+		return "Album [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + "]";
+	}
 }

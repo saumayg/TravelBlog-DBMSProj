@@ -15,6 +15,8 @@ import com.dbmsproject.travelblog.service.TagService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +36,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final TagService tagService;
+
     private Logger logger = Logger.getLogger(getClass().getName());
 
     @InitBinder
@@ -53,21 +56,24 @@ public class CommentController {
         this.postService = postService;
     }
 
-    //checks whether the user who created this post is the same as current user
-    private boolean isPrincipalOwnerOfPost(Principal principal, Post post) {
-        System.out.println(principal.getName());
-        return principal != null && principal.getName().equals(post.getUser().getUsername());
+    //checks whether the user who created this post is the same as current user or admin access
+    private boolean isPrincipalOwnerOfPostOrAdmin(Principal principal, Post post) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        logger.info("User is admin : " + isAdmin);
+        return principal != null && ( isAdmin || principal.getName().equals(post.getUser().getUsername()) );
     }
 
     ///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
+
         //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
 
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
 
         return model;
     }
@@ -81,10 +87,10 @@ public class CommentController {
         Principal principal,
         Model model
     ) {
-        logger.info("Processing comment save");
+        logger.info("CommentController: Processing comment save");
 
         if (bindingResult.hasErrors()) {
-            logger.info("Could not validate comment");
+            logger.info("CommentController: Could not validate comment");
 
             //Post according to given id
             Post postById = postService.getPostById(postId);
@@ -93,13 +99,13 @@ public class CommentController {
             //Adds 3 latest posts and all tags
             addSidebarAttr(model);
 
-            //checks whether the user who created this post is the same as current user
-            if( principal != null && isPrincipalOwnerOfPost(principal, postById) ) {
+            //checks whether the user who created this post is the same as current user or admin access
+            if(isPrincipalOwnerOfPostOrAdmin(principal, postById)) {
                 model.addAttribute("owner", true);
             }
 
             //redirects back showing the error
-            return "postDetail";
+            return "post/detail";
         }
         else {
             //save or update comment
@@ -108,13 +114,17 @@ public class CommentController {
         }
     }
 
+    ///Delete comment
     @PostMapping("/delete/{id}")
     public String deleteComment(
         @PathVariable int id,
         @RequestParam("postId") int postId,
         Model model
     ) {
-        commentService.delete(id);
+        logger.info("CommentController: Processing comment save");
+
+        //Delete comment
+        commentService.deleteById(id);
         return "redirect:/post/" + postId;
     }
 }

@@ -3,7 +3,7 @@ package com.dbmsproject.travelblog.controller;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-// import java.util.logging.Logger;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -39,7 +39,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final TagService tagService;
-    // private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -60,13 +60,18 @@ public class UserController {
 
     ///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
-        //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
 
+		logger.info("UserController: Fetching latest posts");
+        //3 latest posts by all users
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
+		logger.info("UserController: Fetch successful");
+
+		logger.info("UserController: Fetching all tags");
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
+		logger.info("UserController: Fetch successful");
 
         return model;
     }
@@ -148,7 +153,6 @@ public class UserController {
         Principal principal,
         Model model
     ) {
-        User user = userService.findByUserName(username);
 
         //Get all posts by current user
         List<Album> albums = userService.getAllAlbumsSorted(username);

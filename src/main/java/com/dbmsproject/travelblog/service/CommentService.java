@@ -9,5 +9,6 @@ public interface CommentService {
     ///Save or update a comment
     public void saveOrUpdate(Comment comment, Principal principal, int postId);
 
-    public void delete(int id);
+    ///Delete a comment
+    public void deleteById(int id);
 }

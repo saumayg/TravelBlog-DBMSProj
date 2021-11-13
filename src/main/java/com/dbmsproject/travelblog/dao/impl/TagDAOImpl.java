@@ -1,6 +1,7 @@
 package com.dbmsproject.travelblog.dao.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,6 +19,8 @@ public class TagDAOImpl implements TagDAO {
 
 	private EntityManager entityManager;
 
+	private Logger logger = Logger.getLogger(getClass().getName());
+
 	@Autowired
 	public TagDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -26,6 +29,7 @@ public class TagDAOImpl implements TagDAO {
 	///Get all tags
 	@Override
 	public List<Tag> findAll() {
+		logger.info("TagDAO: findAll()");
 		
 		Query query = entityManager.createQuery("select t from Tag t");
 		List<Tag> tags = AppUtils.castList(Tag.class, query.getResultList());
@@ -36,6 +40,7 @@ public class TagDAOImpl implements TagDAO {
 	///Get tag according to its id (Parameter: int id)
 	@Override
 	public Tag findById(int id) {
+		logger.info("TagDAO: findById(int id)");
 		
 		Tag tag = entityManager.find(Tag.class, id);
 

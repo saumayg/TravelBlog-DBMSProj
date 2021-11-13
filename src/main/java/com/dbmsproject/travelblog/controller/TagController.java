@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+///Controller for tag related services
 @Controller
 @RequestMapping("/tag")
 public class TagController {
@@ -44,13 +45,14 @@ public class TagController {
 
     ///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
+
         //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
 
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
 
         return model;
     }
@@ -63,12 +65,13 @@ public class TagController {
         Principal principal,
         Model model
     ) {
-        logger.info("All posts under a tag");
+        logger.info("TagController: Show all posts under tag by id");
 
         //Tag information
         Tag tagById = tagService.getTagById(id);
         model.addAttribute("tag", tagById);
 
+        //All posts
         List<Post> posts = tagService.getAllPostsSorted(id);
         model.addAttribute("allPost", posts);
 

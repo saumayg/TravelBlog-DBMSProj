@@ -1,6 +1,7 @@
 package com.dbmsproject.travelblog.dao.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,6 +19,8 @@ public class UserDAOImpl implements UserDAO {
 
 	private EntityManager entityManager;
 
+	private Logger logger = Logger.getLogger(getClass().getName());
+
 	@Autowired
 	public UserDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -26,6 +29,7 @@ public class UserDAOImpl implements UserDAO {
 	///Get all users
 	@Override
 	public List<User> findAll() {
+		logger.info("UserDAO: findAll()");
 		
 		Query query = entityManager.createQuery("from User p");
 		List<User> users = AppUtils.castList(User.class, query.getResultList());
@@ -36,6 +40,7 @@ public class UserDAOImpl implements UserDAO {
 	///Get a user by its username (Parameter: String username)
 	@Override
 	public User findByUserName(String userName) {
+		logger.info("UserDAO: findByUserName(String userName)");
 		
 		Query theQuery = entityManager.createQuery("from User where username=:uName", User.class);
 		theQuery.setParameter("uName", userName);
@@ -52,8 +57,20 @@ public class UserDAOImpl implements UserDAO {
 	///Save a user
 	@Override
 	public void save(User user) {
+		logger.info("UserDAO: save(User user)");
+
 		User dbUser = entityManager.merge(user);
 		user.setId(dbUser.getId());
 	}
 
+	///Delete a user
+	@Override
+	public void deleteByUsername(String username) {
+		logger.info("UserDAO: deleteByUsername(String username)");
+
+		Query query = entityManager.createQuery("delete from User where username=:uName");
+		query.setParameter("uName", username);
+
+		query.executeUpdate();
+	}
 }

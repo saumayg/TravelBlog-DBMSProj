@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head></head>
+<body>
+    <!-- Big Post Fragment -->
+    <div th:fragment="album (singleAlbum, owner)" >
+        <div class="blog-album">
+            <!-- Album information -->
+            <div class="album-content">
+              <div class="row">	
+                  <div class="col-6">
+                      <a th:href="@{'/album/' + ${singleAlbum.id}}">
+                          <h3 th:text="${singleAlbum.name}"></h3>
+                      </a>
+                      <ul class="album-info">
+                            <li>
+                              <a th:href="@{'/user/' + ${singleAlbum.user.username}}" th:text="${singleAlbum.user.username}"></a>
+                          </li>
+                            <li>
+                              <a th:text="${#temporals.format(singleAlbum.createdAt, 'MMMM dd, yyyy')}"></a>
+                          </li>
+                      </ul>
+                  </div>		
+                  <div class="col-6" th:if="${owner}" style="text-align: right;">
+                    <div class="row">
+                        <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${singleAlbum.id}}">Update</a>
+                        <form style="width: fit-content;" th:action="@{'/album/delete/' + ${singleAlbum.id}}" method="post">
+                            <button class="btn btn-outline-danger" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                  </div>						  
+              </div>
+              <p th:text="${singleAlbum.description}"></p>
+              <!-- Album images -->
+              <div class="album-images">
+                  <div class="album-image" th:each="albumPhoto : ${singleAlbum.photos}">
+                      <img th:src="@{'/' + ${albumPhoto.albumImagePath}}">
+                  </div>
+              </div>
+            </div>
+      </div>
+    </div>
+
+</body>
+</html>

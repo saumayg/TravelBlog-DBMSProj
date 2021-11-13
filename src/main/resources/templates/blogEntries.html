@@ -39,11 +39,11 @@
                                 <div class="blog-thumb">
                                     <a th:href="@{'/post/' + ${tempAllPost.id}}">
                                         <!-- Default image -->
-                                        <div th:if="${tempAllPost.album == null || tempAllPost.album.photos == null}">
+                                        <div th:if="${tempAllPost.album == null || #lists.isEmpty(tempAllPost.album.photos)}">
                                             <img class="post-img" th:src="@{/images/defaultImage.jpeg}">
                                         </div>
                                         <!-- First image of album -->
-                                        <div th:unless="${tempAllPost.album == null || tempAllPost.album.photos == null}">
+                                        <div th:unless="${tempAllPost.album == null || #lists.isEmpty(tempAllPost.album.photos)}">
                                             <img class="post-img" th:src="@{'/' + ${tempAllPost.album.photos[0].albumImagePath}}">
                                         </div>
 									</a>                                
@@ -81,7 +81,7 @@
                 </div>
 
                 <!-- Sidebar fragment -->
-                <div th:replace="/fragments/sidebar :: sidebar (latestPost = ${latestPost}, allTag = ${allTag})"></div>
+                <div th:replace="/fragments/sidebar :: sidebar (latestPosts = ${latestPosts}, allTags = ${allTags})"></div>
             </div>
         </div>
     </section>

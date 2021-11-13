@@ -12,6 +12,7 @@ CREATE TABLE album (
     description text DEFAULT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     user_id int DEFAULT NULL,
+    post_id int DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -22,11 +23,13 @@ CREATE TABLE photo (
     id int NOT NULL UNIQUE AUTO_INCREMENT,
     name varchar(64) DEFAULT NULL,
     album_id int DEFAULT NULL, -- many to one relationship (many photos for one album)
+    user_id int DEFAULT NULL, -- one to one relationship
     PRIMARY KEY (id),
     KEY FK_PHOTO_ALBUM (album_id),
 
     CONSTRAINT FK_PHOTO_ALBUM FOREIGN KEY (album_id)
     REFERENCES album (id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- USER TABLE
@@ -40,22 +43,13 @@ CREATE TABLE user (
     last_name varchar(255) NOT NULL,
     email varchar(255) NOT NULL,
     phone varchar(255),
-    photo_id int DEFAULT NULL, -- One to one relationship
-    PRIMARY KEY (id),
-    KEY FK_USER_PHOTO (photo_id),
-
-    CONSTRAINT FK_USER_PHOTO FOREIGN KEY (photo_id)
-    REFERENCES photo (id)
+    PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-ALTER TABLE album ADD FOREIGN KEY (user_id) REFERENCES user (id);
+-- Adding foreign key references
+ALTER TABLE album ADD FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;
 
--- DATA FOR USER TABLE
-INSERT INTO user (username, password, first_name, last_name, email, phone)
-VALUES 
-('abcd','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','abcd','efgh','abcd@gmail.com', '3434332323'),
-('xyz','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','xyz','zyx','xyz@gmail.com', '3234234233'),
-('mnop','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','mnop','qrst','mnop@gmail.com', '6345344432');
+ALTER TABLE photo ADD FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;
 
 -- TABLE FOR USER ROLES
 DROP TABLE IF EXISTS role;
@@ -65,11 +59,6 @@ CREATE TABLE role (
     name varchar(255) DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
--- DATA FOR ROLES
-INSERT INTO role (name)
-VALUES
-('ROLE_USER'), ('ROLE_ADMIN');
 
 -- USER_ROLES TABLE CONNECTING ROLES AND USERS (MANY TO MANY)
 DROP TABLE IF EXISTS user_role;
@@ -82,20 +71,12 @@ CREATE TABLE user_role (
     
     CONSTRAINT FK_USER_05 FOREIGN KEY (user_id)
     REFERENCES user (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ON DELETE CASCADE ON UPDATE NO ACTION,
 
     CONSTRAINT FK_ROLE FOREIGN KEY (role_id)
     REFERENCES role (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION
+    ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- DATA FOR user_role TABLE
-INSERT INTO user_role (user_id,role_id)
-VALUES 
-(1, 1),
-(2, 1),
-(2, 2),
-(3, 1);
 
 -- POST TABLE 
 -- (CONNECTED TO USER BY A MANY TO ONE RELATIONSHIP (MANY POSTS UNDER ONE USER))
@@ -108,25 +89,16 @@ CREATE TABLE post (
     body text NOT NULL,
     user_id int DEFAULT NULL, -- many to one relationship (many post for one user)
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    album_id int DEFAULT NULL, -- one to one relationship
     PRIMARY KEY (id),
     KEY FK_POST_USER (user_id),
-    KEY FK_POST_ALBUM (album_id),
 
     CONSTRAINT FK_POST_USER FOREIGN KEY (user_id) 
-    REFERENCES user (id),
-    CONSTRAINT FK_POST_ALBUM FOREIGN KEY (album_id)
-    REFERENCES album (id)
+    REFERENCES user (id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- DATA FOR post TABLE
-INSERT INTO post (title, description, body, user_id, created_at)
-VALUES
-('title1', 'description1', 'body1', 2, CURRENT_TIMESTAMP()),
-('title2', 'description2', 'body2', 2, CURRENT_TIMESTAMP()),
-('title3', 'description3', 'body3', 3, CURRENT_TIMESTAMP()),
-('title4', 'description4', 'body4', 3, CURRENT_TIMESTAMP()),
-('title5', 'description5', 'body5', 1, CURRENT_TIMESTAMP());
+-- Adding foreign key references
+ALTER TABLE album ADD FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE;
 
 -- TAGS TABLE
 DROP TABLE IF EXISTS tag;
@@ -138,13 +110,6 @@ CREATE TABLE tag (
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
--- DATA FOR tag TABLE
-INSERT INTO tag (name, description, created_at)
-VALUES
-('tag1', 'description1', CURRENT_TIMESTAMP()),
-('tag2', 'description2', CURRENT_TIMESTAMP()),
-('tag3', 'description3', CURRENT_TIMESTAMP());
 
 -- POST TAG TABLE CONNECTING POST AND TAG
 -- (MANY TO MANY RELATIONSHIP)
@@ -158,26 +123,12 @@ CREATE TABLE post_tag (
     
     CONSTRAINT FK_POST_05 FOREIGN KEY (post_id)
     REFERENCES post (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ON DELETE CASCADE ON UPDATE NO ACTION,
 
     CONSTRAINT FK_TAG FOREIGN KEY (tag_id)
     REFERENCES tag (id)
-    ON DELETE NO ACTION ON UPDATE NO ACTION
+    ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- DATA for post_tag TABLE
-INSERT INTO post_tag (post_id, tag_id) 
-VALUES
-(1, 1),
-(1, 2),
-(2, 1),
-(2, 2),
-(2, 3),
-(3, 2),
-(4, 2),
-(4, 3),
-(5, 1);
-
 
 -- Comment table
 DROP TABLE IF EXISTS comment;
@@ -193,22 +144,9 @@ CREATE TABLE comment (
     KEY FK_COMMENT_USER (user_id),
 
     CONSTRAINT FK_COMMENT_POST FOREIGN KEY (post_id)
-    REFERENCES post (id),
+    REFERENCES post (id)
+    ON DELETE CASCADE,
     CONSTRAINT FK_COMMENT_USER FOREIGN KEY (user_id)
     REFERENCES user (id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
--- DATA FOR comment TABLE
-INSERT INTO comment (body, post_id, user_id, created_at)
-VALUES
-('bod1', 1, 1, CURRENT_TIMESTAMP()),
-('bod2', 2, 1, CURRENT_TIMESTAMP()),
-('bod3', 3, 1, CURRENT_TIMESTAMP()),
-('bod4', 4, 1, CURRENT_TIMESTAMP()),
-('bod5', 5, 1, CURRENT_TIMESTAMP()),
-('bod6', 2, 2, CURRENT_TIMESTAMP()),
-('bod7', 4, 2, CURRENT_TIMESTAMP()),
-('bod8', 3, 2, CURRENT_TIMESTAMP()),
-('bod9', 1, 3, CURRENT_TIMESTAMP()),
-('bod10', 2, 3, CURRENT_TIMESTAMP()),
-('bod11', 5, 3, CURRENT_TIMESTAMP());

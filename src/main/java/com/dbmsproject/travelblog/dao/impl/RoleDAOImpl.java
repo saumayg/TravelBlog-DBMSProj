@@ -1,5 +1,7 @@
 package com.dbmsproject.travelblog.dao.impl;
 
+import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -14,6 +16,8 @@ import com.dbmsproject.travelblog.entity.Role;
 public class RoleDAOImpl implements RoleDAO {
 
 	private EntityManager entityManager;
+
+	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	@Autowired
 	public RoleDAOImpl(EntityManager entityManager) {
@@ -23,6 +27,7 @@ public class RoleDAOImpl implements RoleDAO {
 	///Find role using its name (Parameter: String rolename)
 	@Override
 	public Role findRoleByName(String roleName) {
+		logger.info("RoleDAO: findRoleByName(String roleName)");
 
 		Query theQuery = entityManager.createQuery("from Role where name=:roleName", Role.class);
 		theQuery.setParameter("roleName", roleName);

@@ -1,6 +1,7 @@
 package com.dbmsproject.travelblog.controller;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ public class HomeController {
 
 	private final PostService postService;
 	private final TagService tagService;
+	private Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
 	public HomeController(PostService postService, TagService tagService) {
@@ -27,24 +29,27 @@ public class HomeController {
 
 	///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
+
         //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
 
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
 
         return model;
     }
 	
 	///show home method
+	///Visible to all
 	@GetMapping("/")
 	public String showHome(Model model) {
+		logger.info("HomeController: Home page");
 		
 		//Any 3 random posts among all users
-		List<Post> randomPost = postService.getRandomPost();
-		model.addAttribute("randomPost", randomPost);
+		List<Post> randomPosts = postService.getRandomPosts();
+		model.addAttribute("randomPosts", randomPosts);
 		
 		addSidebarAttr(model);
 

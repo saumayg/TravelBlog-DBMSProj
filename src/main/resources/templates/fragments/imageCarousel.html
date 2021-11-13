@@ -8,11 +8,13 @@
             <ol class="carousel-indicators">
                 <li th:each="img, i : ${imageList}" data-target="#carouselIndicators" th:data-slide-to="${i.index}" th:class = "${i.index} == 0 ? 'active' : ''"></li>
             </ol>
+            <!-- Images -->
             <div class="carousel-inner">
                 <div class="carousel-item" th:each="img, i : ${imageList}" th:classappend = "${i.index} == 0 ? 'active' : ''">
                     <img th:src = "@{'/' + ${img.albumImagePath}}" class="d-block w-100" alt="...">
                 </div>
             </div>
+            <!-- Arrows -->
             <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>

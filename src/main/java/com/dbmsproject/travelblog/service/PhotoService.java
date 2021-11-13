@@ -8,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 ///Photo service interface
 public interface PhotoService {
     
-    ///Save or update image
-    public void saveOrUpdate(Principal principal, int albumId, MultipartFile[] multipartFiles) throws IOException;
+    ///Save image
+    public void save(Principal principal, int albumId, MultipartFile[] multipartFiles) throws IOException;
 }

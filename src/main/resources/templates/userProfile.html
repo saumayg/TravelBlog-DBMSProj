@@ -98,11 +98,11 @@
                         <div class="blog-thumb">
                             <a th:href="@{'/post/' + ${templatestPost.id}}">
                                 <!-- Default image -->
-                                <div th:if="${templatestPost.album == null || templatestPost.album.photos == null}">
+                                <div th:if="${templatestPost.album == null || #lists.isEmpty(templatestPost.album.photos)}">
                                     <img th:src="@{/images/defaultImage.jpeg}">
                                 </div>
                                 <!-- Image carousel without slide -->
-                                <div th:unless="${templatestPost.album == null || templatestPost.album.photos == null}">
+                                <div th:unless="${templatestPost.album == null || #lists.isEmpty(templatestPost.album.photos)}">
                                     <div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${templatestPost.album.photos}, slide = 'false')"></div>
                                 </div>
                             </a>

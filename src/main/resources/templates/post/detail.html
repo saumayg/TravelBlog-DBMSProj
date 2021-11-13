@@ -20,8 +20,12 @@
         </section>
     </div>
 
+    <!-- <form th:action="@{'/post/delete/' + ${postById.id}}" method="post">
+        <button class="btn" type="submit">Delete</button>
+    </form> -->
+
     <!-- Body section containing blog posts and sidebar -->
-    <section class="blog-posts grid-system">
+    <section class="blog-posts">
         <div class="container">
             <div class="row">
                 <!-- Blog post -->
@@ -32,14 +36,15 @@
                             <div class="blog-post">
                                 <div class="blog-thumb">
                                     <!-- Default image -->
-                                    <div th:if="${postById.album == null || postById.album.photos == null}">
+                                    <div th:if="${postById.album == null || #lists.isEmpty(postById.album.photos)}">
                                         <img th:src="@{/images/defaultImage.jpeg}">
                                     </div>
                                     <!-- Image carousel with slide -->
-                                    <div th:unless="${postById.album == null || postById.album.photos == null}">
+                                    <div th:unless="${postById.album == null || #lists.isEmpty(postById.album.photos)}">
                                         <div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${postById.album.photos}, slide = '6000')"></div>
                                     </div>
                                 </div>
+                                <!-- Post content -->
                                 <div class="down-content">
                                     <a>
                                         <h4 th:text="${postById.description}" style="font-weight: 300; font-size: 18x;"></h4>
@@ -67,14 +72,19 @@
 												</ul>
 											</div>
 											<div th:if="${owner}" class="col-6" style="text-align: right;">
-												<a class="btn btn-outline-dark" th:href="@{'/post/update/' + ${postById.id}}">Update</a>
-												<a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+												<div class="row" style="text-align: right;">
+                                                    <a class="btn btn-outline-dark" th:href="@{'/post/update/' + ${postById.id}}">Update</a>
+                                                    <form style="width: fit-content;" th:action="@{'/post/delete/' + ${postById.id}}" method="post">
+                                                        <button class="btn btn-outline-danger" type="submit">Delete</button>
+                                                    </form>
+                                                </div>
 											</div>
 						  				</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Album for the post -->
                         <div class="col-lg-12" th:unless="${postById.album == null}">
                             <div class="sidebar-heading">
                                 <h2>
@@ -82,35 +92,8 @@
                                 </h2>
                             </div>
                             <div class="blog-albums" style="margin-top: 20px;">
-                                <div class="blog-album">
-                                    <div class="album-content">
-                                      <div class="row">	
-                                          <div class="col-6">
-                                              <a th:href="@{'/album/' + ${postById.album.id}}">
-                                                  <h3 th:text="${postById.album.name}"></h3>
-                                              </a>
-                                              <ul class="album-info">
-                                                    <li>
-                                                      <a th:href="@{'/user/' + ${postById.user.username}}" th:text="${postById.user.username}"></a>
-                                                  </li>
-                                                    <li>
-                                                      <a th:text="${#temporals.format(postById.album.createdAt, 'MMMM dd, yyyy')}"></a>
-                                                  </li>
-                                              </ul>
-                                          </div>		
-                                          <div class="col-6" th:if="${owner}" style="text-align: right;">
-                                              <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${postById.album.id}}">Update</a>
-                                              <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
-                                          </div>						  
-                                      </div>
-                                      <p th:text="${postById.album.description}"></p>
-                                      <div class="album-images">
-                                          <div class="album-image" th:each="albumPhoto : ${postById.album.photos}">
-                                              <img th:src="@{'/' + ${albumPhoto.albumImagePath}}">
-                                          </div>
-                                      </div>
-                                    </div>
-                              </div>
+                                <!-- Album fragment -->
+                                <div th:replace="/fragments/singleAlbum :: album (owner = ${owner}, singleAlbum = ${postById.album})"></div>
                             </div>
                         </div>
                         <!-- Comments -->
@@ -144,7 +127,6 @@
                                                                 <input type="hidden" name="postId" th:value="${postById.id}">
                                                                 <button style="margin-right: 10px;" class="btn btn-outline-danger" type="submit">Delete</button>
                                                             </form>
-                                                            <!-- <a  style="margin-right: 10px;" th:href="@{/}" class="btn btn-outline-danger">Delete</a> -->
                                                         </div>
                                                     </div>
                                                 </h4>
@@ -194,7 +176,7 @@
                 </div>
 
                 <!-- Sidebar -->
-				<div th:replace="/fragments/sidebar :: sidebar (latestPost = ${latestPost}, allTag = ${allTag})"></div>
+				<div th:replace="/fragments/sidebar :: sidebar (latestPosts = ${latestPosts}, allTags = ${allTags})"></div>
             </div>
         </div>
     </section>

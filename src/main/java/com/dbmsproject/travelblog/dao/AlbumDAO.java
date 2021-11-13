@@ -24,4 +24,7 @@ public interface AlbumDAO {
 
     ///add or update album
     public void saveOrUpdate(Album album);
+
+    ///Delete an album
+    public void deleteById(int id);
 }

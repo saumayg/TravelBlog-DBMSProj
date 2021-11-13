@@ -15,4 +15,7 @@ public interface UserDAO {
 
     ///Save a user
     public void save(User user);
+
+    ///Delete a user
+    public void deleteByUsername(String username);
 }

@@ -3,7 +3,6 @@ package com.dbmsproject.travelblog.entity;
 import java.time.Instant;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,7 +48,6 @@ public class Tag {
     @JsonIgnore
     @ManyToMany(
 		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL,
 		targetEntity = Post.class
 	)
     @JoinTable(
@@ -71,15 +69,15 @@ public class Tag {
 	}
 
 	public Tag(@NotBlank(message = "Tag name is required") String name, String description, Instant createdAt,
-			List<Post> post) {
+			List<Post> posts) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.createdAt = createdAt;
-		this.posts = post;
+		this.posts = posts;
 	}
-
-	//Getters and Setters
+	
+	//Getters and setters
 
 	public int getId() {
 		return id;
@@ -117,8 +115,8 @@ public class Tag {
 		return posts;
 	}
 
-	public void setPosts(List<Post> post) {
-		this.posts = post;
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 
 	//To string method

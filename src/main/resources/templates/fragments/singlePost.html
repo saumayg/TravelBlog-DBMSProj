@@ -1,0 +1,98 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head></head>
+<body>
+    <!-- Big Post Fragment -->
+    <div th:fragment="post (singlePost, slide)" >
+        <div class="blog-post">
+            <!-- Image area -->
+            <div class="blog-thumb">
+                <a th:href="@{'/post/' + ${singlePost.id}}">
+                    <!-- Default image -->
+                    <div th:if="${singlePost.album == null || #lists.isEmpty(singlePost.album.photos)}">
+                        <img class="post-img" th:src="@{/images/defaultImage.jpeg}">
+                    </div>
+                    <!-- Image carousel without slide -->
+					<div th:unless="${singlePost.album == null || #lists.isEmpty(singlePost.album.photos)}">
+						<div th:replace="/fragments/imageCarousel :: imageCarousel (imageList = ${singlePost.album.photos}, slide = ${slide})"></div>
+					</div>
+                </a>                                
+            </div>
+            <!-- Post information -->
+            <div class="down-content">
+                <a th:href="@{'/post/' + ${singlePost.id}}">
+                    <h4 th:text="${singlePost.title}"></h4>
+                </a>
+                <ul class="post-info">
+                    <li>
+                        <a th:href="@{'/user/' + ${singlePost.user.username}}" th:text="${singlePost.user.username}"></a>
+                    </li>
+                    <li>
+                        <a th:text="${#temporals.format(singlePost.createdAt, 'MMMM dd, yyyy')}"></a>
+                    </li>
+                    <li>
+                        <a th:inline = "text">[[${#lists.size(singlePost.comments)}]] Comments</a>
+                    </li>
+                </ul>
+                <p th:text="${singlePost.description}"></p>
+                <div class="post-options">
+                    <div class="row">
+                        <ul class="post-tags">
+                            <li><i class="fa fa-tags"></i></li>
+                            <li>
+                                <a th:each="tempTag, iterStat : ${singlePost.tags}" th:href="@{'/tag/' + ${tempTag.id} + '/all'}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Big Post Fragment (Grid) -->
+    <div th:fragment="postGrid (singlePost)" >
+        <div class="blog-post">
+            <!-- Image area -->
+            <div class="blog-thumb">
+                <a th:href="@{'/post/' + ${singlePost.id}}">
+                    <!-- Default image -->
+                    <div th:if="${singlePost.album == null || #lists.isEmpty(singlePost.album.photos)}">
+                        <img class="post-img" th:src="@{/images/defaultImage.jpeg}">
+                    </div>
+                    <!-- First image of album -->
+                    <div th:unless="${singlePost.album == null || #lists.isEmpty(singlePost.album.photos)}">
+                        <img class="post-img" th:src="@{'/' + ${singlePost.album.photos[0].albumImagePath}}">
+                    </div>
+                </a>                                
+            </div>
+            <!-- Content area -->
+            <div class="down-content">
+                <a th:href="@{'/post/' + ${singlePost.id}}">
+                    <h4 th:text="${singlePost.title}"></h4>
+                </a>
+                <ul class="post-info">
+                    <li>
+                        <a th:href="@{'/user/' + ${singlePost.user.username}}" th:text="${singlePost.user.username}"></a>
+                    </li>
+                    <li>
+                        <a th:text="${#temporals.format(singlePost.createdAt, 'MMMM dd, yyyy')}"></a>
+                    </li>
+                    <li>
+                        <a th:inline = "text">[[${#lists.size(singlePost.comments)}]] Comments</a>
+                    </li>
+                </ul>
+                <p th:text="${singlePost.description}"></p>
+                <div class="post-options">
+                    <div class="row">
+                        <ul class="post-tags">
+                            <li><i class="fa fa-tags"></i></li>
+                            <li>
+                                <a th:each="tempTag, iterStat : ${singlePost.tags}" th:href="@{'/tag/' + ${tempTag.id} + '/all'}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

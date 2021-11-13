@@ -2,6 +2,7 @@ package com.dbmsproject.travelblog.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.logging.Logger;
 
 import com.dbmsproject.travelblog.service.PhotoService;
 
@@ -20,6 +21,8 @@ public class PhotoController {
 
     private final PhotoService photoService;
 
+    private Logger logger = Logger.getLogger(getClass().getName());
+
     @Autowired
     public PhotoController(
         PhotoService photoService
@@ -27,6 +30,7 @@ public class PhotoController {
         this.photoService = photoService;
     }
     
+    ///Save image
     @PostMapping("/save")
     public String save(
         @RequestParam(value = "image", required = false) MultipartFile[] multipartFiles,
@@ -34,7 +38,9 @@ public class PhotoController {
         Principal principal,
         Model model
     ) throws IOException {
-        photoService.saveOrUpdate(principal, id, multipartFiles);
+        logger.info("PhotoController: Save incoming photo for album");
+
+        photoService.save(principal, id, multipartFiles);
         return "redirect:/album/" + id;
     }
 }

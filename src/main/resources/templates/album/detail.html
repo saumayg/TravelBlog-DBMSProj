@@ -34,6 +34,7 @@
                 <div class="col-lg-8">
                     <div class="blog-album">
                         <div class="row">
+                            <!-- Album user and create time -->
                             <ul class="col-6">
                                 <li style="font-size: 30px;">
                                     <a class="album-det-u" th:href="@{'/user/' + ${albumById.user.username}}" th:text="${albumById.user.username}"></a>
@@ -43,19 +44,23 @@
                                 </li>
                             </ul>
                             <div class="col-6" th:if="${owner}" style="text-align: right;">
-                                <!-- <button class="btn btn-outline-success" th:href="@{/}"> -->
-                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modalCenter">
-                                    New image
-                                </button>
-                                <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${albumById.id}}">Update details</a>
-                                <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+                                <div class="row">
+                                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modalCenter">
+                                        New image
+                                    </button>
+                                    <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${albumById.id}}">Update details</a>
+                                    <form style="width: fit-content;" th:action="@{'/album/delete/' + ${albumById.id}}" method="post">
+                                        <button class="btn btn-outline-danger" type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                </div>
+                                <!-- <a class="btn btn-outline-danger" th:href="@{/}">Delete</a> -->
                             </div>
                         </div>
                         <hr>
-                        <!-- Add post button -->
-						<div class="col-lg-12" th:if="${owner}">
-							
-				  		</div>
+                        <!-- Images in grod order -->
                         <div class="row">
                             <div th:each="albumPhoto : ${albumById.photos}" class="col-6" style="padding: 8px;">
                                 <img style="width: 100%; padding: 3px; border: 1px solid #eee;" th:src="@{'/' + ${albumPhoto.albumImagePath}}" alt="">
@@ -65,7 +70,7 @@
                 </div>
 
                 <!-- Sidebar -->
-				<div th:replace="/fragments/sidebar :: sidebar (latestPost = ${latestPost}, allTag = ${allTag})"></div>
+				<div th:replace="/fragments/sidebar :: sidebar (latestPosts = ${latestPosts}, allTags = ${allTags})"></div>
             </div>
         </div>
     </section>

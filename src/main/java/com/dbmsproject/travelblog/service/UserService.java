@@ -32,6 +32,7 @@ public interface UserService extends UserDetailsService {
     ///Get latest 3 albums by the user in sorted fashion(Parameter: String username)
     public List<Album> getAllLatestAlbumsSorted(String username);
 
+    ///Update profile photo of the user
     public void updateProfilePhoto(Principal principal, String username, MultipartFile multipartFile) throws IOException;
 
     ///Save a user

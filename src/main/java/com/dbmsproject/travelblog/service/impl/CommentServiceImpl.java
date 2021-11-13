@@ -3,6 +3,7 @@ package com.dbmsproject.travelblog.service.impl;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.logging.Logger;
 
 import com.dbmsproject.travelblog.dao.CommentDAO;
 import com.dbmsproject.travelblog.dao.PostDAO;
@@ -26,6 +27,8 @@ public class CommentServiceImpl implements CommentService {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
+    private Logger logger = Logger.getLogger(getClass().getName());
+
     @Autowired
     public CommentServiceImpl(
         CommentDAO commentDAO,
@@ -41,6 +44,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void saveOrUpdate(Comment newComment, Principal principal, int postId) {
+        logger.info("CommentService: saveOrUpdate(Comment newComment, Principal principal, int postId)");
+
+        //Save functionality
 
         //Find and set post info
         Post post = postDAO.findById(postId);
@@ -58,12 +64,16 @@ public class CommentServiceImpl implements CommentService {
         //Set created at
         newComment.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
 
+        //Save comment
         commentDAO.saveOrUpdate(newComment);
     }
 
+    ///Delete a comment
     @Override
     @Transactional
-    public void delete(int id) {
-        commentDAO.delete(id);
+    public void deleteById(int id) {
+        logger.info("CommentService: deleteById(int id)");
+
+        commentDAO.deleteById(id);
     }
 }

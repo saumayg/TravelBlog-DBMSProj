@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -68,8 +67,7 @@ public class Post {
     /// Tags related to the post (SQL: Connected to table post_tag (post_id, tag_id) having many to many relationship)
     @ManyToMany(
 		fetch = FetchType.LAZY,
-		targetEntity = Tag.class,
-		cascade = CascadeType.ALL
+		targetEntity = Tag.class
 	)
     @JoinTable(
         name = "post_tag",
@@ -87,21 +85,20 @@ public class Post {
 	private List<Comment> comments;
 
 	@OneToOne(
-		cascade = {CascadeType.ALL},
+		mappedBy = "post",
 		targetEntity = Album.class,
 		fetch = FetchType.EAGER
 	)
-	@JoinColumn(name = "album_id", referencedColumnName = "id")
 	private Album album;
 
 	//Constructors
 
     public Post() {}
-	
+
 	public Post(
-			@NotBlank(message = "Title is required") @Size(min = 3, message = "Minimum 3 characters required") String title,
-			@NotBlank(message = " Description is required") @Size(min = 10, message = "Minimum 10 characters required") String description,
-			@NotBlank(message = "Body content is required") @Size(min = 10, message = "Minimum 10 characters required") String body,
+			@NotBlank(message = "Title is required") @Size(max = 20, message = "Character limit of 20 exceeded") String title,
+			@NotBlank(message = " Description is required") @Size(min = 5, max = 50, message = "Number of characters should be between 5 and 50") String description,
+			@NotBlank(message = "Body content is required") @Size(min = 5, message = "Minimum 5 characters required") String body,
 			Instant createdAt) {
 		super();
 		this.title = title;
@@ -125,9 +122,9 @@ public class Post {
 		this.comments = comments;
 		this.album = album;
 	}
-
-	//Getters and Setters
 	
+	//Getters and setters
+
 	public int getId() {
 		return id;
 	}

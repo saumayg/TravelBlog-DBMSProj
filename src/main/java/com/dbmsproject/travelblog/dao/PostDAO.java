@@ -11,10 +11,10 @@ public interface PostDAO {
     public List<Post> findAll();
 
     /// Get 3 posts among all users randomly 
-    public List<Post> findRandomPost();
+    public List<Post> findRandomPosts();
     
     /// Get 3 latest posts among all users 
-    public List<Post> findLatestPost();
+    public List<Post> findLatestPosts();
 
     /// Get a single post using its id (Parameter: Int id)
     public Post findById(int id);

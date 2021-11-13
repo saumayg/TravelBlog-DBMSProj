@@ -2,7 +2,6 @@ package com.dbmsproject.travelblog.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,7 +34,6 @@ public class Role {
 	///Users under the role (Many to many relationship)
 	@ManyToMany(
 		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL,
 		targetEntity = User.class
 	)
 	@JoinTable(
@@ -50,6 +48,7 @@ public class Role {
     public Role() {}
 
 	public Role(String name) {
+		super();
 		this.name = name;
 	}
 
@@ -59,8 +58,8 @@ public class Role {
 		this.users = users;
 	}
 
-	//Getters and Setters
-
+	//Getters and setters
+	
 	public int getId() {
 		return id;
 	}
@@ -87,10 +86,9 @@ public class Role {
 
 	//To string method
 	
-	@Override
-	public String toString() {
-		return "Role [id=" + id + ", name=" + name + "]";
+	public Role(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
 	}
-    
-	    
 }

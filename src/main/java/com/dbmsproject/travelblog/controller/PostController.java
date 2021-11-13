@@ -10,6 +10,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.dbmsproject.travelblog.entity.Comment;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
-import com.dbmsproject.travelblog.entity.User;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
 
@@ -38,6 +39,7 @@ public class PostController {
 
     private final PostService postService;
     private final TagService tagService;
+
     private Logger logger = Logger.getLogger(getClass().getName());
 
     @InitBinder
@@ -55,21 +57,25 @@ public class PostController {
         this.tagService = tagService;
     }
 
-     private boolean isPrincipalOwnerOfPost(Principal principal, Post post) {
-        System.out.println(principal.getName());
-        return principal != null && principal.getName().equals(post.getUser().getUsername());
-    }//checks whether the user who created this post is the same as current user
+    //checks whether the user who created this post is the same as current user or admin access
+    private boolean isPrincipalOwnerOfPostOrAdmin(Principal principal, Post post) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        logger.info("User is admin : " + isAdmin);
+        return principal != null && ( isAdmin || principal.getName().equals(post.getUser().getUsername()) );
+    }
    
 
     ///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
+
         //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
 
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
 
         return model;
     }
@@ -78,15 +84,16 @@ public class PostController {
     ///Visible to all
     @GetMapping()
     public String showAllPost(Model model) {
+        logger.info("PostController: Show all posts by all users");
 
         //All posts by all users
-        List<Post> allPost = postService.getAll();
-        model.addAttribute("allPost", allPost);
+        List<Post> allPosts = postService.getAll();
+        model.addAttribute("allPosts", allPosts);
 
         //Adds 3 latest posts and all tags
         addSidebarAttr(model);
 
-        return "blogEntries";
+        return "post/allPosts";
     }
 
     ///Show post detail page according to id
@@ -97,6 +104,8 @@ public class PostController {
         Principal principal,
         Model model
     ) {
+        logger.info("PostController: Show post by id");
+
         //Post according to given id
         Post postById = postService.getPostById(id);
         model.addAttribute("postById", postById);
@@ -104,20 +113,22 @@ public class PostController {
         //Adds 3 latest posts and all tags
         addSidebarAttr(model);
 
-        //checks whether the user who created this post is the same as current user
-        if( principal != null && isPrincipalOwnerOfPost(principal, postById) ) {
+        //checks whether the user who created this post is the same as current user or admin access
+        if(isPrincipalOwnerOfPostOrAdmin(principal, postById) ) {
             model.addAttribute("owner", true);
         }
 
+        //Sending an empty comment to use in new comment form
         model.addAttribute("comment", new Comment());
 
-        return "postDetail";
+        return "post/detail";
     }
 
     ///Get mapping for new post , shows post form
     ///Allowed only when logged in
     @GetMapping("/new")
     public String showPostForm(Principal principal, Model model) {
+        logger.info("PostController: Show new post form");
 
         //Throws forbidden exception when user not logged in
         if (principal == null) {
@@ -132,34 +143,31 @@ public class PostController {
         //Add empty post attribute for saving
         model.addAttribute("post", new Post());
 
-        //add function
+        //Send update false as this is for new post
         model.addAttribute("update", false);
 
-        model.addAttribute("imageCounter", 1);
-
-        return "postForm";
+        return "post/form";
     }
 
     ///Get mapping for update post
-    ///Allowed only when logged in and current user is the owner
+    ///Allowed only when logged in and current user is the owner or admin
     @GetMapping("update/{id}")
     public String updatePostForm(
         @PathVariable int id,
         Principal principal,
         Model model
     ) {
+        logger.info("PostController: Show update form");
 
+        //Get post details
         Post post = postService.getPostById(id);
-        User user = post.getUser();
 
-        //Throws forbidden exception
-        if (principal == null || !principal.getName().equals(user.getUsername())) {
+        //Throws forbidden exception when not logged in or user is not admin and not owner
+        if (!isPrincipalOwnerOfPostOrAdmin(principal, post)) {
             throw new ResponseStatusException(
                 HttpStatus.FORBIDDEN, ""
             );
         }
-
-        System.out.println(post.getId());
 
         //Adds current post info
         model.addAttribute("post", post);
@@ -167,10 +175,10 @@ public class PostController {
         //Adds 3 latest posts and all tags
         addSidebarAttr(model);
 
-        //update function
+        //update is sent true
         model.addAttribute("update", true);
 
-        return "postForm";
+        return "post/form";
     }
 
     ///Add a new post, post method handler
@@ -179,13 +187,14 @@ public class PostController {
         @Valid @ModelAttribute("post") Post post,
         BindingResult bindingResult,
         @RequestParam(value = "tgs", required = false) int[] tgs,
+        @RequestParam(value = "albumName", required = true) String albumName,
+        @RequestParam(value = "albumDescription", required = true) String albumDescription,
         @RequestParam(value = "update", required = false) boolean update,
         @RequestParam(value = "image", required = false) MultipartFile[] multipartFiles,
         Principal principal,
         Model model
     ) throws IOException {
-        logger.info("Processing new post form");
-        System.out.println(update);
+        logger.info("PostController: Processing new post form");
 
         //If validation errors return form
         if (bindingResult.hasErrors()) {
@@ -194,13 +203,27 @@ public class PostController {
 
             //Adds 3 latest posts and all tags
             addSidebarAttr(model);
+
+            model.addAttribute("update", update);
             
-            return "postForm";
+            return "post/form";
         }
         else {
             //save or update form
-            postService.saveOrUpdate(post, principal, tgs, update, multipartFiles);
+            postService.saveOrUpdate(post, principal, tgs, albumName, albumDescription, update, multipartFiles);
             return "redirect:/post/" + post.getId();
         }
+    }
+
+    ///Delete post
+    @PostMapping("/delete/{id}")
+    public String deletePost(
+        @PathVariable int id,
+        Model model
+    ) throws IOException {
+        logger.info("PostController: Delete a post by id");
+
+        postService.deleteById(id);
+        return "redirect:/post";
     }
 }

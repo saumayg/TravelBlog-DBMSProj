@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.EqualsAndHashCode;
@@ -69,16 +68,16 @@ public class Comment {
 
 	public Comment(
 			@NotBlank(message = "Comment cannot be empty") @Size(max = 200, message = "Maximum 200 characters allowed") String body,
-			Instant createdAt, @NotNull Post post, @NotNull User user) {
+			Instant createdAt, Post post, User user) {
 		super();
 		this.body = body;
 		this.createdAt = createdAt;
 		this.post = post;
 		this.user = user;
 	}
-
-	//Getters and Setters
 	
+	//Getters and setters
+
 	public int getId() {
 		return id;
 	}

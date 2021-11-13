@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,8 @@ public class PostServiceImpl implements PostService {
 	private AlbumDAO albumDAO;
 	private PhotoDAO photoDAO;
 
+	private Logger logger = Logger.getLogger(getClass().getName());
+
 	@Autowired
 	public PostServiceImpl(
 		PostDAO postDAO,
@@ -57,6 +60,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	@Transactional
 	public List<Post> getAll() {
+		logger.info("PostService: getAll()");
 
 		return postDAO.findAll();
 	}
@@ -64,25 +68,29 @@ public class PostServiceImpl implements PostService {
 	///Get 3 posts among all users randomly
 	@Override
 	@Transactional
-    public List<Post> getRandomPost() {
+    public List<Post> getRandomPosts() {
+		logger.info("PostService: getRandomPosts()");
     	
-    	return postDAO.findRandomPost();
+    	return postDAO.findRandomPosts();
     };
 
     ///Get 3 latest posts among all users
 	@Override
 	@Transactional
-	public List<Post> getLatestPost() {
+	public List<Post> getLatestPosts() {
+		logger.info("PostService: getLatestPosts()");
 		
-		return postDAO.findLatestPost();
+		return postDAO.findLatestPosts();
 	}
 
     /// Get a single post using its id (Parameter: Int id)
 	@Override
 	@Transactional
 	public Post getPostById(int id) {
+		logger.info("PostService: getPostById(int id)");
 
 		Post postById = postDAO.findById(id);
+
 		//If post not found throws exception
 		if (postById == null) {
             throw new ResponseStatusException(
@@ -96,7 +104,14 @@ public class PostServiceImpl implements PostService {
 	///Save or update a new post
 	@Override
 	@Transactional
-	public void saveOrUpdate(Post newPost, Principal principal, int[] tagList, boolean update, MultipartFile[] multipartFiles) throws IOException {
+	public void saveOrUpdate(
+		Post newPost, 
+		Principal principal, 
+		int[] tagList,
+		String albumName,
+		String albumDescription, 
+		boolean update, MultipartFile[] multipartFiles) throws IOException {
+		logger.info("PostService: saveOrUpdate(Post newPost, Principal principal, int[] tagList, String albumName, String albumDescription, boolean update, MultipartFile[] multipartFiles)");
 
 		//Sets incoming tags
 		newPost.setTags(new ArrayList<>());
@@ -110,30 +125,33 @@ public class PostServiceImpl implements PostService {
         }
 		
 		if (!update) {
+			//Save area (update = false)
 
 			//Find and set user info
 			User user = userDAO.findByUserName(principal.getName());
 			newPost.setUser(user);
+
 			//Set created time
 			newPost.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
 
-			//Assigns album details to empty album, saves it and then joins to post enity
-			Album album = new Album();
-			album = newPost.getAlbum();
-			album.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
-			album.setUser(user);
-			albumDAO.saveOrUpdate(album);
-			newPost.setAlbum(album);
-
 			//Save post
 			postDAO.saveOrUpdate(newPost);
+
+			//Assigns album details to empty album, assigns post to it and saves it
+			Album album = new Album();
+			album.setName(albumName);
+			album.setDescription(albumDescription);
+			album.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
+			album.setUser(user);
+			album.setPost(newPost);
+			albumDAO.saveOrUpdate(album);
 
 			//Save the images input by user and connect them to album
 			for (int i = 0 ; i < multipartFiles.length; i++) {
 				Photo photo = new Photo();
 				String fileName = StringUtils.cleanPath(multipartFiles[i].getOriginalFilename());
 				photo.setName(fileName);
-				photo.setAlbum(newPost.getAlbum());
+				photo.setAlbum(album);
 				photoDAO.save(photo);
 
 				String uploadDir = "images/album" + album.getId() + "/" + photo.getId();
@@ -143,8 +161,8 @@ public class PostServiceImpl implements PostService {
 		else {
 			//Find old post data
 			Post post = postDAO.findById(newPost.getId());
+			//Find old album
 			Album album = post.getAlbum();
-			Album newAlbum = newPost.getAlbum();
 
 			if (post == null || album == null) {
 				throw new ResponseStatusException(
@@ -159,8 +177,8 @@ public class PostServiceImpl implements PostService {
 			post.setTags(newPost.getTags());
 			
 			//Update album data
-			album.setName(newAlbum.getName());
-			album.setDescription(newAlbum.getDescription());
+			album.setName(albumName);
+			album.setDescription(albumDescription);
 
 			//Save updated album data
 			albumDAO.saveOrUpdate(album);
@@ -169,5 +187,29 @@ public class PostServiceImpl implements PostService {
 		}
 
 		
+	}
+
+	///Delete a post
+	@Override
+	@Transactional
+	public void deleteById(int id) throws IOException {
+		logger.info("PostService: deleteById(int id");
+
+		//Gets post by id
+		Post post = postDAO.findById(id);
+
+		//Throws exception if post not found
+		if (post == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
+		//Delete the album directory for the post
+		String deleteDir = "images/album" + post.getAlbum().getId();
+		FileUploadUtil.deleteFile(deleteDir);
+		
+		//Delete post (Cascade set in sql script)
+		postDAO.deleteById(id);
 	}
 }

@@ -45,9 +45,10 @@ public class Photo {
 
     ///User which has this profile photo (One to one relationship)
     @OneToOne(
-        mappedBy = "profilePhoto",
-        targetEntity = User.class
+        targetEntity = User.class,
+		fetch = FetchType.LAZY
     )
+	@JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id")
     private User user;
 
     //Constructors
@@ -65,8 +66,8 @@ public class Photo {
 		this.album = album;
 		this.user = user;
 	}
-
-    //Getters and Setters
+	
+	//Getters and setters
 
 	public int getId() {
 		return id;
@@ -116,8 +117,8 @@ public class Photo {
 		return "images/user" + user.getId() + "/" + id + "/" + name;
 	}
 
-    //To string method
-
+	//To string method
+	
 	@Override
 	public String toString() {
 		return "Photo [id=" + id + ", name=" + name + "]";

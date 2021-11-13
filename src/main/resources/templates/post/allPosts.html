@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Travel Blog - Blog entries</title>
+</head>
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+
+    <!-- Heading banner -->
+    <div class="heading-page">
+        <section class="page-heading">
+            <div class="container">
+                <div class="text-content">
+                    <h2 th:if="${tag == null}">Recent Blog Entries</h2>
+                    <div th:if="${tag != null}">
+                        <h2 th:inline = "text">
+                            [[${tag.name}]]
+                        </h2>
+                        <h4 th:text="${tag.description}"></h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Body section containing blog posts (grid form) and sidebar -->
+    <section class="blog-posts grid-system">
+        <div class="container">
+            <div class="row">
+                <!-- Blog posts -->
+                <div class="col-lg-8">
+                    <div class="row">
+                        <!-- Individual Blog posts -->
+                        <div class="col-lg-6" th:each="tempPost : ${allPosts}">
+                            <div th:replace="/fragments/singlePost :: postGrid (singlePost = ${tempPost})"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar fragment -->
+                <div th:replace="/fragments/sidebar :: sidebar (latestPosts = ${latestPosts}, allTags = ${allTags})"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer fragment -->
+	<div th:replace="/fragments/footer :: footer"></div>
+</body>
+</html>

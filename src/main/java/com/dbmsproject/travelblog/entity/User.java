@@ -3,7 +3,6 @@ package com.dbmsproject.travelblog.entity;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,8 +70,7 @@ public class User {
 
 	///Roles a user has (Many to many relationship with roles (USER, ADMIN))
     @ManyToMany(
-		fetch = FetchType.EAGER, 
-		cascade = CascadeType.ALL,
+		fetch = FetchType.EAGER,
 		targetEntity = Role.class
 	)
     @JoinTable(
@@ -86,21 +84,15 @@ public class User {
 	@OneToMany(
 		mappedBy = "user",
 		targetEntity = Comment.class,
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL,
-		orphanRemoval = true
+		fetch = FetchType.LAZY
 	)
 	private List<Comment> comments;
 
 	/// User profile photo (SQL: photo_id, One to one mapping)
 	@OneToOne(
-		cascade = CascadeType.ALL,
+		mappedBy = "user",
 		targetEntity = Photo.class,
 		fetch = FetchType.EAGER
-	)
-	@JoinColumn(
-		name = "photo_id",
-		referencedColumnName = "id"
 	)
 	private Photo profilePhoto;
     
@@ -108,17 +100,14 @@ public class User {
 	@OneToMany(
 		mappedBy = "user",
 		targetEntity = Post.class,
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL,
-		orphanRemoval = true
+		fetch = FetchType.LAZY
 	)
 	private List<Post> posts;
 
 	@OneToMany(
 		mappedBy = "user",
 		targetEntity = Album.class,
-		fetch = FetchType.LAZY,
-		cascade = CascadeType.ALL
+		fetch = FetchType.LAZY
 	)
 	private List<Album> albums;
 
@@ -163,7 +152,7 @@ public class User {
 		this.posts = posts;
 		this.albums = albums;
 	}
-
+	
 	//Getters and setters
 
 	public int getId() {
@@ -253,7 +242,7 @@ public class User {
 	public void setPosts(List<Post> posts) {
 		this.posts = posts;
 	}
-	
+
 	public List<Album> getAlbums() {
 		return albums;
 	}
@@ -261,12 +250,12 @@ public class User {
 	public void setAlbums(List<Album> albums) {
 		this.albums = albums;
 	}
-	
-	//To string method
 
+	//To string method
+	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", phone=" + phone + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + "]";
 	}
 }

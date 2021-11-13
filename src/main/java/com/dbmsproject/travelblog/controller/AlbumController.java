@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import com.dbmsproject.travelblog.entity.Album;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
-import com.dbmsproject.travelblog.entity.User;
 import com.dbmsproject.travelblog.service.AlbumService;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
@@ -18,6 +17,8 @@ import com.dbmsproject.travelblog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,21 +60,24 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    //checks whether the user who created this album is the same as current user
-    private boolean isPrincipalOwnerOfAlbum(Principal principal, Album album) {
-        System.out.println(principal.getName());
-        return principal != null && principal.getName().equals(album.getUser().getUsername());
+    //checks whether the user who created this album is the same as current user or admin access
+    private boolean isPrincipalOwnerOfAlbumOrAdmin(Principal principal, Album album) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        logger.info("User is admin : " + isAdmin);
+        return principal != null && ( isAdmin || principal.getName().equals(album.getUser().getUsername()) );
     }
 
     ///Private method to add common attributes to sidebar
     private Model addSidebarAttr(Model model) {
+
         //3 latest posts by all users
-		List<Post> latestPost = postService.getLatestPost();
-		model.addAttribute("latestPost", latestPost);
+		List<Post> latestPosts = postService.getLatestPosts();
+		model.addAttribute("latestPosts", latestPosts);
 
         //List of all tags
-		List<Tag> allTag = tagService.getAll();
-		model.addAttribute("allTag", allTag);
+		List<Tag> allTags = tagService.getAll();
+		model.addAttribute("allTags", allTags);
 
         return model;
     }
@@ -82,6 +86,7 @@ public class AlbumController {
     ///Visible to all
     @GetMapping()
     public String showAllAlbums(Model model) {
+        logger.info("AlbumController: Show all albums by all users");
 
         //All albums by all users
         List<Album> albums = albumService.getAll();
@@ -90,7 +95,7 @@ public class AlbumController {
         //Adds 3 latest posts and all tags
         addSidebarAttr(model);
 
-        return "allAlbums";
+        return "album/allAlbums";
     }
 
     ///Show album detail page according to id
@@ -101,6 +106,8 @@ public class AlbumController {
         Principal principal,
         Model model
     ) {
+        logger.info("AlbumController: Show album detail page according to id");
+
         //Post according to given id
         Album albumById = albumService.getAlbumById(id);
         model.addAttribute("albumById", albumById);
@@ -109,17 +116,18 @@ public class AlbumController {
         addSidebarAttr(model);
 
         //checks whether the user who created this post is the same as current user
-        if( principal != null && isPrincipalOwnerOfAlbum(principal, albumById)) {
+        if(isPrincipalOwnerOfAlbumOrAdmin(principal, albumById)) {
             model.addAttribute("owner", true);
         }
 
-        return "albumDetail";
+        return "album/detail";
     }
 
     ///Get mapping for new album , shows post form
     ///Allowed only when logged in
     @GetMapping("/new")
     public String showPostForm(Principal principal, Model model) {
+        logger.info("AlbumController: Show new album form");
 
         //Throws forbidden exception when user not logged in
         if (principal == null) {
@@ -134,34 +142,31 @@ public class AlbumController {
         //Add empty post attribute for saving
         model.addAttribute("album", new Album());
 
-        //add function
+        //as save link, update is false
         model.addAttribute("update", false);
 
-        model.addAttribute("imageCounter", 1);
-
-        return "albumForm";
+        return "album/form";
     }
 
     ///Get mapping for update album
     ///Allowed only when logged in and current user is the owner
-    @GetMapping("update/{id}")
+    @GetMapping("/update/{id}")
     public String updatePostForm(
         @PathVariable int id,
         Principal principal,
         Model model
     ) {
+        logger.info("AlbumController: Show album form for update");
 
+        //Get album according to its id
         Album album = albumService.getAlbumById(id);
-        User user = album.getUser();
 
         //Throws forbidden exception
-        if (principal == null || !principal.getName().equals(user.getUsername())) {
+        if (!isPrincipalOwnerOfAlbumOrAdmin(principal, album)) {
             throw new ResponseStatusException(
                 HttpStatus.FORBIDDEN, ""
             );
         }
-
-        System.out.println(album.getId());
 
         //Adds current post info
         model.addAttribute("album", album);
@@ -172,9 +177,10 @@ public class AlbumController {
         //update function
         model.addAttribute("update", true);
 
-        return "albumForm";
+        return "album/form";
     }
 
+    ///Save or update album
     @PostMapping("/save")
     public String saveOrUpdateAlbum(
         @Valid @ModelAttribute("album") Album album,
@@ -184,22 +190,34 @@ public class AlbumController {
         Principal principal,
         Model model
     ) throws IOException {
-        logger.info("Processing new album form");
-        System.out.println(update);
+        logger.info("AlbumController: Processing new album form (Update = " + update + " )");
 
         //If validation errors return form
         if (bindingResult.hasErrors()) {
-            logger.info("Could not validate post");
-            logger.info(bindingResult.getAllErrors().toString());
+            logger.info("AlbumController: Could not validate album");
 
             //Adds 3 latest posts and all tags
             addSidebarAttr(model);
+
+            model.addAttribute("update", update);
             
-            return "albumForm";
+            return "album/form";
         }
         else {
             albumService.saveOrUpdate(album, principal, update, multipartFiles);
             return "redirect:/album/" + album.getId();
         }
+    }
+
+    ///Delete album
+    @PostMapping("/delete/{id}")
+    public String deletePost(
+        @PathVariable int id,
+        Model model
+    ) throws IOException {
+        logger.info("AlbumController: Delete album according to its id");
+
+        albumService.deleteById(id);
+        return "redirect:/album";
     }
 }

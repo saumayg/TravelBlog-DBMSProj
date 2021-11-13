@@ -1,6 +1,7 @@
 package com.dbmsproject.travelblog.dao.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -18,6 +19,8 @@ public class CommentDAOImpl implements CommentDAO {
 
 	private EntityManager entityManager;
 
+	private Logger logger = Logger.getLogger(getClass().getName());
+
 	@Autowired
 	public CommentDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -26,26 +29,29 @@ public class CommentDAOImpl implements CommentDAO {
 	///Get all comments by all users
 	@Override
 	public List<Comment> findAll() {
+		logger.info("CommentDAO: findAll()");
 		
 		Query query = entityManager.createQuery("select c from Comment c order by c.createdAt desc");
-		List<Comment> comment = AppUtils.castList(Comment.class, query.getResultList());
+		List<Comment> comments = AppUtils.castList(Comment.class, query.getResultList());
 
-		return comment;
+		return comments;
 	}
 
+	///Save or update a comment
 	@Override
 	public void saveOrUpdate(Comment comment) {
-
-		System.out.println("Saving/Updating comment with id = " + comment.getId());
+		logger.info("CommentDAO: saveOrUpdate(Comment comment)");
 
 		Comment dbComment = entityManager.merge(comment);
 		comment.setId(dbComment.getId());
 	}
 
+	///Delete a comment
 	@Override
-	public void delete(int id) {
+	public void deleteById(int id) {
+		logger.info("CommentDAO: deleteById(int id)");
 		
-		Query query = entityManager.createQuery("delete from Comment c where c.id=:cmntId");
+		Query query = entityManager.createQuery("delete from Comment where id=:cmntId");
 		query.setParameter("cmntId", id);
 
 		query.executeUpdate();
