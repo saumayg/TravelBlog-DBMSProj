@@ -12,4 +12,8 @@ public interface TagDAO {
 
     ///Get tag according to its id (Parameter: int id)
     public Tag findById(int id);
+
+    public void saveOrUpdate(Tag tag);
+
+    public void deleteById(int id);
 }

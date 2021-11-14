@@ -10,4 +10,7 @@ public interface PhotoService {
     
     ///Save image
     public void save(Principal principal, int albumId, MultipartFile[] multipartFiles) throws IOException;
+
+    ///Delete image
+    public void deleteById(int id) throws IOException;
 }

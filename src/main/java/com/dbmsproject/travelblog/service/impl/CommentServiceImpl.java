@@ -74,6 +74,16 @@ public class CommentServiceImpl implements CommentService {
     public void deleteById(int id) {
         logger.info("CommentService: deleteById(int id)");
 
+        //Find comment by id
+        Comment comment = commentDAO.findById(id);
+
+        //Throws exception if no comment
+        if (comment == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, ""
+            );
+        }
+
         commentDAO.deleteById(id);
     }
 }

@@ -148,26 +148,47 @@ public class PostServiceImpl implements PostService {
 
 			//Save the images input by user and connect them to album
 			for (int i = 0 ; i < multipartFiles.length; i++) {
+				if (multipartFiles[i].isEmpty())
+					continue;
 				Photo photo = new Photo();
 				String fileName = StringUtils.cleanPath(multipartFiles[i].getOriginalFilename());
 				photo.setName(fileName);
 				photo.setAlbum(album);
 				photoDAO.save(photo);
 
-				String uploadDir = "images/album" + album.getId() + "/" + photo.getId();
+				String uploadDir = "images/user" + user.getId() + "/album" + album.getId() + "/" + photo.getId();
 				FileUploadUtil.saveFile(uploadDir, fileName, multipartFiles[i]);
 			}
 		}
 		else {
 			//Find old post data
 			Post post = postDAO.findById(newPost.getId());
-			//Find old album
-			Album album = post.getAlbum();
 
-			if (post == null || album == null) {
+			if (post == null) {
 				throw new ResponseStatusException(
 					HttpStatus.NOT_FOUND, ""
 				);
+			}
+
+			//Find old album
+			Album album = post.getAlbum();
+
+			if (album == null) {
+				logger.info("Creating new album");
+				Album newAlbum = new Album();
+				newAlbum.setName(albumName);
+				newAlbum.setDescription(albumDescription);
+				newAlbum.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
+				newAlbum.setUser(post.getUser());
+				newAlbum.setPost(post);
+				albumDAO.saveOrUpdate(newAlbum);
+				System.out.println(newAlbum.getPost());
+
+				//Find old post data
+				post = postDAO.findById(post.getId());
+
+				//Find old album
+				album = newAlbum;
 			}
 
 			//Update post data
@@ -206,7 +227,7 @@ public class PostServiceImpl implements PostService {
 		}
 
 		//Delete the album directory for the post
-		String deleteDir = "images/album" + post.getAlbum().getId();
+		String deleteDir = "images/user" + post.getUser().getId() + "/album" + post.getAlbum().getId();
 		FileUploadUtil.deleteFile(deleteDir);
 		
 		//Delete post (Cascade set in sql script)

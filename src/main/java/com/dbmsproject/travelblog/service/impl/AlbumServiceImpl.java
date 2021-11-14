@@ -100,13 +100,15 @@ public class AlbumServiceImpl implements AlbumService {
 
             //Save the images input by user and connect them to album
 			for (int i = 0 ; i < multipartFiles.length; i++) {
+                if (multipartFiles[i].isEmpty())
+                    continue;
 				Photo photo = new Photo();
 				String fileName = StringUtils.cleanPath(multipartFiles[i].getOriginalFilename());
 				photo.setName(fileName);
 				photo.setAlbum(album);
 				photoDAO.save(photo);
 
-				String uploadDir = "images/album" + album.getId() + "/" + photo.getId();
+				String uploadDir = "images/user" + user.getId() + "/album" + album.getId() + "/" + photo.getId();
 				FileUploadUtil.saveFile(uploadDir, fileName, multipartFiles[i]);
 			}
         }
@@ -133,18 +135,16 @@ public class AlbumServiceImpl implements AlbumService {
     public void deleteById(int id) throws IOException {
         logger.info("AlbumService: deleteById(int id)");
 
-        //Get album by id
         Album album = albumDAO.findById(id);
 
-        //Throws exception if album not found
-		if (album == null) {
-			throw new ResponseStatusException(
-				HttpStatus.NOT_FOUND, ""
-			);
-		}
+        if (album == null) {
+            throw new ResponseStatusException (
+                HttpStatus.NOT_FOUND, ""
+            );
+        }
 
         //Delete album directory
-        String deleteDir = "images/album" + id;
+        String deleteDir = "images/user" + album.getUser().getId() + "/album" + id;
         FileUploadUtil.deleteFile(deleteDir);
 
         //Delete album (Cascade set in sql script)

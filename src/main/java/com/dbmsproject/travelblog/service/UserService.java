@@ -37,4 +37,7 @@ public interface UserService extends UserDetailsService {
 
     ///Save a user
     public void save(User user, boolean update, MultipartFile multipartFile) throws IOException;
+
+    ///Delete a user
+    public void deleteById(String username) throws IOException;
 }

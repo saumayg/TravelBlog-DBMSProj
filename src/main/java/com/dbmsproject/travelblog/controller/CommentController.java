@@ -103,6 +103,13 @@ public class CommentController {
             if(isPrincipalOwnerOfPostOrAdmin(principal, postById)) {
                 model.addAttribute("owner", true);
             }
+            else {
+                model.addAttribute("owner", false);
+            }
+
+            if (principal != null) {
+                model.addAttribute("currentUsername", principal.getName());
+            }
 
             //redirects back showing the error
             return "post/detail";

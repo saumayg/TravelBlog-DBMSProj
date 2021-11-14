@@ -3,26 +3,27 @@
 <head>
     <!-- Header fragment containing css and js imports -->
 	<div th:replace="/fragments/header :: header-css"></div>
-	<title>Travel Blog - Blog entries</title>
+	<title>Travel Blog - Tag blog entries</title>
 </head>
 <body>
     <!-- Header fragment containing navbar -->
 	<div th:replace="/fragments/header :: header"></div>
 
-    <!-- Heading banner -->
+    <!-- Heading banner with tag name and description -->
     <div class="heading-page">
         <section class="page-heading">
             <div class="container">
                 <div class="text-content">
-                    <h2>
-                        All Blog Entries
+                    <h2 th:inline = "text">
+                        [[${tag.name}]]
                     </h2>
+                    <h4 th:text="${tag.description}"></h4>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Body section containing blog posts (grid form) and sidebar -->
+    <!-- Body section containing blog posts and sidebar -->
     <section class="blog-posts grid-system">
         <div class="container">
             <div class="row">
@@ -31,6 +32,7 @@
                     <div class="row">
                         <!-- Individual Blog posts -->
                         <div class="col-lg-6" th:each="tempPost : ${allPosts}">
+                            <!-- Single grid post fragment -->
                             <div th:replace="/fragments/singlePost :: postGrid (singlePost = ${tempPost})"></div>
                         </div>
                     </div>

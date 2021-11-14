@@ -2,7 +2,7 @@
 <head></head>
 <body>
     <!-- Big Post Fragment -->
-    <div th:fragment="post (singlePost, slide)" >
+    <div th:fragment="post (singlePost, slide, owner)" >
         <div class="blog-post">
             <!-- Image area -->
             <div class="blog-thumb">
@@ -36,12 +36,18 @@
                 <p th:text="${singlePost.description}"></p>
                 <div class="post-options">
                     <div class="row">
-                        <ul class="post-tags">
-                            <li><i class="fa fa-tags"></i></li>
-                            <li>
-                                <a th:each="tempTag, iterStat : ${singlePost.tags}" th:href="@{'/tag/' + ${tempTag.id} + '/all'}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
-                            </li>
-                        </ul>
+                        <div class="col-6">
+                            <ul class="post-tags">
+                                <li><i class="fa fa-tags"></i></li>
+                                <li>
+                                    <a th:each="tempTag, iterStat : ${singlePost.tags}" th:href="@{'/tag/' + ${tempTag.id} + '/all'}" th:text="${tempTag.name} + ${!iterStat.last ? ', ' : ''}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:if="${owner == true}" class="col-6" style="text-align: right;">
+                            <a class="btn btn-outline-dark" th:href="@{'/post/update/' + ${singlePost.id}}">Update</a>
+                            <a class="btn btn-outline-danger" th:href="@{/}">Delete</a>
+                        </div>
                     </div>
                 </div>
             </div>

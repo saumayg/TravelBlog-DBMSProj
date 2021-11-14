@@ -10,6 +10,9 @@ public interface CommentDAO {
     ///Get all comments by all users
     public List<Comment> findAll();
 
+    ///Get comment by id
+    public Comment findById(int id);
+
     ///Save or Update a comment
     public void saveOrUpdate(Comment comment);
 

@@ -9,6 +9,7 @@ import com.dbmsproject.travelblog.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,5 +43,18 @@ public class PhotoController {
 
         photoService.save(principal, id, multipartFiles);
         return "redirect:/album/" + id;
+    }
+
+    ///Delete image from album
+    @PostMapping("/delete/{id}")
+    public String deletePhoto(
+        @PathVariable int id,
+        @RequestParam(value = "albumId") int albumId,
+        Model model
+    ) throws IOException {
+        logger.info("PhotoController: Delete image from album");
+
+        photoService.deleteById(id);
+        return "redirect:/album/" + albumId;
     }
 }

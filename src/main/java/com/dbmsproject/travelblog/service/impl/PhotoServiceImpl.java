@@ -31,7 +31,7 @@ public class PhotoServiceImpl implements PhotoService{
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
-    ///Save or image
+    ///Save image
     @Override
     @Transactional
     public void save(Principal principal, int albumId, MultipartFile[] multipartFiles) throws IOException {
@@ -49,6 +49,8 @@ public class PhotoServiceImpl implements PhotoService{
         
         //Saves photos
         for (int i = 0 ; i < multipartFiles.length; i++) {
+            if (multipartFiles[i].isEmpty())
+                continue;
             //New photo
             Photo photo = new Photo();
             String fileName = StringUtils.cleanPath(multipartFiles[i].getOriginalFilename());
@@ -57,8 +59,41 @@ public class PhotoServiceImpl implements PhotoService{
             photoDAO.save(photo);
 
             //Save in directory
-            String uploadDir = "images/album" + album.getId() + "/" + photo.getId();
+            String uploadDir = "images/user" + album.getUser().getId() + "/album" + albumId + "/" + photo.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFiles[i]);
         }
+    }
+
+    ///Delete image
+    @Override
+    @Transactional
+    public void deleteById(int id) throws IOException {
+        logger.info("PhotoService: deleteById(int id)");
+
+        //Get photo by id
+        Photo photo = photoDAO.findById(id);
+        
+        //Throws exception if photo not found
+        if (photo == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, ""
+            );
+        }
+
+        Album album = photo.getAlbum();
+
+        //Throws exception if album not found
+        if (album == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, ""
+            );
+        }
+
+        //Delete photo directory
+        String deleteDir = "images/user" + album.getUser().getId() + "/album" + album.getId() + "/" + id;
+        FileUploadUtil.deleteFile(deleteDir);
+
+        //Delete photo
+        photoDAO.deleteById(id);
     }
 }

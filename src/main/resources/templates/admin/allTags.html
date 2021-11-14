@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Admin - All tags </title>
+</head>
+
+<body>
+	<!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+	
+
+	<section style="margin: 100px;">
+          <div class="main-button" style=" margin-bottom: 25px;">
+              <a data-toggle="collapse" href="#newForm" role="button" aria-expanded="false" aria-controls="newForm" style="width: 100%; text-align: center; font-size: 20px;">
+                Create a new tag
+              </a>
+          </div>
+
+        <div class="collapse" id="newForm">
+          <form th:action="@{/tag/save}" method="post" th:object="${tag}">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group"> 
+              <label for="tagName">Name</label>
+              <input type="text" th:field="*{name}" id="tagName" class="form-control" placeholder="Name">
+            </div>
+            <div class="form-group"> 
+              <label for="tagDescription">Description</label>
+              <textarea th:field="*{description}" id="tagDescription" class="form-control" placeholder="Description"></textarea>
+            </div>
+            <button name="submit" id="submit" class="btn btn-outline-dark" type="submit">
+              Submit
+            </button>
+          </form>
+          <br>
+          <br>
+        </div>
+
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="tempTag : ${allTags}">
+                <th scope="row" th:text="${tempTag.id}"></th>
+                <td th:text="${tempTag.name}"></td>
+                <td th:text="${tempTag.description}"></td>
+                <td>
+                    <form method="post" th:action="@{'/tag/' + ${tempTag.id} + '/delete'}">
+                        <button class="btn btn-outline-danger" type="submit">
+                          Delete
+                        </button>
+                    </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </section>
+
+	  <!-- Footer fragment -->
+	  <div th:replace="/fragments/footer :: footer"></div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

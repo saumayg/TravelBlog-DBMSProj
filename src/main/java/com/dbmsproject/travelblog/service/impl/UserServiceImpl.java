@@ -94,12 +94,6 @@ public class UserServiceImpl implements UserService {
 
 		User user =  userDAO.findByUserName(username);
 
-		if (user == null) {
-			throw new ResponseStatusException(
-				HttpStatus.NOT_FOUND, "Page not found"
-			);
-		}
-
 		return user;
 	}
 
@@ -108,6 +102,16 @@ public class UserServiceImpl implements UserService {
 	@Transactional
     public List<Post> getAllPostsSorted(String username) {
 		logger.info("UserService: getAllPostsSorted(String username)");
+
+		//Find user info
+		User user =  userDAO.findByUserName(username);
+
+		//If user not found throw exception
+		if (user == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, "Page not found"
+			);
+		}
 
 		return postDAO.allPostsSortedByUser(username);
 	}
@@ -127,6 +131,16 @@ public class UserServiceImpl implements UserService {
     public List<Album> getAllAlbumsSorted(String username) {
 		logger.info("UserService: getAllAlbumsSorted(String username)");
 
+		//Find user info
+		User user =  userDAO.findByUserName(username);
+
+		//If user not found throw exception
+		if (user == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, "Page not found"
+			);
+		}
+
 		return albumDAO.allAlbumsSortedByUser(username);
 	}
 
@@ -135,7 +149,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
     public List<Album> getAllLatestAlbumsSorted(String username) {
 		logger.info("UserService: getAllLatestAlbumsSorted(String username)");
-
+		
 		return albumDAO.allLatestAlbumsSortedByUser(username);
 	}
 
@@ -148,6 +162,9 @@ public class UserServiceImpl implements UserService {
 		MultipartFile multipartFile
 	) throws IOException {
 		logger.info("UserService: updateProfilePhoto(Principal principal, String username, MultipartFile multipartFile)");
+
+		if (multipartFile.isEmpty())
+			return;
 
 		//Gets the user by username
 		User user = userDAO.findByUserName(username);
@@ -219,6 +236,12 @@ public class UserServiceImpl implements UserService {
 			//Old user details
 			User oldUser = userDAO.findByUserName(user.getUsername());
 
+			if (oldUser == null) {
+				throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, ""
+				);
+			}
+
 			//Set details
 			oldUser.setFirstName(user.getFirstName());
 			oldUser.setLastName(user.getLastName());
@@ -230,5 +253,25 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	///Delete user by id
+	@Override
+	@Transactional
+	public void deleteById(String username) throws IOException {
+		logger.info("UserService: deleteById(String username)");
 
+		User user = userDAO.findByUserName(username);
+
+		if (user == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
+		//Delete user directory
+		String deleteDir = "images/user" + user.getId();
+		FileUploadUtil.deleteFile(deleteDir);
+
+		//Delete user (Cascade set in sql script)
+		userDAO.deleteByUsername(username);
+	}
 }

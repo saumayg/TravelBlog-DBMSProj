@@ -20,7 +20,7 @@
                           </li>
                       </ul>
                   </div>		
-                  <div class="col-6" th:if="${owner}" style="text-align: right;">
+                  <div class="col-6" th:if="${owner == true}" style="text-align: right;">
                     <div class="row">
                         <a class="btn btn-outline-dark" th:href="@{'/album/update/' + ${singleAlbum.id}}">Update</a>
                         <form style="width: fit-content;" th:action="@{'/album/delete/' + ${singleAlbum.id}}" method="post">

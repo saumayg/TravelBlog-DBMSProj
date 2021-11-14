@@ -117,9 +117,16 @@ public class PostController {
         if(isPrincipalOwnerOfPostOrAdmin(principal, postById) ) {
             model.addAttribute("owner", true);
         }
+        else {
+            model.addAttribute("owner", false);
+        }
 
         //Sending an empty comment to use in new comment form
         model.addAttribute("comment", new Comment());
+
+        if (principal != null) {
+            model.addAttribute("currentUsername", principal.getName());
+        }
 
         return "post/detail";
     }
@@ -196,10 +203,11 @@ public class PostController {
     ) throws IOException {
         logger.info("PostController: Processing new post form");
 
+        // have to add album error logic
+
         //If validation errors return form
         if (bindingResult.hasErrors()) {
             logger.info("Could not validate post");
-            logger.info(bindingResult.getAllErrors().toString());
 
             //Adds 3 latest posts and all tags
             addSidebarAttr(model);

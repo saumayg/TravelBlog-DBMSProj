@@ -43,7 +43,7 @@
                                     <a style="color: gray;" th:text="${#temporals.format(albumById.createdAt, 'MMMM dd, yyyy')}"></a>
                                 </li>
                             </ul>
-                            <div class="col-6" th:if="${owner}" style="text-align: right;">
+                            <div class="col-6" th:if="${owner == true}" style="text-align: right;">
                                 <div class="row">
                                     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modalCenter">
                                         New image
@@ -54,21 +54,24 @@
                                             Delete
                                         </button>
                                     </form>
-
                                 </div>
-                                <!-- <a class="btn btn-outline-danger" th:href="@{/}">Delete</a> -->
                             </div>
                         </div>
                         <hr>
-                        <!-- Images in grod order -->
+                        <!-- Images in grid order -->
                         <div class="row">
                             <div th:each="albumPhoto : ${albumById.photos}" class="col-6" style="padding: 8px;">
-                                <img style="width: 100%; padding: 3px; border: 1px solid #eee;" th:src="@{'/' + ${albumPhoto.albumImagePath}}" alt="">
+                                <div>
+                                    <img style="width: 100%; padding: 3px; border: 1px solid; border-bottom: 0px; padding-bottom: 0px;" th:src="@{'/' + ${albumPhoto.albumImagePath}}" alt="">
+                                    <form th:if="${owner == true}" th:action="@{'/photo/delete/' + ${albumPhoto.id}}" method="post">
+                                        <input type="hidden" name="albumId" th:value="${albumById.id}">
+                                        <button style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-top-left-radius: 0; border-top-right-radius: 0; width: 100%; border-top: 0px;" class="btn btn-outline-dark" type="submit">Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Sidebar -->
 				<div th:replace="/fragments/sidebar :: sidebar (latestPosts = ${latestPosts}, allTags = ${allTags})"></div>
             </div>
@@ -91,7 +94,7 @@
                     <input type="file" name="image" accept="image/png, image/jpg, image/jpeg">
                 </div>
                 <input type="hidden" name="albumId" th:value="${albumById.id}">
-                <button type="submit" id="addImage" onclick="addImageInput()">
+                <button type="button" id="addImage" onclick="addImageInput()">
                     Add another image
                   </button>
                </form>

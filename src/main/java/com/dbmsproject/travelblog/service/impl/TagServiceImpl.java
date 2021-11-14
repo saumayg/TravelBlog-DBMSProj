@@ -1,12 +1,16 @@
 package com.dbmsproject.travelblog.service.impl;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dbmsproject.travelblog.dao.PostDAO;
 import com.dbmsproject.travelblog.dao.TagDAO;
@@ -47,6 +51,16 @@ public class TagServiceImpl implements TagService {
     public List<Post> getAllPostsSorted(int id) {
 		logger.info("TagService: getAllPostsSorted(int id)");
 
+		//Get tag informmation
+		Tag tag = tagDAO.findById(id);
+
+		//Throws exception if tag not found
+		if (tag == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
 		return postDAO.allPostsSortedByTag(id);
 	}
 
@@ -56,7 +70,39 @@ public class TagServiceImpl implements TagService {
 	public Tag getTagById(int id) {
 		logger.info("TagService: getTagById(int id)");
 		
-		return tagDAO.findById(id);
+		//Get tag informmation
+		Tag tag = tagDAO.findById(id);
+
+		//Throws exception if tag not found
+		if (tag == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
+		return tag;
 	}
 
+	@Override
+	@Transactional
+	public void save(Tag newTag) {
+		
+		newTag.setCreatedAt(Instant.now().plus(5, ChronoUnit.HOURS).plus(30, ChronoUnit.MINUTES));
+		tagDAO.saveOrUpdate(newTag);
+	}
+
+	@Override
+	@Transactional
+	public void deleteById(int id) {
+
+		Tag tag = tagDAO.findById(id);
+
+		if (tag == null) {
+			throw new ResponseStatusException(
+				HttpStatus.NOT_FOUND, ""
+			);
+		}
+
+		tagDAO.deleteById(id);
+	}
 }

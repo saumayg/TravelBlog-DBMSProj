@@ -36,7 +36,7 @@
 					<div class="row">
 						<!-- Individual blog posts -->
 				  		<div class="col-lg-12" th:each="tempPost : ${randomPosts}">
-							<div th:replace="/fragments/singlePost :: post (slide = 'false', singlePost = ${tempPost})"></div>
+							<div th:replace="/fragments/singlePost :: post (slide = 'false', singlePost = ${tempPost}, owner = false)"></div>
 				  		</div>
 						<!-- All posts button -->
 				  		<div class="col-lg-12">

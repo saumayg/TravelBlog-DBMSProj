@@ -119,6 +119,9 @@ public class AlbumController {
         if(isPrincipalOwnerOfAlbumOrAdmin(principal, albumById)) {
             model.addAttribute("owner", true);
         }
+        else {
+            model.addAttribute("owner", false);
+        }
 
         return "album/detail";
     }
@@ -211,11 +214,21 @@ public class AlbumController {
 
     ///Delete album
     @PostMapping("/delete/{id}")
-    public String deletePost(
+    public String deleteAlbum(
         @PathVariable int id,
+        Principal principal,
         Model model
     ) throws IOException {
         logger.info("AlbumController: Delete album according to its id");
+
+        Album album = albumService.getAlbumById(id);
+
+        //Throws forbidden exception
+        if (!isPrincipalOwnerOfAlbumOrAdmin(principal, album)) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, ""
+            );
+        }
 
         albumService.deleteById(id);
         return "redirect:/album";

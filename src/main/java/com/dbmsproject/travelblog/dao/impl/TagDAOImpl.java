@@ -47,4 +47,19 @@ public class TagDAOImpl implements TagDAO {
 		return tag;
 	}
 
+	@Override
+	public void saveOrUpdate(Tag tag) {
+
+		Tag dbTag = entityManager.merge(tag);
+		tag.setId(dbTag.getId());
+	}
+
+	@Override
+    public void deleteById(int id) {
+		
+		Query query = entityManager.createQuery("delete from Tag where id=:tagId");
+		query.setParameter("tagId", id);
+
+		query.executeUpdate();
+	}
 }

@@ -91,10 +91,12 @@
                       <div class="col-4">
                         <input th:if="${post.album == null}" type="text" class="form-control" name="albumName" placeholder="Album name">
                         <input th:unless="${post.album == null}" th:value="${post.album.name}" type="text" class="form-control" name="albumName" placeholder="Album name">
+                        <!-- Have to add error management -->
                       </div>
                       <div class="col">
                         <textarea th:if="${post.album == null}" rows="1" type="text" class="form-control" name="albumDescription" placeholder="Album description"></textarea>
                         <textarea th:unless="${post.album == null}" rows="1" type="text" class="form-control" name="albumDescription" placeholder="Album description">[[${post.album.description}]]</textarea>
+                        <!-- Have to add error management -->
                       </div>
                     </div>
                     <!-- Images in album (only shown for new post) -->

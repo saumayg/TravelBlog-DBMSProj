@@ -106,7 +106,7 @@ public class Photo {
 	public String getAlbumImagePath() {
 		if (name == null)
 			return null;
-		return "images/album" + album.getId() + "/" + id + "/" + name;
+		return "images/user" + album.getUser().getId() + "/album" + album.getId() + "/" + id + "/" + name;
 	}
 
 	///Profile photo image path

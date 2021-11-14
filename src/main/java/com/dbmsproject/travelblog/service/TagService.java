@@ -16,4 +16,8 @@ public interface TagService {
 
     ///Get tag according to its id (Parameter: int id)
     public Tag getTagById(int id);
+
+    public void save(Tag tag);
+
+    public void deleteById(int id);
 }

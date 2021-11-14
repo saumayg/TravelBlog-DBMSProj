@@ -37,6 +37,15 @@ public class CommentDAOImpl implements CommentDAO {
 		return comments;
 	}
 
+	///Get comment by id
+	public Comment findById(int id) {
+		logger.info("CommentDAO: findById(int id)");
+
+		Comment comment = entityManager.find(Comment.class, id);
+
+		return comment;
+	}
+
 	///Save or update a comment
 	@Override
 	public void saveOrUpdate(Comment comment) {

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>User Profile</title>
+</head>
+
+<body>
+    <!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+
+	<!-- Heading banner -->
+    <div class="heading-page">
+        <section class="page-heading">
+            <div class="container">
+                <div class="text-content">
+                    <h2 style="text-transform: capitalize;">
+						User Profile
+					</h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Profile area -->
+    <section class="user-profile">
+        <div class="row">
+            <!-- Profile photo -->
+            <div class="col-4">
+                <div th:if="${user.profilePhoto == null}">
+                    <img th:src="@{/images/defaultUser.png}">
+                </div>
+                <div th:unless="${user.profilePhoto == null}">
+                    <img th:src = "@{'/' + ${user.profilePhoto.userImagePath}}">
+                </div>
+                <br>
+                <div th:if="${owner == true}">
+                    <button th:if="${update == false}" type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#modalCenter">
+                        Update profile photo
+                    </button>
+                </div>
+            </div>
+            <!-- Profile details -->
+            <div class="col-8">
+                <div class="row">
+                    <h1 class="col-6" th:text="${user.username}"></h1>
+                    <div class="col-6" th:if="${owner == true}" style="text-align: right;">
+                        <a class="btn btn-outline-dark" th:unless="${update == true}" th:href="@{'/user/' + ${user.username} + '/update'}">Update</a>
+                        <form style="width: fit-content;" th:action="@{'/user/' + ${user.username} + '/delete'}" method="post">
+                            <button class="btn btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <br>
+                <form th:object="${user}" method="POST" th:action="@{/user/update}">
+                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{username}">
+                    <input type="hidden" th:field="*{password}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="firstName">First Name</label>
+                            <input type="text" th:field="*{firstName}" name="firstName" id="firstName" class="form-control" th:disabled="${update == false}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" th:field="*{lastName}" name="lastName" id="lastName" class="form-control" th:disabled="${update == false}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="email" th:field="*{email}" name="email" id="email" class="form-control" th:disabled="${update == false}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="phone">Contact no.</label>
+                            <input type="text" th:field="*{phone}" name="phone" id="phone" class="form-control" th:disabled="${update == false}">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-dark" th:if="${update == true}">Update</button>
+                    <a th:href="@{'/user/' + ${user.username}}" class="btn btn-outline-success" th:if="${update == true}">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- User content like latest albums and posts -->
+    <section class="user-content" th:unless="${update == true}">
+        <div class="row">
+            <!-- Latest posts -->
+            <div class="col-lg-6 latest-post">
+                <div class="row">
+                    <h2 class="col-6">Latest Posts</h2>
+                    <div class="col-6" style="text-align: right;">
+                        <a class="orange-cstm-btn" name="allPosts" id="submit" th:href="@{'/user/' + ${user.username} + '/posts'}">
+                            All posts
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-lg-12 blog-posts" th:each="tempPost : ${latestPosts}" style="padding-left: 50px; padding-right: 50px;">
+                    <!-- Post fragment -->
+                    <div th:replace="/fragments/singlePost :: post (slide = 'false', singlePost = ${tempPost}, owner = false)"></div>
+                </div>
+            </div>
+            <!-- Latest albums -->
+            <div class="col-lg-6 latest-album">
+                <div class="row">
+                    <h2 class="col-6">Latest Albums</h2>
+                    <div class="col-6" style="text-align: right;">
+                        <a class="orange-cstm-btn" name="allAlbums" id="submit" th:href="@{'/user/' + ${user.username} + '/albums'}">
+                            All albums
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-lg-12 blog-albums" th:each="tempAlbum : ${latestAlbums}" style="padding-left: 50px; padding-right: 50px;">
+                    <!-- Album fragment -->
+                    <div th:replace="/fragments/singleAlbum :: album (owner = false, singleAlbum = ${tempAlbum})"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLongTitle">Add image to album</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <form id="imageForm" th:action="@{/user/update/profilePhoto}" method="POST" enctype="multipart/form-data">
+                   <div id="imageList">
+                    <input type="file" name="image" accept="image/png, image/jpg, image/jpeg">
+                    <input type="hidden" name="username" th:value="${user.username}">
+                </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="imageForm" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Footer fragment -->
+	  <div th:replace="/fragments/footer :: footer"></div>
+</body>
+
+</html>
