@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 ///Tag entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "tag")
 public class Tag {

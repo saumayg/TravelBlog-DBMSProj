@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 
 ///Role entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "role")
 public class Role {

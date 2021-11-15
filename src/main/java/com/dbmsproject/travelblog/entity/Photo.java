@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 
 ///Image entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "photo")
 public class Photo {

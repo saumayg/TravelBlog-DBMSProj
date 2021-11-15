@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 
 ///User entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "user")
 public class User {

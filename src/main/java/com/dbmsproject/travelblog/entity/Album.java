@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 ///Album entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "album")
 public class Album {

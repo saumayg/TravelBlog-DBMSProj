@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 ///Comment Entity
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "comment")
 public class Comment {

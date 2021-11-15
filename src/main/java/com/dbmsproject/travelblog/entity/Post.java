@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 ///Post entity 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Entity
 @Table(name = "post")
 public class Post {
