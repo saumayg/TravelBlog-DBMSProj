@@ -1,7 +1,8 @@
--- DROP DATABASE IF EXISTS dbms_proj;
+DROP DATABASE IF EXISTS dbms_proj;
 
--- CREATE DATABASE IF NOT EXISTS dbms_proj;
-USE heroku_01022fbe580f378;
+CREATE DATABASE IF NOT EXISTS dbms_proj;
+-- USE heroku_01022fbe580f378;
+USE dbms_proj;
 
 SET FOREIGN_KEY_CHECKS = 0;
 

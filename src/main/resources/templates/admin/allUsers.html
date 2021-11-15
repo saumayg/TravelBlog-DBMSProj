@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+	<!-- Header fragment containing css and js imports -->
+	<div th:replace="/fragments/header :: header-css"></div>
+	<title>Admin - All posts </title>
+</head>
+
+<body>
+	<!-- Header fragment containing navbar -->
+	<div th:replace="/fragments/header :: header"></div>
+	
+
+	<section style="margin: 100px;">
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="tempUser : ${allUsers}">
+                <th scope="row" th:text="${tempUser.id}"></th>
+                <td th:text="${tempUser.username}"></td>
+                <td th:text="${tempUser.firstName + ' ' + tempUser.lastName}"></td>
+                <td th:text="${tempUser.email}"></td>
+                <td>
+                    <a th:href="@{'/user/' + ${tempUser.username}}">Go to User</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </section>
+
+	  <!-- Footer fragment -->
+	  <div th:replace="/fragments/footer :: footer"></div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

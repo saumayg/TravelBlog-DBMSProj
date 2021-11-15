@@ -1,4 +1,4 @@
-USE heroku_01022fbe580f378;
+-- USE heroku_01022fbe580f378;
 
 -- DATA FOR USER TABLE
 DELETE FROM user;
@@ -14,11 +14,11 @@ DELETE FROM post;
 
 INSERT INTO post (title, description, body, user_id, created_at)
 VALUES
-('title1', 'description1', 'body1', 15, CURRENT_TIMESTAMP()),
-('title2', 'description2', 'body2', 15, CURRENT_TIMESTAMP()),
-('title3', 'description3', 'body3', 25, CURRENT_TIMESTAMP()),
-('title4', 'description4', 'body4', 25, CURRENT_TIMESTAMP()),
-('title5', 'description5', 'body5', 5, CURRENT_TIMESTAMP());
+('title1', 'description1', 'body1', 2, CURRENT_TIMESTAMP()),
+('title2', 'description2', 'body2', 2, CURRENT_TIMESTAMP()),
+('title3', 'description3', 'body3', 3, CURRENT_TIMESTAMP()),
+('title4', 'description4', 'body4', 3, CURRENT_TIMESTAMP()),
+('title5', 'description5', 'body5', 1, CURRENT_TIMESTAMP());
 
 -- DATA FOR ALBUM TABLE
 DELETE FROM album;

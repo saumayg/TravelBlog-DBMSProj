@@ -75,28 +75,6 @@ public class TagController {
         return model;
     }
 
-    @GetMapping("/all")
-    public String showAllTags(
-        Model model
-    ) {
-        logger.info("TagController: Show all tags to admin");
-
-        if ( !AppUtils.isAdmin() ) {
-            throw new ResponseStatusException(
-                HttpStatus.FORBIDDEN, ""
-            );
-        }
-
-        List<Tag> tags = tagService.getAll();
-        model.addAttribute("allTags", tags);
-
-        model.addAttribute("new", false);
-
-        model.addAttribute("tag", new Tag());
-
-        return "admin/allTags";
-    }
-
     @PostMapping("/save")
     public String newTag(
         @Valid @ModelAttribute("tag") Tag tag,
@@ -124,7 +102,7 @@ public class TagController {
         }
         else {
             tagService.save(tag);
-            return "redirect:/tag/all";
+            return "redirect:/admin/tags";
         }
     }
 
