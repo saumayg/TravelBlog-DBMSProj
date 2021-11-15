@@ -221,15 +221,18 @@ public class UserServiceImpl implements UserService {
 			user.setRoles(Arrays.asList(roleDAO.findRoleByName("ROLE_USER")));
 			userDAO.save(user);
 
-			//New profilePhoto
-			Photo profilePhoto = new Photo();
-			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-			profilePhoto.setName(fileName);
-			profilePhoto.setUser(user);
-			photoDAO.save(profilePhoto);
+			if (!multipartFile.isEmpty()) {
+				//New profilePhoto
+				Photo profilePhoto = new Photo();
+				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+				profilePhoto.setName(fileName);
+				profilePhoto.setUser(user);
+				photoDAO.save(profilePhoto);
+				
+				String uploadDir = "images/user" + user.getId() + "/" + profilePhoto.getId();
+				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+			}
 
-			String uploadDir = "images/user" + user.getId() + "/" + profilePhoto.getId();
-			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		}
 		else {
 			//Update is true

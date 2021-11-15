@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.dbmsproject.travelblog.entity.Album;
 import com.dbmsproject.travelblog.entity.Comment;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
+import com.dbmsproject.travelblog.service.AlbumService;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
 
@@ -39,6 +41,7 @@ public class PostController {
 
     private final PostService postService;
     private final TagService tagService;
+    private final AlbumService albumService;
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -51,10 +54,12 @@ public class PostController {
     @Autowired
     public PostController(
         PostService postService, 
-        TagService tagService
+        TagService tagService,
+        AlbumService albumService
     ) {
         this.postService = postService;
         this.tagService = tagService;
+        this.albumService = albumService;
     }
 
     //checks whether the user who created this post is the same as current user or admin access
@@ -72,6 +77,10 @@ public class PostController {
         //3 latest posts by all users
 		List<Post> latestPosts = postService.getLatestPosts();
 		model.addAttribute("latestPosts", latestPosts);
+
+        //3 latest albums by all users
+		List<Album> latestAlbums = albumService.getLatestAlbums();
+		model.addAttribute("latestAlbums", latestAlbums);
 
         //List of all tags
 		List<Tag> allTags = tagService.getAll();

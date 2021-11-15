@@ -6,9 +6,11 @@ import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
+import com.dbmsproject.travelblog.entity.Album;
 import com.dbmsproject.travelblog.entity.Comment;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
+import com.dbmsproject.travelblog.service.AlbumService;
 import com.dbmsproject.travelblog.service.CommentService;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
@@ -36,6 +38,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
     private final TagService tagService;
+    private final AlbumService albumService;
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -49,11 +52,13 @@ public class CommentController {
     public CommentController(
         CommentService commentService,
         PostService postService,
-        TagService tagService
+        TagService tagService,
+        AlbumService albumService
     ) {
         this.commentService = commentService;
         this.tagService = tagService;
         this.postService = postService;
+        this.albumService = albumService;
     }
 
     //checks whether the user who created this post is the same as current user or admin access
@@ -70,6 +75,10 @@ public class CommentController {
         //3 latest posts by all users
 		List<Post> latestPosts = postService.getLatestPosts();
 		model.addAttribute("latestPosts", latestPosts);
+
+        //3 latest albums by all users
+		List<Album> latestAlbums = albumService.getLatestAlbums();
+		model.addAttribute("latestAlbums", latestAlbums);
 
         //List of all tags
 		List<Tag> allTags = tagService.getAll();

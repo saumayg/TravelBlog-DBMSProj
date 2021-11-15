@@ -11,6 +11,7 @@ import com.dbmsproject.travelblog.entity.Album;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
 import com.dbmsproject.travelblog.entity.User;
+import com.dbmsproject.travelblog.service.AlbumService;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
 import com.dbmsproject.travelblog.service.UserService;
@@ -45,6 +46,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final TagService tagService;
+    private final AlbumService albumService;
 
     private Logger logger = Logger.getLogger(getClass().getName());
 
@@ -58,11 +60,13 @@ public class UserController {
     public UserController(
         TagService tagService,
         PostService postService,
-        UserService userService
+        UserService userService,
+        AlbumService albumService
     ) {
         this.tagService = tagService;
         this.postService = postService;
         this.userService = userService;
+        this.albumService = albumService;
     }
 
     ///Private method to add common attributes to sidebar
@@ -71,6 +75,10 @@ public class UserController {
         //3 latest posts by all users
 		List<Post> latestPosts = postService.getLatestPosts();
 		model.addAttribute("latestPosts", latestPosts);
+
+        //3 latest albums by all users
+		List<Album> latestAlbums = albumService.getLatestAlbums();
+		model.addAttribute("latestAlbums", latestAlbums);
 
         //List of all tags
 		List<Tag> allTags = tagService.getAll();
@@ -99,6 +107,12 @@ public class UserController {
         //Get user details
         User user = userService.findByUserName(username);
         model.addAttribute("user", user);
+
+        if (user == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, ""
+            );
+        }
 
         //3 latest posts by user
         model.addAttribute("latestPosts", userService.getAllLatestPostsSorted(username));

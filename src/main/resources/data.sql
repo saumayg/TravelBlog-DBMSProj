@@ -2,7 +2,7 @@
 INSERT INTO user (username, password, first_name, last_name, email, phone)
 VALUES 
 ('abcd','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','abcd','efgh','abcd@gmail.com', '3434332323'),
-('xyz','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','xyz','zyx','xyz@gmail.com', '3234234233'),
+('saumayg','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','Saumay','Gupta','saumayg@gmail.com', '3234234233'),
 ('mnop','$2a$04$eFytJDGtjbThXa80FyOOBuFdK2IwjyWefYkMpiBEFlpBwDH.5PM0K','mnop','qrst','mnop@gmail.com', '6345344432');
 
 -- DATA FOR post TABLE

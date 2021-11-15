@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.dbmsproject.travelblog.entity.Album;
 import com.dbmsproject.travelblog.entity.Post;
 import com.dbmsproject.travelblog.entity.Tag;
+import com.dbmsproject.travelblog.service.AlbumService;
 import com.dbmsproject.travelblog.service.PostService;
 import com.dbmsproject.travelblog.service.TagService;
 
@@ -19,12 +21,19 @@ public class HomeController {
 
 	private final PostService postService;
 	private final TagService tagService;
+	private final AlbumService albumService;
+
 	private Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
-	public HomeController(PostService postService, TagService tagService) {
+	public HomeController(
+		PostService postService, 
+		TagService tagService,
+		AlbumService albumService
+	) {
 		this.postService = postService;
 		this.tagService = tagService;
+		this.albumService = albumService;
 	}
 
 	///Private method to add common attributes to sidebar
@@ -33,6 +42,10 @@ public class HomeController {
         //3 latest posts by all users
 		List<Post> latestPosts = postService.getLatestPosts();
 		model.addAttribute("latestPosts", latestPosts);
+
+		//3 latest albums by all users
+		List<Album> latestAlbums = albumService.getLatestAlbums();
+		model.addAttribute("latestAlbums", latestAlbums);
 
         //List of all tags
 		List<Tag> allTags = tagService.getAll();

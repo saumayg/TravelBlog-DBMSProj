@@ -75,6 +75,10 @@ public class AlbumController {
 		List<Post> latestPosts = postService.getLatestPosts();
 		model.addAttribute("latestPosts", latestPosts);
 
+        //3 latest albums by all users
+		List<Album> latestAlbums = albumService.getLatestAlbums();
+		model.addAttribute("latestAlbums", latestAlbums);
+
         //List of all tags
 		List<Tag> allTags = tagService.getAll();
 		model.addAttribute("allTags", allTags);

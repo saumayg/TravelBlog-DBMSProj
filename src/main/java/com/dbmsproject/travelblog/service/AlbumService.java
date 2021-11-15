@@ -14,6 +14,9 @@ public interface AlbumService {
     ///Get all albums by all users
     public List<Album> getAll();
 
+    ///Get 3 latest albums among all users
+    public List<Album> getLatestAlbums();
+
     /// Get a single album using its id (Parameter: Int id)
     public Album getAlbumById(int id);
 

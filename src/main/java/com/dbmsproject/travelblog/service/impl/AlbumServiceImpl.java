@@ -54,6 +54,15 @@ public class AlbumServiceImpl implements AlbumService {
         return albumDAO.findAll();
     }
 
+    ///Get 3 latest albums among all users
+    @Override
+    @Transactional
+    public List<Album> getLatestAlbums() {
+        logger.info("AlbumService: getLatestAlbums()");
+
+        return albumDAO.findLatestAlbum();
+    }
+
     /// Get a single album using its id (Parameter: Int id)
     @Override
     @Transactional

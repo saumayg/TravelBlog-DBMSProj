@@ -74,7 +74,7 @@ public class RegistrationController {
         if (!bindingResult.hasErrors()) {
             //Registration successful, saving user
             userService.save(user, false, multipartFile);
-            return "redirect:/";
+            return "regConfirm";
         }
 
         return "regForm";
